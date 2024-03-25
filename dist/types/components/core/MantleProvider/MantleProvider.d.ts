@@ -20,10 +20,6 @@ export type TMantleContext = {
      */
     subscription: Subscription;
     /**
-     * - The current plan
-     */
-    currentPlan: Plan;
-    /**
      * - The available plans
      */
     plans: Array<Plan>;
@@ -55,10 +51,6 @@ export type TMantleContext = {
      * - Get the limit for a feature
      */
     limitForFeature: FeatureLimitCallback;
-    /**
-     * - The Mantle client instance
-     */
-    mantleClient: MantleClient;
 };
 export type RefetchCallback = () => Promise<void>;
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<void>;
@@ -78,5 +70,4 @@ export type FeatureLimitCallback = (params: {
     featureKey: string;
 }) => number;
 import React from "react";
-import { MantleClient } from "@heymantle/client";
 //# sourceMappingURL=MantleProvider.d.ts.map

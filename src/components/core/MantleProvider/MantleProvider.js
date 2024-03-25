@@ -43,7 +43,6 @@ export const MantleProvider = ({
 
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const fetchCustomer = async () => {
     try {
@@ -51,7 +50,7 @@ export const MantleProvider = ({
       const customer = await mantleClient.getCustomer();
       setCustomer(customer);
     } catch (error) {
-      setError(error);
+      console.error("[MantleProvider] Error fetching customer: ", error);
     } finally {
       setLoading(false);
     }
@@ -90,7 +89,6 @@ export const MantleProvider = ({
 
   const plans = customer?.plans || [];
   const subscription = customer?.subscription;
-  const currentPlan = subscription?.plan;
 
   return (
     <MantleContext.Provider
@@ -99,8 +97,6 @@ export const MantleProvider = ({
         subscription,
         plans,
         loading,
-        error,
-        mantleClient,
         sendUsageEvent,
         subscribe,
         cancelSubscription,
@@ -152,7 +148,6 @@ export const useMantle = () => {
  * @typedef TMantleContext
  * @property {Customer} customer - The current customer
  * @property {Subscription} subscription - The current subscription
- * @property {Plan} currentPlan - The current plan
  * @property {Array.<Plan>} plans - The available plans
  * @property {boolean} loading - Whether the current customer is loading
  * @property {RefetchCallback} refetch - Refetch the current customer
@@ -161,7 +156,6 @@ export const useMantle = () => {
  * @property {CancelSubscriptionCallback} cancelSubscription - Cancel the current subscription
  * @property {FeatureEnabledCallback} isFeatureEnabled - Check if a feature is enabled
  * @property {FeatureLimitCallback} limitForFeature - Get the limit for a feature
- * @property {MantleClient} mantleClient - The Mantle client instance
  */
 
 /**
