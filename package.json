@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/react",
   "description": "Mantle's frontend component library",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
