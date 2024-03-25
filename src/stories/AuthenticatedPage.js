@@ -5,7 +5,7 @@ const PlanContainer = ({ plan }) => {
     <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '5px', margin: '1rem' }}>
       <h2>{plan.name}</h2>
       <p>{plan.description}</p>
-      <p>Price: {plan.price}</p>
+      <p>Price: ${plan.amount}</p>
     </div>
   );
 };
