@@ -1,7 +1,7 @@
 
 # Mantle App API React Client and Components
 
-A [react](https://react.dev/) interface for interacting with the [Mantle](https://heymantle.com) App API and drop-in components for your billing UI.
+A [react](https://react.dev/) interface for interacting with the [Mantle](https://heymantle.com) App API.
 
 ## Installation
 
@@ -9,7 +9,7 @@ You can install the Mantle react package using npm:
 
 
 ```bash
-$ npm install @heymantle/surface
+$ npm install @heymantle/react
 ```
 
 ## Usage
@@ -55,7 +55,7 @@ const App = (Component) => {
 Furthur down the stack you can then use the `useMantle` hook for most data and operations, for example:
 
 ```js
-import { useMantle, HorizontalCards } from "@heymantle/react";
+import { useMantle } from "@heymantle/react";
 
 const HomePage = () => {
   const { customer, subscription, plans, subscribe, cancelSubscription, pushEvent } = useMantle();
@@ -83,19 +83,27 @@ const HomePage = () => {
           </button>
         </div>
       ) : (
-        <HorizontalCards
-          customer={customer}
-          plans={plans}
-          onSubscribe={async ({ planId, discountId }) => {
-            const subscription = await subscribe({ planId, discountId });
-            open(subscription.confirmationUrl, "_top");
-          }}
-        />
+        <div style={{ display: 'flex' }}>
+        {plans.map((plan) => (
+          <div>
+            <span><strong>{plan.name}</strong></span>
+            <span>${plan.amount}</span>
+            <button
+              onclick={async () => {
+                const subscription = await subscribe({ planId: plan.id });
+                open(subscription.confirmationUrl, "_top");
+              }}
+              Subscribe
+            </button>
+          </div>
+        )}
       )}
     </div>
   )
 };
 ```
+
+This example uses a very simple and vanilla plan list rendering, check out our [drop-in components](https://heymantle.com/components) for usable UI components.
 
 ## Documentation
 

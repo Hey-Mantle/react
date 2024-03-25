@@ -28,12 +28,12 @@ export default defineConfig ({
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.js"),
-      name: "@heymantle/surface",
+      name: "@heymantle/react",
       fileName: "index",
       formats: ["cjs", "es"]
     },
     rollupOptions: {
-      external: ["react", "@shopify/polaris"],
+      external: ["react"],
     },
   },
 });
