@@ -10,6 +10,11 @@ export type Customer = import('@heymantle/client').Customer;
 export type Subscription = import('@heymantle/client').Subscription;
 export type Plan = import('@heymantle/client').Plan;
 export type UsageEvent = import('@heymantle/client').UsageEvent;
+export type PaymentMethod = import('@heymantle/client').PaymentMethod;
+export type SetupIntent = import('@heymantle/client').SetupIntent;
+/**
+ * - The MantleContext object, which encapsulates functionality exposed by `MantleProvider`
+ */
 export type TMantleContext = {
     /**
      * - The current customer
@@ -44,6 +49,10 @@ export type TMantleContext = {
      */
     cancelSubscription: CancelSubscriptionCallback;
     /**
+     * - Generate a new client secret for customer's billing platform
+     */
+    requestClientSecret: RequestClientSecretCallback;
+    /**
      * - Check if a feature is enabled
      */
     isFeatureEnabled: FeatureEnabledCallback;
@@ -52,8 +61,17 @@ export type TMantleContext = {
      */
     limitForFeature: FeatureLimitCallback;
 };
+/**
+ * - Refetch the current customer, useful for updating the customer after a mutation
+ */
 export type RefetchCallback = () => Promise<void>;
-export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<void>;
+/**
+ * - Send a new usage event to Mantle
+ */
+export type SendUsageEventCallback = (usageEvent?: UsageEvent, usageEvents?: Array<UsageEvent>) => Promise<void>;
+/**
+ * - Subscribes to a new plan
+ */
 export type SubscribeCallback = (params: {
     planId: string;
     planIds?: Array<string>;
@@ -61,11 +79,26 @@ export type SubscribeCallback = (params: {
     billingProvider?: string;
     returnUrl?: string;
 }) => Promise<Subscription>;
+/**
+ * - Cancels the current subscription for the authorized customer
+ */
 export type CancelSubscriptionCallback = () => Promise<Subscription>;
+/**
+ * - Generates a new client secret for the customer's billing platform. Currently only used for Stripe Elements and Stripe Checkout.
+ */
+export type RequestClientSecretCallback = (params: {
+    returnUrl: string;
+}) => Promise<SetupIntent>;
+/**
+ * - Check if a feature is enabled for the current customer
+ */
 export type FeatureEnabledCallback = (params: {
     featureKey: string;
     count?: number;
 }) => boolean;
+/**
+ * - Get the limit for a feature for the current customer
+ */
 export type FeatureLimitCallback = (params: {
     featureKey: string;
 }) => number;

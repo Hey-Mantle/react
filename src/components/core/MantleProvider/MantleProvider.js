@@ -1,7 +1,7 @@
 /// <reference types="@heymantle/client" />
 
-import React, { createContext, useContext, useState, useEffect } from "react";
 import { MantleClient } from "@heymantle/client";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 /** @type {React.Context<TMantleContext>} */
 const MantleContext = createContext();
@@ -56,13 +56,16 @@ export const MantleProvider = ({
     }
   };
 
+  /**
+   * @type {SendUsageEventCallback}
+   */
   const sendUsageEvent = async (usageEvent) => {
     await mantleClient.sendUsageEvent(usageEvent);
   };
 
   /**
    * @type {SubscribeCallback}
-  */
+   */
   const subscribe = async ({ planId, planIds, discountId, billingProvider, returnUrl }) => {
     return await mantleClient.subscribe({
       planId,
@@ -73,12 +76,18 @@ export const MantleProvider = ({
     });
   };
 
-
   /**
    * @type {CancelSubscriptionCallback}
    */
   const cancelSubscription = async () => {
     return await mantleClient.cancelSubscription();
+  };
+
+  /**
+   * @type {RequestClientSecretCallback}
+   */
+  const requestClientSecret = async ({ returnUrl }) => {
+    return await mantleClient.requestClientSecret({ returnUrl });
   };
 
   useEffect(() => {
@@ -100,6 +109,7 @@ export const MantleProvider = ({
         sendUsageEvent,
         subscribe,
         cancelSubscription,
+        requestClientSecret,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
             return evaluateFeature({ feature: customer.features[featureKey], count });
@@ -142,10 +152,12 @@ export const useMantle = () => {
  * @typedef {import('@heymantle/client').Subscription} Subscription
  * @typedef {import('@heymantle/client').Plan} Plan
  * @typedef {import('@heymantle/client').UsageEvent} UsageEvent
+ * @typedef {import('@heymantle/client').PaymentMethod} PaymentMethod
+ * @typedef {import('@heymantle/client').SetupIntent} SetupIntent
  */
 
 /**
- * @typedef TMantleContext
+ * @typedef TMantleContext - The MantleContext object, which encapsulates functionality exposed by `MantleProvider`
  * @property {Customer} customer - The current customer
  * @property {Subscription} subscription - The current subscription
  * @property {Array.<Plan>} plans - The available plans
@@ -154,23 +166,25 @@ export const useMantle = () => {
  * @property {SendUsageEventCallback} sendUsageEvent - Send a new usage event to Mantle
  * @property {SubscribeCallback} subscribe - Subscribe to a new plan
  * @property {CancelSubscriptionCallback} cancelSubscription - Cancel the current subscription
+ * @property {RequestClientSecretCallback} requestClientSecret - Generate a new client secret for customer's billing platform
  * @property {FeatureEnabledCallback} isFeatureEnabled - Check if a feature is enabled
  * @property {FeatureLimitCallback} limitForFeature - Get the limit for a feature
  */
 
 /**
- * @callback RefetchCallback
- * @returns {Promise<void>} a promise that resolves when the customer is refetched
+ * @callback RefetchCallback - Refetch the current customer, useful for updating the customer after a mutation
+ * @returns {Promise<void>} a promise that resolves when the customer fetch has completed
  */
 
 /**
- * @callback SendUsageEventCallback
- * @param {UsageEvent} usageEvent - The usage event to send to Mantle
- * @returns {Promise<void>} a promise that resolves when the event is pushed
+ * @callback SendUsageEventCallback - Send a new usage event to Mantle
+ * @param {UsageEvent} [usageEvent] - The usage event to send to Mantle
+ * @param {Array.<UsageEvent>} [usageEvents] - An array of usage events to send to Mantle at once
+ * @returns {Promise<void>} a promise that resolves when the event is successfully sent
  */
 
 /**
- * @callback SubscribeCallback
+ * @callback SubscribeCallback - Subscribes to a new plan
  * @param {Object} params
  * @param {string} params.planId - The ID of the plan to subscribe to
  * @param {Array.<string>} [params.planIds] - The IDs of the plans to subscribe to
@@ -181,12 +195,19 @@ export const useMantle = () => {
  */
 
 /**
- * @callback CancelSubscriptionCallback
+ * @callback CancelSubscriptionCallback - Cancels the current subscription for the authorized customer
  * @returns {Promise<Subscription>} a promise that resolves to the canceled subscription
  */
 
 /**
- * @callback FeatureEnabledCallback
+ * @callback RequestClientSecretCallback - Generates a new client secret for the customer's billing platform. Currently only used for Stripe Elements and Stripe Checkout.
+ * @param {Object} params
+ * @param {string} params.returnUrl - The URL to return to after connecting a new `PaymentMethod`
+ * @returns {Promise<SetupIntent>} a promise that resolves to the created SetupIntent with `clientSecret`
+ */
+
+/**
+ * @callback FeatureEnabledCallback - Check if a feature is enabled for the current customer
  * @param {Object} params
  * @param {string} params.featureKey - The key of the feature to evaluate
  * @param {number} [params.count] - The count to evaluate against the feature limit if there is one
@@ -194,7 +215,7 @@ export const useMantle = () => {
  */
 
 /**
- * @callback FeatureLimitCallback
+ * @callback FeatureLimitCallback - Get the limit for a feature for the current customer
  * @param {Object} params
  * @param {string} params.featureKey - The key of the feature to evaluate
  * @returns {number} the max limit for this feature, returns -1 if there is no limit
