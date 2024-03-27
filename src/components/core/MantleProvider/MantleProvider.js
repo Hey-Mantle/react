@@ -84,10 +84,10 @@ export const MantleProvider = ({
   };
 
   /**
-   * @type {RequestClientSecretCallback}
+   * @type {AddPaymentMethodCallback}
    */
-  const requestClientSecret = async ({ returnUrl }) => {
-    return await mantleClient.requestClientSecret({ returnUrl });
+  const addPaymentMethod = async ({ returnUrl }) => {
+    return await mantleClient.addPaymentMethod({ returnUrl });
   };
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export const MantleProvider = ({
         sendUsageEvent,
         subscribe,
         cancelSubscription,
-        requestClientSecret,
+        addPaymentMethod,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
             return evaluateFeature({ feature: customer.features[featureKey], count });
@@ -166,7 +166,7 @@ export const useMantle = () => {
  * @property {SendUsageEventCallback} sendUsageEvent - Send a new usage event to Mantle
  * @property {SubscribeCallback} subscribe - Subscribe to a new plan
  * @property {CancelSubscriptionCallback} cancelSubscription - Cancel the current subscription
- * @property {RequestClientSecretCallback} requestClientSecret - Generate a new client secret for customer's billing platform
+ * @property {AddPaymentMethodCallback} addPaymentMethod - Start the process of adding a new payment method using an external billing provider
  * @property {FeatureEnabledCallback} isFeatureEnabled - Check if a feature is enabled
  * @property {FeatureLimitCallback} limitForFeature - Get the limit for a feature
  */
@@ -200,10 +200,14 @@ export const useMantle = () => {
  */
 
 /**
- * @callback RequestClientSecretCallback - Generates a new client secret for the customer's billing platform. Currently only used for Stripe Elements and Stripe Checkout.
+ * @callback AddPaymentMethodCallback Initial step to start the process of connecting a new payment method from an external billing provider.
+ * For Stripe billing, this creates a `SetupIntent` which contains a `clientSecret`, which can be used to initialize
+ * Stripe Elements or Stripe Checkout, which is necessary to collect payment method details to save for later use,
+ * or complete checkout without an active `PaymentIntent`. Do not store this `clientSecret` or share it with anyone,
+ * except for as part of the client-side payment method collection process.
  * @param {Object} params
- * @param {string} params.returnUrl - The URL to return to after connecting a new `PaymentMethod`
- * @returns {Promise<SetupIntent>} a promise that resolves to the created SetupIntent with `clientSecret`
+ * @param {string} params.returnUrl - The URL to return to after connecting a new `PaymentMethod` or completing the checkout process
+ * @returns {Promise<SetupIntent>} a promise that resolves to a created SetupIntent with `clientSecret`
  */
 
 /**

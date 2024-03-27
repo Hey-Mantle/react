@@ -1,5 +1,5 @@
-import M, { createContext as T, useState as h, useEffect as q, useContext as x } from "react";
-class A {
+import M, { createContext as T, useState as p, useEffect as x, useContext as A } from "react";
+class D {
   /**
    * Creates a new MantleClient. If being used in the browser, or any frontend code, never use the apiKey parameter,
    * always use the customerApiToken for the customer that is currently authenticated on the frontend.
@@ -161,49 +161,35 @@ class A {
     });
   }
   /**
-   * Internally attempts to create a Stripe `SetupIntent` and returns a `clientSecret`, which can be used to initialize
-   * Stripe Elements or Stripe Checkout to collect payment method details to save for later use.
+   * Initial step to start the process of connecting a new payment method from an external billing provider. 
+   * For Stripe billing, this creates a `SetupIntent` which contains a `clientSecret`, which can be used to initialize 
+   * Stripe Elements or Stripe Checkout, which is necessary to collect payment method details to save for later use, 
+   * or complete checkout without an active `PaymentIntent`. Do not store this `clientSecret` or share it with anyone,
+   * except for as part of the client-side payment method collection process.
    * @param {Object} params
    * @param {string} [params.returnUrl] - The URL to redirect to after a checkout has completed
    * @returns {Promise<SetupIntent>} a promise that resolves to the created `SetupIntent` with `clientSecret`
    */
-  async requestClientSecret({ returnUrl: e }) {
+  async addPaymentMethod({ returnUrl: e }) {
     return await this.mantleRequest({
       path: "payment_methods",
-      method: "GET",
+      method: "POST",
       ...e && {
         body: { returnUrl: e }
       }
     });
   }
-  /**
-   * Set the payment method for the current customer
-   * @param {Object} params - The payment method options
-   * @param {string} params.paymentMethodId - The platform ID of the payment method to add to the customer, ex. `pm_1234567890`
-   * @param {boolean} [params.defaultMethod=true] - Whether to set the payment method as the default for this customer
-   * @returns {Promise<PaymentMethod>} a promise that resolves to the updated payment method
-   */
-  async connectPaymentMethod({ paymentMethodId: e, defaultMethod: n = !0 }) {
-    return await this.mantleRequest({
-      path: "payment_methods",
-      method: "PUT",
-      body: {
-        paymentMethodId: e,
-        defaultMethod: n
-      }
-    });
-  }
 }
 var R = {
-  MantleClient: A
+  MantleClient: D
 };
-const d = T(), D = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? e < t.value || t.value === -1 : !1, _ = ({
+const y = T(), L = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? e < t.value || t.value === -1 : !1, Y = ({
   appId: t,
   customerApiToken: e,
   apiUrl: n = "https://appapi.heymantle.com/v1",
   children: s
 }) => {
-  const a = new R.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [r, l] = h(null), [u, m] = h(!0), p = async () => {
+  const a = new R.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [r, l] = p(null), [u, m] = p(!0), d = async () => {
     try {
       m(!0);
       const o = await a.getCustomer();
@@ -215,60 +201,60 @@ const d = T(), D = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.typ
     }
   }, b = async (o) => {
     await a.sendUsageEvent(o);
-  }, f = async ({ planId: o, planIds: c, discountId: E, billingProvider: C, returnUrl: g }) => await a.subscribe({
+  }, f = async ({ planId: o, planIds: c, discountId: E, billingProvider: g, returnUrl: C }) => await a.subscribe({
     planId: o,
     planIds: c,
     discountId: E,
-    billingProvider: C,
-    returnUrl: g
-  }), v = async () => await a.cancelSubscription(), w = async ({ returnUrl: o }) => await a.requestClientSecret({ returnUrl: o });
-  q(() => {
-    e && p();
+    billingProvider: g,
+    returnUrl: C
+  }), v = async () => await a.cancelSubscription(), w = async ({ returnUrl: o }) => await a.addPaymentMethod({ returnUrl: o });
+  x(() => {
+    e && d();
   }, [e]);
-  const S = (r == null ? void 0 : r.plans) || [], P = r == null ? void 0 : r.subscription;
+  const P = (r == null ? void 0 : r.plans) || [], S = r == null ? void 0 : r.subscription;
   return /* @__PURE__ */ M.createElement(
-    d.Provider,
+    y.Provider,
     {
       value: {
         customer: r,
-        subscription: P,
-        plans: S,
+        subscription: S,
+        plans: P,
         loading: u,
         sendUsageEvent: b,
         subscribe: f,
         cancelSubscription: v,
-        requestClientSecret: w,
-        isFeatureEnabled: ({ featureKey: o, count: c = 0 }) => r != null && r.features[o] ? D({ feature: r.features[o], count: c }) : !1,
+        addPaymentMethod: w,
+        isFeatureEnabled: ({ featureKey: o, count: c = 0 }) => r != null && r.features[o] ? L({ feature: r.features[o], count: c }) : !1,
         limitForFeature: ({ featureKey: o }) => r != null && r.features[o] && currentPlan.features[o].type === "limit" ? r.features[o].value : -1,
         refetch: async () => {
-          await p();
+          await d();
         }
       }
     },
     s
   );
 }, k = () => {
-  const t = x(d);
+  const t = A(y);
   if (t === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return t;
-}, y = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, O = (t, e) => y(e) - y(t) || t.name.localeCompare(e.name), L = (t = "USD") => new Intl.NumberFormat("en-US", {
+}, h = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, _ = (t, e) => h(e) - h(t) || t.name.localeCompare(e.name), q = (t = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: t,
   notation: "standard"
 }), B = (t, e = "USD", n = !0) => {
-  let s = L(e).format(t);
+  let s = q(e).format(t);
   return n && (s = s.replace(/\.00$/, "")), s;
 }, i = {
   Annual: "ANNUAL",
   Every30Days: "EVERY_30_DAYS"
-}, G = {
+}, I = {
   Public: "public",
   CustomerTag: "customerTag",
   ShopifyPlan: "shopifyPlan",
   Customer: "customer",
   Hidden: "hidden"
-}, U = {
+}, F = {
   Back: "Back",
   CurrentPlan: "Current plan",
   CustomPlans: "Custom plans",
@@ -287,7 +273,7 @@ const d = T(), D = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.typ
   SelectPlan: "Select plan",
   SubscribeSuccessTitle: "Subscription successful",
   SubscribeSuccessBody: "Thanks for subscribing to our app!"
-}, F = (t = i.Every30Days) => {
+}, U = (t = i.Every30Days) => {
   switch (t) {
     case i.Annual:
       return "year";
@@ -303,15 +289,15 @@ const d = T(), D = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.typ
     default:
       return "mo";
   }
-}, I = ({
+}, N = ({
   interval: t = i.Every30Days,
   useShortFormPlanIntervals: e = !0
-}) => e ? $(t) : F(t), N = ({ plan: t, customFieldKey: e = "recommended" }) => {
+}) => e ? $(t) : U(t), j = ({ plan: t, customFieldKey: e = "recommended" }) => {
   var n;
   return !!((n = t.customFields) != null && n[e]);
-}, j = ({ plan: t, customFieldKey: e = "buttonLabel" }) => {
+}, G = ({ plan: t, customFieldKey: e = "buttonLabel" }) => {
   var n;
-  return ((n = t.customFields) == null ? void 0 : n[e]) || U.SelectPlan;
+  return ((n = t.customFields) == null ? void 0 : n[e]) || F.SelectPlan;
 }, X = ({ plan: t }) => {
   var e;
   return ((e = t.discounts) == null ? void 0 : e.length) > 0 ? t.discounts.reduce(
@@ -319,20 +305,20 @@ const d = T(), D = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.typ
   ) : void 0;
 }, H = (t = 4) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, J = (t = 4) => t % 4 === 0 ? 4 : t % 3 === 0 ? 3 : t % 2 === 0 ? 2 : t === 1 ? 1 : 4;
 export {
-  U as Labels,
-  _ as MantleProvider,
-  G as PlanAvailability,
+  F as Labels,
+  Y as MantleProvider,
+  I as PlanAvailability,
   i as PlanInterval,
   J as columnCount,
   H as columnSpan,
-  j as customButtonLabel,
-  y as featureEnabled,
-  O as featureSort,
+  G as customButtonLabel,
+  h as featureEnabled,
+  _ as featureSort,
   X as highestDiscount,
-  I as intervalLabel,
-  F as intervalLabelLong,
+  N as intervalLabel,
+  U as intervalLabelLong,
   $ as intervalLabelShort,
-  N as isRecommendedPlan,
+  j as isRecommendedPlan,
   B as money,
   k as useMantle
 };
