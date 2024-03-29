@@ -58,10 +58,10 @@ Furthur down the stack you can then use the `useMantle` hook for most data and o
 import { useMantle } from "@heymantle/react";
 
 const HomePage = () => {
-  const { customer, subscription, plans, subscribe, cancelSubscription, pushEvent } = useMantle();
+  const { customer, subscription, plans, subscribe, cancelSubscription, sendUsageEvent } = useMantle();
 
   useEffect(() => {
-    pushEvent({
+    sendUsageEvent({
       eventName: 'page_view',
       properties: {
         path: window.location.href,
