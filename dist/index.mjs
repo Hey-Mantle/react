@@ -54,6 +54,7 @@ class D {
    * @param {string} params.name - The name of the customer
    * @param {string} params.email - The email of the customer
    * @param {Object.<string, Object>} [params.customFields] - Custom fields to store on the customer, must be a JSON object
+   * @param {Date} [params.createdAt] - The date the customer was created, defaults to now if not provided
    * @returns {Promise<Object.<string, string>} a promise that resolves to an object with the customer API token, `apiToken`
    */
   async identify({
@@ -63,20 +64,34 @@ class D {
     accessToken: a,
     name: r,
     email: l,
-    customFields: u
+    customFields: c,
+    createdAt: u
   }) {
     return await this.mantleRequest({
       path: "identify",
       method: "POST",
-      body: { platformId: e, myshopifyDomain: n, platform: s, accessToken: a, name: r, email: l, customFields: u }
+      body: {
+        platformId: e,
+        myshopifyDomain: n,
+        platform: s,
+        accessToken: a,
+        name: r,
+        email: l,
+        customFields: c,
+        createdAt: u
+      }
     });
   }
   /**
    * Get the customer associated with the current customer API token
+   * @param {string} [id] - The ID of the customer to get. Only required if using the API key for authentication instead of the customer API token
    * @returns {Promise<Customer>} a promise that resolves to the current customer
    */
-  async getCustomer() {
-    return (await this.mantleRequest({ path: "customer" })).customer;
+  async getCustomer(e) {
+    return (await this.mantleRequest({
+      path: "customer",
+      ...e ? { body: { id: e } } : {}
+    })).customer;
   }
   /**
    * Subscribe to a plan, or list of plans. Must provide either `planId` or `planIds`
@@ -161,9 +176,9 @@ class D {
     });
   }
   /**
-   * Initial step to start the process of connecting a new payment method from an external billing provider. 
-   * For Stripe billing, this creates a `SetupIntent` which contains a `clientSecret`, which can be used to initialize 
-   * Stripe Elements or Stripe Checkout, which is necessary to collect payment method details to save for later use, 
+   * Initial step to start the process of connecting a new payment method from an external billing provider.
+   * For Stripe billing, this creates a `SetupIntent` which contains a `clientSecret`, which can be used to initialize
+   * Stripe Elements or Stripe Checkout, which is necessary to collect payment method details to save for later use,
    * or complete checkout without an active `PaymentIntent`. Do not store this `clientSecret` or share it with anyone,
    * except for as part of the client-side payment method collection process.
    * @param {Object} params
@@ -183,27 +198,27 @@ class D {
 var R = {
   MantleClient: D
 };
-const y = T(), L = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? e < t.value || t.value === -1 : !1, Y = ({
+const h = T(), L = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? e < t.value || t.value === -1 : !1, Y = ({
   appId: t,
   customerApiToken: e,
   apiUrl: n = "https://appapi.heymantle.com/v1",
   children: s
 }) => {
-  const a = new R.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [r, l] = p(null), [u, m] = p(!0), d = async () => {
+  const a = new R.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [r, l] = p(null), [c, u] = p(!0), d = async () => {
     try {
-      m(!0);
+      u(!0);
       const o = await a.getCustomer();
       l(o);
     } catch (o) {
       console.error("[MantleProvider] Error fetching customer: ", o);
     } finally {
-      m(!1);
+      u(!1);
     }
   }, b = async (o) => {
     await a.sendUsageEvent(o);
-  }, f = async ({ planId: o, planIds: c, discountId: E, billingProvider: g, returnUrl: C }) => await a.subscribe({
+  }, f = async ({ planId: o, planIds: m, discountId: E, billingProvider: g, returnUrl: C }) => await a.subscribe({
     planId: o,
-    planIds: c,
+    planIds: m,
     discountId: E,
     billingProvider: g,
     returnUrl: C
@@ -213,18 +228,18 @@ const y = T(), L = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.typ
   }, [e]);
   const P = (r == null ? void 0 : r.plans) || [], S = r == null ? void 0 : r.subscription;
   return /* @__PURE__ */ M.createElement(
-    y.Provider,
+    h.Provider,
     {
       value: {
         customer: r,
         subscription: S,
         plans: P,
-        loading: u,
+        loading: c,
         sendUsageEvent: b,
         subscribe: f,
         cancelSubscription: v,
         addPaymentMethod: w,
-        isFeatureEnabled: ({ featureKey: o, count: c = 0 }) => r != null && r.features[o] ? L({ feature: r.features[o], count: c }) : !1,
+        isFeatureEnabled: ({ featureKey: o, count: m = 0 }) => r != null && r.features[o] ? L({ feature: r.features[o], count: m }) : !1,
         limitForFeature: ({ featureKey: o }) => r != null && r.features[o] && currentPlan.features[o].type === "limit" ? r.features[o].value : -1,
         refetch: async () => {
           await d();
@@ -234,11 +249,11 @@ const y = T(), L = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.typ
     s
   );
 }, k = () => {
-  const t = A(y);
+  const t = A(h);
   if (t === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return t;
-}, h = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, _ = (t, e) => h(e) - h(t) || t.name.localeCompare(e.name), q = (t = "USD") => new Intl.NumberFormat("en-US", {
+}, y = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, _ = (t, e) => y(e) - y(t) || t.name.localeCompare(e.name), q = (t = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: t,
   notation: "standard"
@@ -312,7 +327,7 @@ export {
   J as columnCount,
   H as columnSpan,
   G as customButtonLabel,
-  h as featureEnabled,
+  y as featureEnabled,
   _ as featureSort,
   X as highestDiscount,
   N as intervalLabel,
