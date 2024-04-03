@@ -41,6 +41,10 @@ export type TMantleContext = {
      */
     sendUsageEvent: SendUsageEventCallback;
     /**
+     * - Get a usage report for a usage metric
+     */
+    getUsageReport: GetUsageReportCallback;
+    /**
      * - Subscribe to a new plan
      */
     subscribe: SubscribeCallback;
@@ -69,6 +73,13 @@ export type RefetchCallback = () => Promise<void>;
  * - Send a new usage event to Mantle
  */
 export type SendUsageEventCallback = (usageEvent?: UsageEvent, usageEvents?: Array<UsageEvent>) => Promise<void>;
+/**
+ * - Get a usage report for a usage metric
+ */
+export type GetUsageReportCallback = (params: {
+    usageId: string;
+    period: string;
+}) => Promise<any>;
 /**
  * - Subscribes to a new plan
  */

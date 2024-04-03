@@ -64,6 +64,13 @@ export const MantleProvider = ({
   };
 
   /**
+   * @type {GetUsageReportCallback}
+  */
+  const getUsageReport = async ({ usageId, period }) => {
+    return await mantleClient.getUsageMetricReport({ id: usageId, period });
+  };
+
+  /**
    * @type {SubscribeCallback}
    */
   const subscribe = async ({ planId, planIds, discountId, billingProvider, returnUrl }) => {
@@ -107,6 +114,7 @@ export const MantleProvider = ({
         plans,
         loading,
         sendUsageEvent,
+        getUsageReport,
         subscribe,
         cancelSubscription,
         addPaymentMethod,
@@ -164,6 +172,7 @@ export const useMantle = () => {
  * @property {boolean} loading - Whether the current customer is loading
  * @property {RefetchCallback} refetch - Refetch the current customer
  * @property {SendUsageEventCallback} sendUsageEvent - Send a new usage event to Mantle
+ * @property {GetUsageReportCallback} getUsageReport - Get a usage report for a usage metric
  * @property {SubscribeCallback} subscribe - Subscribe to a new plan
  * @property {CancelSubscriptionCallback} cancelSubscription - Cancel the current subscription
  * @property {AddPaymentMethodCallback} addPaymentMethod - Start the process of adding a new payment method using an external billing provider
@@ -181,6 +190,14 @@ export const useMantle = () => {
  * @param {UsageEvent} [usageEvent] - The usage event to send to Mantle
  * @param {Array.<UsageEvent>} [usageEvents] - An array of usage events to send to Mantle at once
  * @returns {Promise<void>} a promise that resolves when the event is successfully sent
+ */
+
+/**
+ * @callback GetUsageReportCallback - Get a usage report for a usage metric
+ * @param {Object} params
+ * @param {string} params.usageId - The ID of the usage metric to get a report for
+ * @param {string} params.period - The period to get the usage report for
+ * @returns {Promise<Object>} a promise that resolves to the usage report
  */
 
 /**
