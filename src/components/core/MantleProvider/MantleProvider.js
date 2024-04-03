@@ -2,6 +2,7 @@
 
 import { MantleClient } from "@heymantle/client";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Labels } from "../../../utils/constants";
 
 /** @type {React.Context<TMantleContext>} */
 const MantleContext = createContext();
@@ -28,6 +29,7 @@ const evaluateFeature = ({ feature, count = 0 }) => {
  * @param {string} params.appId - The Mantle App ID provided by Mantle
  * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the `identify` endpoint
  * @param {string} [params.apiUrl] - The Mantle API URL to use
+ * @param {Object} params.i18n - The i18n object to use for labels
  * @param {React.ReactNode} params.children - The children to render
  */
 export const MantleProvider = ({
@@ -35,6 +37,7 @@ export const MantleProvider = ({
   customerApiToken,
   apiUrl = "https://appapi.heymantle.com/v1",
   children,
+  i18n = Labels,
 }) => {
   /**
    * @type {MantleClient}
@@ -113,6 +116,7 @@ export const MantleProvider = ({
         subscription,
         plans,
         loading,
+        i18n: { ...Labels, ...i18n },
         sendUsageEvent,
         getUsageReport,
         subscribe,
