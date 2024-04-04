@@ -1,7 +1,8 @@
-export function MantleProvider({ appId, customerApiToken, apiUrl, children, }: {
+export function MantleProvider({ appId, customerApiToken, apiUrl, children, i18n, }: {
     appId: string;
     customerApiToken: string;
     apiUrl?: string;
+    i18n: any;
     children: React.ReactNode;
 }): React.JSX.Element;
 export function useMantle(): TMantleContext;
