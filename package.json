@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/react",
   "description": "Mantle's React component library",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
@@ -24,7 +24,7 @@
     "build-storybook": "storybook build",
     "build": "NODE_ENV=production vite build",
     "test": "exit 0",
-    "build-and-publish": "npm run build && npx tsc && npm publish"
+    "build-and-publish": "npm install && npm run build && npx tsc && npm publish"
   },
   "keywords": [
     "mantle",
@@ -58,7 +58,7 @@
     "react": ">16.3"
   },
   "dependencies": {
-    "@heymantle/client": "^1.1.9"
+    "@heymantle/client": "^1.1.12"
   },
   "publishConfig": {
     "@heymantle:registry": "https://registry.npmjs.org/",

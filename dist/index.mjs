@@ -55,6 +55,7 @@ class q {
    * @param {string} [params.email] - The email of the customer
    * @param {Object.<string, Object>} [params.customFields] - Custom fields to store on the customer, must be a JSON object
    * @param {Date} [params.createdAt] - The date the customer was created, defaults to now if not provided
+   * @param {boolean} [params.rotateApiToken] - True to rotate the customer API token and return the new value
    * @returns {Promise<Object.<string, string>} a promise that resolves to an object with the customer API token, `apiToken`
    */
   async identify({
@@ -64,8 +65,9 @@ class q {
     accessToken: o,
     name: i,
     email: a,
-    customFields: c,
-    createdAt: p
+    customFields: p,
+    createdAt: d,
+    rotateApiToken: c
   }) {
     return await this.mantleRequest({
       path: "identify",
@@ -77,8 +79,9 @@ class q {
         accessToken: o,
         name: i,
         email: a,
-        customFields: c,
-        createdAt: p
+        customFields: p,
+        createdAt: d,
+        rotateApiToken: c
       }
     });
   }
@@ -219,7 +222,7 @@ const l = {
   ShopifyPlan: "shopifyPlan",
   Customer: "customer",
   Hidden: "hidden"
-}, d = {
+}, m = {
   AmountPerInterval: "{{ amount }} per {{ interval }}",
   Back: "Back",
   Cancel: "Cancel",
@@ -256,17 +259,17 @@ const l = {
   customerApiToken: e,
   apiUrl: n = "https://appapi.heymantle.com/v1",
   children: s,
-  i18n: o = d
+  i18n: o = m
 }) => {
-  const i = new L.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [a, c] = h(null), [p, m] = h(!0), y = async () => {
+  const i = new L.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [a, p] = h(null), [d, c] = h(!0), y = async () => {
     try {
-      m(!0);
+      c(!0);
       const r = await i.getCustomer();
-      c(r);
+      p(r);
     } catch (r) {
       console.error("[MantleProvider] Error fetching customer: ", r);
     } finally {
-      m(!1);
+      c(!1);
     }
   }, v = async (r) => {
     await i.sendUsageEvent(r);
@@ -288,8 +291,8 @@ const l = {
         customer: a,
         subscription: E,
         plans: C,
-        loading: p,
-        i18n: { ...d, ...o },
+        loading: d,
+        i18n: { ...m, ...o },
         sendUsageEvent: v,
         getUsageReport: P,
         subscribe: w,
@@ -340,7 +343,7 @@ const l = {
   return !!((n = t.customFields) != null && n[e]);
 }, H = ({ plan: t, customFieldKey: e = "buttonLabel" }) => {
   var n;
-  return ((n = t.customFields) == null ? void 0 : n[e]) || d.SelectPlan;
+  return ((n = t.customFields) == null ? void 0 : n[e]) || m.SelectPlan;
 }, J = ({ plan: t }) => {
   var e;
   return ((e = t.discounts) == null ? void 0 : e.length) > 0 ? t.discounts.reduce(
@@ -348,7 +351,7 @@ const l = {
   ) : void 0;
 }, K = (t = 4) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, V = (t = 4) => t % 4 === 0 ? 4 : t % 3 === 0 ? 3 : t % 2 === 0 ? 2 : t === 1 ? 1 : 4;
 export {
-  d as Labels,
+  m as Labels,
   k as MantleProvider,
   _ as PlanAvailability,
   l as PlanInterval,
