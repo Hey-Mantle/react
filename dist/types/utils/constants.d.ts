@@ -19,12 +19,15 @@ export namespace Labels {
     let CurrentPlan: string;
     let CustomPlans: string;
     let CustomPlansDescription: string;
+    let DiscountAmount: string;
+    let DiscountAmountExpired: string;
     let FreeTrialLength: string;
     let Features: string;
     let Month: string;
     let MonthShort: string;
     let Monthly: string;
     let NextBillingDate: string;
+    let NotSubscribed: string;
     let Year: string;
     let YearShort: string;
     let Yearly: string;
@@ -36,5 +39,7 @@ export namespace Labels {
     let SubscribeSuccessTitle: string;
     let SubscribeSuccessBody: string;
     let Subscription: string;
+    let SubscriptionCancelled: string;
+    let UsageCharges: string;
 }
 //# sourceMappingURL=constants.d.ts.map
