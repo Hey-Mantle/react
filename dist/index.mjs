@@ -1,5 +1,5 @@
-import T, { createContext as R, useState as h, useEffect as D, useContext as U } from "react";
-class q {
+import D, { createContext as R, useState as h, useEffect as U, useContext as q } from "react";
+class L {
   /**
    * Creates a new MantleClient. If being used in the browser, or any frontend code, never use the apiKey parameter,
    * always use the customerApiToken for the customer that is currently authenticated on the frontend.
@@ -9,12 +9,12 @@ class q {
    * @param {string} [params.customerApiToken] - The Mantle Customer API Token returned by the /identify endpoint. This should be used in the browser.
    * @param {string} [params.apiUrl] - The Mantle API URL to use
    */
-  constructor({ appId: e, apiKey: n, customerApiToken: s, apiUrl: o = "https://appapi.heymantle.com/v1" }) {
-    if (!e)
+  constructor({ appId: t, apiKey: n, customerApiToken: s, apiUrl: o = "https://appapi.heymantle.com/v1" }) {
+    if (!t)
       throw new Error("MantleClient appId is required");
     if (typeof window < "u" && n)
       throw new Error("MantleClient apiKey should never be used in the browser");
-    this.appId = e, this.apiKey = n, this.customerApiToken = s, this.apiUrl = o;
+    this.appId = t, this.apiKey = n, this.customerApiToken = s, this.apiUrl = o;
   }
   /**
    * Makes a request to the Mantle API
@@ -24,9 +24,9 @@ class q {
    * @param {JSON} [params.body] - The request body
    * @returns {Promise<JSON>} a promise that resolves to the response body
    */
-  async mantleRequest({ path: e, method: n = "GET", body: s }) {
+  async mantleRequest({ path: t, method: n = "GET", body: s }) {
     try {
-      const o = `${this.apiUrl}${e.startsWith("/") ? "" : "/"}${e}${s && n === "GET" ? `?${new URLSearchParams(s)}` : ""}`;
+      const o = `${this.apiUrl}${t.startsWith("/") ? "" : "/"}${t}${s && n === "GET" ? `?${new URLSearchParams(s)}` : ""}`;
       return await (await fetch(o, {
         method: n,
         headers: {
@@ -41,7 +41,7 @@ class q {
         }
       })).json();
     } catch (o) {
-      throw console.error(`[mantleRequest] ${e} error: ${o.message}`), o;
+      throw console.error(`[mantleRequest] ${t} error: ${o.message}`), o;
     }
   }
   /**
@@ -59,12 +59,12 @@ class q {
    * @returns {Promise<Object.<string, string>} a promise that resolves to an object with the customer API token, `apiToken`
    */
   async identify({
-    platformId: e,
+    platformId: t,
     myshopifyDomain: n,
     platform: s = "shopify",
     accessToken: o,
     name: i,
-    email: a,
+    email: r,
     customFields: p,
     createdAt: d,
     rotateApiToken: c
@@ -73,12 +73,12 @@ class q {
       path: "identify",
       method: "POST",
       body: {
-        platformId: e,
+        platformId: t,
         myshopifyDomain: n,
         platform: s,
         accessToken: o,
         name: i,
-        email: a,
+        email: r,
         customFields: p,
         createdAt: d,
         rotateApiToken: c
@@ -90,10 +90,10 @@ class q {
    * @param {string} [id] - The ID of the customer to get. Only required if using the API key for authentication instead of the customer API token
    * @returns {Promise<Customer>} a promise that resolves to the current customer
    */
-  async getCustomer(e) {
+  async getCustomer(t) {
     return (await this.mantleRequest({
       path: "customer",
-      ...e ? { body: { id: e } } : {}
+      ...t ? { body: { id: t } } : {}
     })).customer;
   }
   /**
@@ -104,13 +104,21 @@ class q {
    * @param {string} [params.discountId] - The ID of the discount to apply to the subscription
    * @param {string} params.returnUrl - The URL to redirect to after the subscription is complete
    * @param {string} [params.billingProvider] - The name of the billing provider to use, if none is provided, use sensible default
+   * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the subscription if available
    * @returns {Promise<Subscription>} a promise that resolves to the created subscription
    */
-  async subscribe({ planId: e, planIds: n, discountId: s, returnUrl: o, billingProvider: i }) {
+  async subscribe({
+    planId: t,
+    planIds: n,
+    discountId: s,
+    returnUrl: o,
+    billingProvider: i,
+    useSavedPaymentMethod: r = !1
+  }) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "POST",
-      body: { planId: e, planIds: n, discountId: s, returnUrl: o, billingProvider: i }
+      body: { planId: t, planIds: n, discountId: s, returnUrl: o, billingProvider: i, useSavedPaymentMethod: r }
     });
   }
   /**
@@ -119,12 +127,12 @@ class q {
    * @param {string} [params.cancelReason] - The reason for cancelling the subscription
    * @returns {Promise<Subscription>} a promise that resolves to the cancelled subscription
    */
-  async cancelSubscription({ cancelReason: e } = {}) {
+  async cancelSubscription({ cancelReason: t } = {}) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "DELETE",
-      ...e && {
-        body: { cancelReason: e }
+      ...t && {
+        body: { cancelReason: t }
       }
     });
   }
@@ -135,11 +143,11 @@ class q {
    * @param {number} params.cappedAmount - The capped amount of the usage charge
    * @returns {Promise<Subscription>} a promise that resolves to the updated subscription
    */
-  async updateSubscription({ id: e, cappedAmount: n }) {
+  async updateSubscription({ id: t, cappedAmount: n }) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "PUT",
-      body: { id: e, cappedAmount: n }
+      body: { id: t, cappedAmount: n }
     });
   }
   /**
@@ -151,12 +159,12 @@ class q {
    * @param {Object.<string, any>} [params.properties] - The event properties
    * @returns {Promise<boolean>} true if the event was sent successfully
    */
-  async sendUsageEvent({ eventId: e, eventName: n, customerId: s, properties: o = {} }) {
+  async sendUsageEvent({ eventId: t, eventName: n, customerId: s, properties: o = {} }) {
     return await this.mantleRequest({
       path: "usage_events",
       method: "POST",
       body: {
-        eventId: e,
+        eventId: t,
         eventName: n,
         ...s ? { customerId: s } : {},
         properties: o
@@ -169,12 +177,12 @@ class q {
    * @param {UsageEvent[]} params.events - The events to send
    * @returns {Promise<boolean>} true if the events were sent successfully
    */
-  async sendUsageEvents({ events: e }) {
+  async sendUsageEvents({ events: t }) {
     return await this.mantleRequest({
       path: "usage_events",
       method: "POST",
       body: {
-        events: e
+        events: t
       }
     });
   }
@@ -188,12 +196,12 @@ class q {
    * @param {string} params.returnUrl - The URL to redirect to after a checkout has completed
    * @returns {Promise<SetupIntent>} a promise that resolves to the created `SetupIntent` with `clientSecret`
    */
-  async addPaymentMethod({ returnUrl: e }) {
+  async addPaymentMethod({ returnUrl: t }) {
     return await this.mantleRequest({
       path: "payment_methods",
       method: "POST",
-      ...e && {
-        body: { returnUrl: e }
+      ...t && {
+        body: { returnUrl: t }
       }
     });
   }
@@ -203,20 +211,44 @@ class q {
    * @param {string} [period] - The interval to get the report for, one of "daily", "weekly", "monthly"
    * @returns {Promise<Object>} a promise that resolves to the usage metric report
    */
-  async getUsageMetricReport({ id: e, period: n }) {
+  async getUsageMetricReport({ id: t, period: n }) {
     return await this.mantleRequest({
-      path: `usage_events/${e}/report`,
+      path: `usage_events/${t}/report`,
       ...n && { body: { period: n } }
     });
   }
 }
-var L = {
-  MantleClient: q
+const F = {
+  /**
+   * The subscription was created and one of two things will happen:
+   * 1. If the subscription has a trial, the first invoice will be paid after the trial ends
+   * 2. If the subscription does not have a trial, the first invoice will be paid immediately
+   * In both cases, the consumer should redirect to the `returnUrl` provided with the subscription to activate the subscription
+   * @type {string}
+   */
+  finalize: "finalize",
+  /**
+   * The subscription was created with a trial. The consumer should pass the returned `clientSecret` to Stripe Elements in order
+   * to collect payment method details and complete the subscription. The consumer should pass the `returnUrl` to the
+   * `Stripe#confirmSetup` method to activate the subscription and vault the card. The first invoice will be paid after the trial ends.
+   * @type {string}
+   */
+  setup: "setup",
+  /**
+   * The subscription was created without a trial. The consumer should pass the returned `clientSecret` to Stripe Elements in order
+   * to collect payment method details and complete the subscription. The consumer should pass the `returnUrl` to the
+   * `Stripe#confirmPayment` method to activate the subscription and vault the card. The first invoice will be paid immediately.
+   */
+  subscribe: "subscribe"
+};
+var $ = {
+  MantleClient: L,
+  SubscriptionConfirmType: F
 };
 const l = {
   Annual: "ANNUAL",
   Every30Days: "EVERY_30_DAYS"
-}, _ = {
+}, B = {
   Public: "public",
   CustomerTag: "customerTag",
   ShopifyPlan: "shopifyPlan",
@@ -254,52 +286,62 @@ const l = {
   Subscription: "Subscription",
   SubscriptionCancelled: "Subscription cancelled",
   UsageCharges: "Usage charges"
-}, g = R(), F = ({ feature: t, count: e = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? e < t.value || t.value === -1 : !1, k = ({
-  appId: t,
-  customerApiToken: e,
+}, g = R(), N = ({ feature: e, count: t = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? t < e.value || e.value === -1 : !1, I = ({
+  appId: e,
+  customerApiToken: t,
   apiUrl: n = "https://appapi.heymantle.com/v1",
   children: s,
   i18n: o = m
 }) => {
-  const i = new L.MantleClient({ appId: t, customerApiToken: e, apiUrl: n }), [a, p] = h(null), [d, c] = h(!0), y = async () => {
+  const i = new $.MantleClient({ appId: e, customerApiToken: t, apiUrl: n }), [r, p] = h(null), [d, c] = h(!0), y = async () => {
     try {
       c(!0);
-      const r = await i.getCustomer();
-      p(r);
-    } catch (r) {
-      console.error("[MantleProvider] Error fetching customer: ", r);
+      const a = await i.getCustomer();
+      p(a);
+    } catch (a) {
+      console.error("[MantleProvider] Error fetching customer: ", a);
     } finally {
       c(!1);
     }
-  }, v = async (r) => {
-    await i.sendUsageEvent(r);
-  }, P = async ({ usageId: r, period: u }) => await i.getUsageMetricReport({ id: r, period: u }), w = async ({ planId: r, planIds: u, discountId: M, billingProvider: x, returnUrl: A }) => await i.subscribe({
-    planId: r,
+  }, f = async (a) => {
+    await i.sendUsageEvent(a);
+  }, v = async ({ usageId: a, period: u }) => await i.getUsageMetricReport({ id: a, period: u }), P = async ({
+    planId: a,
     planIds: u,
     discountId: M,
     billingProvider: x,
-    returnUrl: A
-  }), S = async () => await i.cancelSubscription(), f = async ({ returnUrl: r }) => await i.addPaymentMethod({ returnUrl: r });
-  D(() => {
-    e && y();
-  }, [e]);
-  const C = (a == null ? void 0 : a.plans) || [], E = a == null ? void 0 : a.subscription;
-  return /* @__PURE__ */ T.createElement(
+    returnUrl: A,
+    useSavedPaymentMethod: T = !1
+  }) => await i.subscribe({
+    planId: a,
+    planIds: u,
+    discountId: M,
+    billingProvider: x,
+    returnUrl: A,
+    useSavedPaymentMethod: T
+  }), S = async ({ cancelReason: a }) => await i.cancelSubscription({
+    ...a && { cancelReason: a }
+  }), w = async ({ returnUrl: a }) => await i.addPaymentMethod({ returnUrl: a });
+  U(() => {
+    t && y();
+  }, [t]);
+  const C = (r == null ? void 0 : r.plans) || [], E = r == null ? void 0 : r.subscription;
+  return /* @__PURE__ */ D.createElement(
     g.Provider,
     {
       value: {
-        customer: a,
+        customer: r,
         subscription: E,
         plans: C,
         loading: d,
         i18n: { ...m, ...o },
-        sendUsageEvent: v,
-        getUsageReport: P,
-        subscribe: w,
+        sendUsageEvent: f,
+        getUsageReport: v,
+        subscribe: P,
         cancelSubscription: S,
-        addPaymentMethod: f,
-        isFeatureEnabled: ({ featureKey: r, count: u = 0 }) => a != null && a.features[r] ? F({ feature: a.features[r], count: u }) : !1,
-        limitForFeature: ({ featureKey: r }) => a != null && a.features[r] && currentPlan.features[r].type === "limit" ? a.features[r].value : -1,
+        addPaymentMethod: w,
+        isFeatureEnabled: ({ featureKey: a, count: u = 0 }) => r != null && r.features[a] ? N({ feature: r.features[a], count: u }) : !1,
+        limitForFeature: ({ featureKey: a }) => r != null && r.features[a] && currentPlan.features[a].type === "limit" ? r.features[a].value : -1,
         refetch: async () => {
           await y();
         }
@@ -307,64 +349,64 @@ const l = {
     },
     s
   );
-}, B = () => {
-  const t = U(g);
-  if (t === void 0)
+}, j = () => {
+  const e = q(g);
+  if (e === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
-  return t;
-}, b = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, I = (t, e) => b(e) - b(t) || t.name.localeCompare(e.name), $ = (t = "USD") => new Intl.NumberFormat("en-US", {
+  return e;
+}, b = (e) => e.type === "boolean" && e.value == !0 || e.type === "limit" && e.value !== 0, G = (e, t) => b(t) - b(e) || e.name.localeCompare(t.name), Y = (e = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: t,
+  currency: e,
   notation: "standard"
-}), j = (t, e = "USD", n = !0) => {
-  let s = $(e).format(t);
+}), X = (e, t = "USD", n = !0) => {
+  let s = Y(t).format(e);
   return n && (s = s.replace(/\.00$/, "")), s;
-}, N = (t = l.Every30Days) => {
-  switch (t) {
+}, O = (e = l.Every30Days) => {
+  switch (e) {
     case l.Annual:
       return "year";
     case l.Every30Days:
     default:
       return "month";
   }
-}, Y = (t = l.Every30Days) => {
-  switch (t) {
+}, _ = (e = l.Every30Days) => {
+  switch (e) {
     case l.Annual:
       return "yr";
     case l.Every30Days:
     default:
       return "mo";
   }
-}, G = ({
-  interval: t = l.Every30Days,
-  useShortFormPlanIntervals: e = !0
-}) => e ? Y(t) : N(t), X = ({ plan: t, customFieldKey: e = "recommended" }) => {
+}, H = ({
+  interval: e = l.Every30Days,
+  useShortFormPlanIntervals: t = !0
+}) => t ? _(e) : O(e), J = ({ plan: e, customFieldKey: t = "recommended" }) => {
   var n;
-  return !!((n = t.customFields) != null && n[e]);
-}, H = ({ plan: t, customFieldKey: e = "buttonLabel" }) => {
+  return !!((n = e.customFields) != null && n[t]);
+}, K = ({ plan: e, customFieldKey: t = "buttonLabel" }) => {
   var n;
-  return ((n = t.customFields) == null ? void 0 : n[e]) || m.SelectPlan;
-}, J = ({ plan: t }) => {
-  var e;
-  return ((e = t.discounts) == null ? void 0 : e.length) > 0 ? t.discounts.reduce(
+  return ((n = e.customFields) == null ? void 0 : n[t]) || m.SelectPlan;
+}, V = ({ plan: e }) => {
+  var t;
+  return ((t = e.discounts) == null ? void 0 : t.length) > 0 ? e.discounts.reduce(
     (n, s) => n.discountedAmount < s.discountedAmount ? n : s
   ) : void 0;
-}, K = (t = 4) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, V = (t = 4) => t % 4 === 0 ? 4 : t % 3 === 0 ? 3 : t % 2 === 0 ? 2 : t === 1 ? 1 : 4;
+}, W = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, Q = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
 export {
   m as Labels,
-  k as MantleProvider,
-  _ as PlanAvailability,
+  I as MantleProvider,
+  B as PlanAvailability,
   l as PlanInterval,
-  V as columnCount,
-  K as columnSpan,
-  H as customButtonLabel,
+  Q as columnCount,
+  W as columnSpan,
+  K as customButtonLabel,
   b as featureEnabled,
-  I as featureSort,
-  J as highestDiscount,
-  G as intervalLabel,
-  N as intervalLabelLong,
-  Y as intervalLabelShort,
-  X as isRecommendedPlan,
-  j as money,
-  B as useMantle
+  G as featureSort,
+  V as highestDiscount,
+  H as intervalLabel,
+  O as intervalLabelLong,
+  _ as intervalLabelShort,
+  J as isRecommendedPlan,
+  X as money,
+  j as useMantle
 };

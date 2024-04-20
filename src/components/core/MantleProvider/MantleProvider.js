@@ -68,7 +68,7 @@ export const MantleProvider = ({
 
   /**
    * @type {GetUsageReportCallback}
-  */
+   */
   const getUsageReport = async ({ usageId, period }) => {
     return await mantleClient.getUsageMetricReport({ id: usageId, period });
   };
@@ -76,21 +76,31 @@ export const MantleProvider = ({
   /**
    * @type {SubscribeCallback}
    */
-  const subscribe = async ({ planId, planIds, discountId, billingProvider, returnUrl }) => {
+  const subscribe = async ({
+    planId,
+    planIds,
+    discountId,
+    billingProvider,
+    returnUrl,
+    useSavedPaymentMethod = false,
+  }) => {
     return await mantleClient.subscribe({
       planId,
       planIds,
       discountId,
       billingProvider,
       returnUrl,
+      useSavedPaymentMethod,
     });
   };
 
   /**
    * @type {CancelSubscriptionCallback}
    */
-  const cancelSubscription = async () => {
-    return await mantleClient.cancelSubscription();
+  const cancelSubscription = async ({ cancelReason }) => {
+    return await mantleClient.cancelSubscription({
+      ...(cancelReason && { cancelReason }),
+    });
   };
 
   /**
@@ -212,11 +222,14 @@ export const useMantle = () => {
  * @param {string} [params.discountId] - The ID of the discount to apply
  * @param {string} [params.billingProvider] - The billing provider to use
  * @param {string} [params.returnUrl] - The URL to return to after subscribing
+ * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the customer
  * @returns {Promise<Subscription>} a promise that resolves to the created subscription
  */
 
 /**
  * @callback CancelSubscriptionCallback - Cancels the current subscription for the authorized customer
+ * @param {Object} params
+ * @param {string} [params.cancelReason] - The reason for canceling the subscription
  * @returns {Promise<Subscription>} a promise that resolves to the canceled subscription
  */
 

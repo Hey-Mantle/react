@@ -90,11 +90,14 @@ export type SubscribeCallback = (params: {
     discountId?: string;
     billingProvider?: string;
     returnUrl?: string;
+    useSavedPaymentMethod?: boolean;
 }) => Promise<Subscription>;
 /**
  * - Cancels the current subscription for the authorized customer
  */
-export type CancelSubscriptionCallback = () => Promise<Subscription>;
+export type CancelSubscriptionCallback = (params: {
+    cancelReason?: string;
+}) => Promise<Subscription>;
 /**
  * Initial step to start the process of connecting a new payment method from an external billing provider.
  * For Stripe billing, this creates a `SetupIntent` which contains a `clientSecret`, which can be used to initialize
