@@ -13,6 +13,7 @@ export type Plan = import('@heymantle/client').Plan;
 export type UsageEvent = import('@heymantle/client').UsageEvent;
 export type PaymentMethod = import('@heymantle/client').PaymentMethod;
 export type SetupIntent = import('@heymantle/client').SetupIntent;
+export type HostedSession = import('@heymantle/client').HostedSession;
 /**
  * - The MantleContext object, which encapsulates functionality exposed by `MantleProvider`
  */
@@ -65,6 +66,10 @@ export type TMantleContext = {
      * - Get the limit for a feature
      */
     limitForFeature: FeatureLimitCallback;
+    /**
+     * - Create a hosted session
+     */
+    createHostedSession: HostedSessionCallback;
 };
 /**
  * - Refetch the current customer, useful for updating the customer after a mutation
@@ -121,5 +126,12 @@ export type FeatureEnabledCallback = (params: {
 export type FeatureLimitCallback = (params: {
     featureKey: string;
 }) => number;
+/**
+ * - Create a hosted session
+ */
+export type HostedSessionCallback = (params: {
+    type: string;
+    config: any;
+}) => Promise<HostedSession>;
 import React from "react";
 //# sourceMappingURL=MantleProvider.d.ts.map

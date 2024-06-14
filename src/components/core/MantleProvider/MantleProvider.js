@@ -110,6 +110,13 @@ export const MantleProvider = ({
     return await mantleClient.addPaymentMethod({ returnUrl });
   };
 
+  /**
+   * @type {CreateHostedSessionCallback}
+   */
+  const createHostedSession = async ({ type, config }) => {
+    return await mantleClient.createHostedSession({ type, config });
+  };
+
   useEffect(() => {
     if (customerApiToken) {
       fetchCustomer();
@@ -132,6 +139,7 @@ export const MantleProvider = ({
         subscribe,
         cancelSubscription,
         addPaymentMethod,
+        createHostedSession,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
             return evaluateFeature({ feature: customer.features[featureKey], count });
@@ -176,6 +184,7 @@ export const useMantle = () => {
  * @typedef {import('@heymantle/client').UsageEvent} UsageEvent
  * @typedef {import('@heymantle/client').PaymentMethod} PaymentMethod
  * @typedef {import('@heymantle/client').SetupIntent} SetupIntent
+ * @typedef {import('@heymantle/client').HostedSession} HostedSession
  */
 
 /**
@@ -192,6 +201,7 @@ export const useMantle = () => {
  * @property {AddPaymentMethodCallback} addPaymentMethod - Start the process of adding a new payment method using an external billing provider
  * @property {FeatureEnabledCallback} isFeatureEnabled - Check if a feature is enabled
  * @property {FeatureLimitCallback} limitForFeature - Get the limit for a feature
+ * @property {HostedSessionCallback} createHostedSession - Create a hosted session
  */
 
 /**
@@ -257,4 +267,12 @@ export const useMantle = () => {
  * @param {Object} params
  * @param {string} params.featureKey - The key of the feature to evaluate
  * @returns {number} the max limit for this feature, returns -1 if there is no limit
+ */
+
+/**
+ * @callback HostedSessionCallback - Create a hosted session
+ * @param {Object} params
+ * @param {string} params.type - The type of hosted session to create
+ * @param {Object} params.config - The configuration for the hosted session
+ * @returns {Promise<HostedSession>} a promise that resolves to the hosted session
  */
