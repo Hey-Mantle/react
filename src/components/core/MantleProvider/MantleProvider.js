@@ -111,7 +111,7 @@ export const MantleProvider = ({
   };
 
   /**
-   * @type {CreateHostedSessionCallback}
+   * @type {HostedSessionCallback}
    */
   const createHostedSession = async ({ type, config }) => {
     return await mantleClient.createHostedSession({ type, config });
@@ -185,6 +185,7 @@ export const useMantle = () => {
  * @typedef {import('@heymantle/client').PaymentMethod} PaymentMethod
  * @typedef {import('@heymantle/client').SetupIntent} SetupIntent
  * @typedef {import('@heymantle/client').HostedSession} HostedSession
+ * @typedef {import('@heymantle/client').Address} Address
  */
 
 /**

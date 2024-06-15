@@ -14,6 +14,7 @@ export type UsageEvent = import('@heymantle/client').UsageEvent;
 export type PaymentMethod = import('@heymantle/client').PaymentMethod;
 export type SetupIntent = import('@heymantle/client').SetupIntent;
 export type HostedSession = import('@heymantle/client').HostedSession;
+export type Address = import('@heymantle/client').Address;
 /**
  * - The MantleContext object, which encapsulates functionality exposed by `MantleProvider`
  */
