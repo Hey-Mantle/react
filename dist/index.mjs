@@ -349,7 +349,7 @@ const u = {
     billingProvider: x,
     returnUrl: A,
     useSavedPaymentMethod: R
-  }), P = async ({ cancelReason: a }) => await i.cancelSubscription({
+  }), P = async ({ cancelReason: a } = {}) => await i.cancelSubscription({
     ...a && { cancelReason: a }
   }), v = async ({ returnUrl: a }) => await i.addPaymentMethod({ returnUrl: a }), C = async ({ type: a, config: c }) => await i.createHostedSession({ type: a, config: c });
   q(() => {

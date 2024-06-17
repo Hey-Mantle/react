@@ -97,7 +97,7 @@ export const MantleProvider = ({
   /**
    * @type {CancelSubscriptionCallback}
    */
-  const cancelSubscription = async ({ cancelReason }) => {
+  const cancelSubscription = async ({ cancelReason } = {}) => {
     return await mantleClient.cancelSubscription({
       ...(cancelReason && { cancelReason }),
     });
