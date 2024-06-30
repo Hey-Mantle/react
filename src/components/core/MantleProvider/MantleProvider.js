@@ -114,7 +114,15 @@ export const MantleProvider = ({
    * @type {HostedSessionCallback}
    */
   const createHostedSession = async ({ type, config }) => {
-    return await mantleClient.createHostedSession({ type, config });
+    const searchParams = new URL(document.location.toString()).searchParams;
+    const locale = searchParams.get("locale");
+    return await mantleClient.createHostedSession({
+      type,
+      config: {
+        ...(locale ? { locale } : {}),
+        ...(config || {}),
+      },
+    });
   };
 
   useEffect(() => {
