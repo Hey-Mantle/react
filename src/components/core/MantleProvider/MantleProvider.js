@@ -38,6 +38,8 @@ export const MantleProvider = ({
   apiUrl = "https://appapi.heymantle.com/v1",
   children,
   i18n = Labels,
+  waitForCustomer = false,
+  loadingComponent = null,
 }) => {
   /**
    * @type {MantleClient}
@@ -133,6 +135,10 @@ export const MantleProvider = ({
 
   const plans = customer?.plans || [];
   const subscription = customer?.subscription;
+
+  if (waitForCustomer && loading) {
+    return loadingComponent || '';
+  }
 
   return (
     <MantleContext.Provider

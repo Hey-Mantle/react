@@ -1,10 +1,10 @@
-export function MantleProvider({ appId, customerApiToken, apiUrl, children, i18n, }: {
+export function MantleProvider({ appId, customerApiToken, apiUrl, children, i18n, waitForCustomer, loadingComponent, }: {
     appId: string;
     customerApiToken: string;
     apiUrl?: string;
     i18n: any;
     children: React.ReactNode;
-}): React.JSX.Element;
+}): any;
 export function useMantle(): TMantleContext;
 export type Feature = import('@heymantle/client').Feature;
 export type Customer = import('@heymantle/client').Customer;
