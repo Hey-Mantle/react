@@ -85,6 +85,7 @@ export const MantleProvider = ({
     billingProvider,
     returnUrl,
     useSavedPaymentMethod = false,
+    trialDays,
   }) => {
     return await mantleClient.subscribe({
       planId,
@@ -93,6 +94,7 @@ export const MantleProvider = ({
       billingProvider,
       returnUrl,
       useSavedPaymentMethod,
+      trialDays,
     });
   };
 
@@ -248,6 +250,7 @@ export const useMantle = () => {
  * @param {string} [params.billingProvider] - The billing provider to use
  * @param {string} [params.returnUrl] - The URL to return to after subscribing
  * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the customer
+ * @param {number} [params.trialDays] - The number of trial days to offer
  * @returns {Promise<Subscription>} a promise that resolves to the created subscription
  */
 
