@@ -30,6 +30,8 @@ const evaluateFeature = ({ feature, count = 0 }) => {
  * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the `identify` endpoint
  * @param {string} [params.apiUrl] - The Mantle API URL to use
  * @param {Object} params.i18n - The i18n object to use for labels
+ * @param {boolean} [params.waitForCustomer] - Whether to wait for the customer to be fetched
+ * @param {React.ReactNode} [params.loadingComponent] - The component to render while waiting for the customer to be fetched
  * @param {React.ReactNode} params.children - The children to render
  */
 export const MantleProvider = ({
