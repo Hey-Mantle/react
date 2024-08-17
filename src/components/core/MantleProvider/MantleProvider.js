@@ -71,6 +71,13 @@ export const MantleProvider = ({
   };
 
   /**
+  * @type {SendUsageEventCallback}
+  */
+  const sendUsageEvents = async (usageEvent) => {
+    await mantleClient.sendUsageEvents(usageEvent);
+  };
+
+  /**
    * @type {GetUsageReportCallback}
    */
   const getUsageReport = async ({ usageId, period }) => {
