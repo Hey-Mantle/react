@@ -160,6 +160,7 @@ export const MantleProvider = ({
         loading,
         i18n: { ...Labels, ...i18n },
         sendUsageEvent,
+        sendUsageEvents,
         getUsageReport,
         subscribe,
         cancelSubscription,
@@ -221,6 +222,7 @@ export const useMantle = () => {
  * @property {boolean} loading - Whether the current customer is loading
  * @property {RefetchCallback} refetch - Refetch the current customer
  * @property {SendUsageEventCallback} sendUsageEvent - Send a new usage event to Mantle
+ * @property {SendUsageEventCallback} sendUsageEvents - Send a set of new usage event to Mantle
  * @property {GetUsageReportCallback} getUsageReport - Get a usage report for a usage metric
  * @property {SubscribeCallback} subscribe - Subscribe to a new plan
  * @property {CancelSubscriptionCallback} cancelSubscription - Cancel the current subscription
