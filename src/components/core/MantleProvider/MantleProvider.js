@@ -197,6 +197,7 @@ export const useMantle = () => {
 /**
  * @typedef {import('@heymantle/client').Feature} Feature
  * @typedef {import('@heymantle/client').Customer} Customer
+ * @typedef {import('@heymantle/client').Review} Review
  * @typedef {import('@heymantle/client').Subscription} Subscription
  * @typedef {import('@heymantle/client').Plan} Plan
  * @typedef {import('@heymantle/client').UsageEvent} UsageEvent

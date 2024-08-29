@@ -10,6 +10,7 @@ export function MantleProvider({ appId, customerApiToken, apiUrl, children, i18n
 export function useMantle(): TMantleContext;
 export type Feature = import('@heymantle/client').Feature;
 export type Customer = import('@heymantle/client').Customer;
+export type Review = import('@heymantle/client').Review;
 export type Subscription = import('@heymantle/client').Subscription;
 export type Plan = import('@heymantle/client').Plan;
 export type UsageEvent = import('@heymantle/client').UsageEvent;
