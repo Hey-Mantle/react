@@ -2,7 +2,7 @@ export function MantleProvider({ appId, customerApiToken, apiUrl, children, i18n
     appId: string;
     customerApiToken: string;
     apiUrl?: string;
-    i18n: any;
+    i18n?: any;
     waitForCustomer?: boolean;
     loadingComponent?: React.ReactNode;
     children: React.ReactNode;
