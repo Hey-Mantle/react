@@ -199,7 +199,9 @@ export const useMantle = () => {
  * @typedef {import('@heymantle/client').Customer} Customer
  * @typedef {import('@heymantle/client').Review} Review
  * @typedef {import('@heymantle/client').Subscription} Subscription
+ * @typedef {import('@heymantle/client').SubscriptionLineItem} SubscriptionLineItem
  * @typedef {import('@heymantle/client').Plan} Plan
+ * @typedef {import('@heymantle/client').Discount} Discount
  * @typedef {import('@heymantle/client').UsageEvent} UsageEvent
  * @typedef {import('@heymantle/client').PaymentMethod} PaymentMethod
  * @typedef {import('@heymantle/client').SetupIntent} SetupIntent
