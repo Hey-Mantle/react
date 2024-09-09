@@ -33,6 +33,7 @@ const evaluateFeature = ({ feature, count = 0 }) => {
  * @param {boolean} [params.waitForCustomer] - Whether to wait for the customer to be fetched
  * @param {React.ReactNode} [params.loadingComponent] - The component to render while waiting for the customer to be fetched
  * @param {React.ReactNode} params.children - The children to render
+ * @returns {React.ReactNode} the MantleProvider component
  */
 export const MantleProvider = ({
   appId,

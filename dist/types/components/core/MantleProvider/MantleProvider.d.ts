@@ -6,7 +6,7 @@ export function MantleProvider({ appId, customerApiToken, apiUrl, children, i18n
     waitForCustomer?: boolean;
     loadingComponent?: React.ReactNode;
     children: React.ReactNode;
-}): string | number | true | Iterable<React.ReactNode> | React.JSX.Element;
+}): React.ReactNode;
 export function useMantle(): TMantleContext;
 export type Feature = import('@heymantle/client').Feature;
 export type Customer = import('@heymantle/client').Customer;
