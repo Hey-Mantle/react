@@ -89,6 +89,7 @@ export const MantleProvider = ({
     returnUrl,
     useSavedPaymentMethod = false,
     trialDays,
+    hosted = true,
   }) => {
     return await mantleClient.subscribe({
       planId,
@@ -98,6 +99,7 @@ export const MantleProvider = ({
       returnUrl,
       useSavedPaymentMethod,
       trialDays,
+      hosted,
     });
   };
 
@@ -142,7 +144,7 @@ export const MantleProvider = ({
   const subscription = customer?.subscription;
 
   if (waitForCustomer && loading) {
-    return loadingComponent || '';
+    return loadingComponent || "";
   }
 
   return (
@@ -257,6 +259,7 @@ export const useMantle = () => {
  * @param {string} [params.returnUrl] - The URL to return to after subscribing
  * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the customer
  * @param {number} [params.trialDays] - The number of trial days to offer
+ * @param {boolean} [params.hosted] - Whether or not to use Stripe hosted checkout. Not applicable for Shopify billing as it always uses Shopify's charge screen. Defaults to true.
  * @returns {Promise<Subscription>} a promise that resolves to the created subscription
  */
 

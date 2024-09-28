@@ -1,5 +1,5 @@
-import L, { createContext as F, useState as v, useEffect as $, useContext as N } from "react";
-class O {
+import F, { createContext as $, useState as v, useEffect as N, useContext as O } from "react";
+class Y {
   /**
    * Creates a new MantleClient. If being used in the browser, or any frontend code, never use the apiKey parameter,
    * always use the customerApiToken for the customer that is currently authenticated on the frontend.
@@ -124,6 +124,7 @@ class O {
    * @param {string} [params.billingProvider] - The name of the billing provider to use, if none is provided, use sensible default
    * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the subscription if available
    * @param {number} [params.trialDays] - The number of days to trial the subscription for
+   * @param {boolean} [params.hosted] - Whether or not to use Stripe checkout for the subscription. Not applicable for Shopify subscriptions as they are always hosted. Defaults to true
    * @returns {Promise<Subscription>} a promise that resolves to the created subscription
    */
   async subscribe({
@@ -133,7 +134,8 @@ class O {
     returnUrl: a,
     billingProvider: c,
     useSavedPaymentMethod: d = !1,
-    trialDays: i
+    trialDays: i,
+    hosted: o = !0
   }) {
     return await this.mantleRequest({
       path: "subscriptions",
@@ -145,7 +147,8 @@ class O {
         returnUrl: a,
         billingProvider: c,
         useSavedPaymentMethod: d,
-        trialDays: i
+        trialDays: i,
+        hosted: o
       }
     });
   }
@@ -275,7 +278,7 @@ class O {
     };
   }
 }
-const Y = {
+const _ = {
   /**
    * The subscription was created and one of two things will happen:
    * 1. If the subscription has a trial, the first invoice will be paid after the trial ends
@@ -298,14 +301,14 @@ const Y = {
    */
   subscribe: "subscribe"
 };
-var _ = {
-  MantleClient: O,
-  SubscriptionConfirmType: Y
+var k = {
+  MantleClient: Y,
+  SubscriptionConfirmType: _
 };
 const u = {
   Annual: "ANNUAL",
   Every30Days: "EVERY_30_DAYS"
-}, G = {
+}, X = {
   Public: "public",
   CustomerTag: "customerTag",
   ShopifyPlan: "shopifyPlan",
@@ -343,7 +346,7 @@ const u = {
   Subscription: "Subscription",
   SubscriptionCancelled: "Subscription cancelled",
   UsageCharges: "Usage charges"
-}, E = F(), k = ({ feature: e, count: t = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? t < e.value || e.value === -1 : !1, X = ({
+}, E = $(), B = ({ feature: e, count: t = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? t < e.value || e.value === -1 : !1, J = ({
   appId: e,
   customerApiToken: t,
   apiUrl: n = "https://appapi.heymantle.com/v1",
@@ -352,7 +355,7 @@ const u = {
   waitForCustomer: c = !1,
   loadingComponent: d = null
 }) => {
-  const i = new _.MantleClient({ appId: e, customerApiToken: t, apiUrl: n }), [o, b] = v(null), [p, m] = v(!0), h = async () => {
+  const i = new k.MantleClient({ appId: e, customerApiToken: t, apiUrl: n }), [o, b] = v(null), [p, m] = v(!0), h = async () => {
     try {
       m(!0);
       const r = await i.getCustomer();
@@ -371,7 +374,8 @@ const u = {
     billingProvider: y,
     returnUrl: U,
     useSavedPaymentMethod: D = !1,
-    trialDays: q
+    trialDays: q,
+    hosted: L = !0
   }) => await i.subscribe({
     planId: r,
     planIds: l,
@@ -379,7 +383,8 @@ const u = {
     billingProvider: y,
     returnUrl: U,
     useSavedPaymentMethod: D,
-    trialDays: q
+    trialDays: q,
+    hosted: L
   }), M = async ({ cancelReason: r } = {}) => await i.cancelSubscription({
     ...r && { cancelReason: r }
   }), T = async ({ returnUrl: r }) => await i.addPaymentMethod({ returnUrl: r }), x = async ({ type: r, config: l }) => {
@@ -392,11 +397,11 @@ const u = {
       }
     });
   };
-  $(() => {
+  N(() => {
     t && h();
   }, [t]);
   const A = (o == null ? void 0 : o.plans) || [], R = o == null ? void 0 : o.subscription;
-  return c && p ? d || "" : /* @__PURE__ */ L.createElement(
+  return c && p ? d || "" : /* @__PURE__ */ F.createElement(
     E.Provider,
     {
       value: {
@@ -411,7 +416,7 @@ const u = {
         cancelSubscription: M,
         addPaymentMethod: T,
         createHostedSession: x,
-        isFeatureEnabled: ({ featureKey: r, count: l = 0 }) => o != null && o.features[r] ? k({ feature: o.features[r], count: l }) : !1,
+        isFeatureEnabled: ({ featureKey: r, count: l = 0 }) => o != null && o.features[r] ? B({ feature: o.features[r], count: l }) : !1,
         limitForFeature: ({ featureKey: r }) => o != null && o.features[r] && currentPlan.features[r].type === "limit" ? o.features[r].value : -1,
         refetch: async () => {
           await h();
@@ -420,19 +425,19 @@ const u = {
     },
     s
   );
-}, J = () => {
-  const e = N(E);
+}, K = () => {
+  const e = O(E);
   if (e === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return e;
-}, C = (e) => e.type === "boolean" && e.value == !0 || e.type === "limit" && e.value !== 0, K = (e, t) => C(t) - C(e) || e.name.localeCompare(t.name), B = (e = "USD") => new Intl.NumberFormat("en-US", {
+}, C = (e) => e.type === "boolean" && e.value == !0 || e.type === "limit" && e.value !== 0, V = (e, t) => C(t) - C(e) || e.name.localeCompare(t.name), H = (e = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: e,
   notation: "standard"
-}), V = (e, t = "USD", n = !0) => {
-  let s = B(t).format(e);
+}), W = (e, t = "USD", n = !0) => {
+  let s = H(t).format(e);
   return n && (s = s.replace(/\.00$/, "")), s;
-}, H = (e = u.Every30Days) => {
+}, I = (e = u.Every30Days) => {
   switch (e) {
     case u.Annual:
       return "year";
@@ -440,7 +445,7 @@ const u = {
     default:
       return "month";
   }
-}, I = (e = u.Every30Days) => {
+}, j = (e = u.Every30Days) => {
   switch (e) {
     case u.Annual:
       return "yr";
@@ -448,36 +453,36 @@ const u = {
     default:
       return "mo";
   }
-}, W = ({
+}, Q = ({
   interval: e = u.Every30Days,
   useShortFormPlanIntervals: t = !0
-}) => t ? I(e) : H(e), Q = ({ plan: e, customFieldKey: t = "recommended" }) => {
+}) => t ? j(e) : I(e), Z = ({ plan: e, customFieldKey: t = "recommended" }) => {
   var n;
   return !!((n = e.customFields) != null && n[t]);
-}, Z = ({ plan: e, customFieldKey: t = "buttonLabel" }) => {
+}, z = ({ plan: e, customFieldKey: t = "buttonLabel" }) => {
   var n;
   return ((n = e.customFields) == null ? void 0 : n[t]) || P.SelectPlan;
-}, z = ({ plan: e }) => {
+}, ee = ({ plan: e }) => {
   var t;
   return ((t = e.discounts) == null ? void 0 : t.length) > 0 ? e.discounts.reduce(
     (n, s) => n.discountedAmount < s.discountedAmount ? n : s
   ) : void 0;
-}, ee = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, te = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
+}, te = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, ne = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
 export {
   P as Labels,
-  X as MantleProvider,
-  G as PlanAvailability,
+  J as MantleProvider,
+  X as PlanAvailability,
   u as PlanInterval,
-  te as columnCount,
-  ee as columnSpan,
-  Z as customButtonLabel,
+  ne as columnCount,
+  te as columnSpan,
+  z as customButtonLabel,
   C as featureEnabled,
-  K as featureSort,
-  z as highestDiscount,
-  W as intervalLabel,
-  H as intervalLabelLong,
-  I as intervalLabelShort,
-  Q as isRecommendedPlan,
-  V as money,
-  J as useMantle
+  V as featureSort,
+  ee as highestDiscount,
+  Q as intervalLabel,
+  I as intervalLabelLong,
+  j as intervalLabelShort,
+  Z as isRecommendedPlan,
+  W as money,
+  K as useMantle
 };

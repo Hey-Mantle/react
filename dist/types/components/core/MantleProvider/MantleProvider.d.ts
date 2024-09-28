@@ -103,6 +103,7 @@ export type SubscribeCallback = (params: {
     returnUrl?: string;
     useSavedPaymentMethod?: boolean;
     trialDays?: number;
+    hosted?: boolean;
 }) => Promise<Subscription>;
 /**
  * - Cancels the current subscription for the authorized customer
