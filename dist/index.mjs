@@ -423,7 +423,7 @@ const u = {
         addPaymentMethod: w,
         createHostedSession: x,
         isFeatureEnabled: ({ featureKey: r, count: l = 0 }) => o != null && o.features[r] ? B({ feature: o.features[r], count: l }) : !1,
-        limitForFeature: ({ featureKey: r }) => o != null && o.features[r] && currentPlan.features[r].type === "limit" ? o.features[r].value : -1,
+        limitForFeature: ({ featureKey: r }) => o != null && o.features[r] && o.features[r].type === "limit" ? o.features[r].value : -1,
         refetch: async () => {
           await h();
         }

@@ -168,7 +168,7 @@ export const MantleProvider = ({
           return false;
         },
         limitForFeature: ({ featureKey }) => {
-          if (customer?.features[featureKey] && currentPlan.features[featureKey].type === "limit") {
+          if (!!customer?.features[featureKey] && customer.features[featureKey].type === "limit") {
             return customer.features[featureKey].value;
           }
           return -1;
