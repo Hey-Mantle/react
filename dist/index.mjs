@@ -411,6 +411,7 @@ const u = {
     T.Provider,
     {
       value: {
+        client: i,
         customer: o,
         subscription: R,
         plans: A,
@@ -422,7 +423,10 @@ const u = {
         cancelSubscription: P,
         addPaymentMethod: w,
         createHostedSession: x,
-        isFeatureEnabled: ({ featureKey: r, count: l = 0 }) => o != null && o.features[r] ? B({ feature: o.features[r], count: l }) : !1,
+        isFeatureEnabled: ({ featureKey: r, count: l = 0 }) => o != null && o.features[r] ? B({
+          feature: o.features[r],
+          count: l
+        }) : !1,
         limitForFeature: ({ featureKey: r }) => o != null && o.features[r] && o.features[r].type === "limit" ? o.features[r].value : -1,
         refetch: async () => {
           await h();

@@ -150,6 +150,7 @@ export const MantleProvider = ({
   return (
     <MantleContext.Provider
       value={{
+        client: mantleClient,
         customer,
         subscription,
         plans,
@@ -163,12 +164,18 @@ export const MantleProvider = ({
         createHostedSession,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
-            return evaluateFeature({ feature: customer.features[featureKey], count });
+            return evaluateFeature({
+              feature: customer.features[featureKey],
+              count,
+            });
           }
           return false;
         },
         limitForFeature: ({ featureKey }) => {
-          if (!!customer?.features[featureKey] && customer.features[featureKey].type === "limit") {
+          if (
+            !!customer?.features[featureKey] &&
+            customer.features[featureKey].type === "limit"
+          ) {
             return customer.features[featureKey].value;
           }
           return -1;
