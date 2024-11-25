@@ -221,6 +221,7 @@ export const useMantle = () => {
 
 /**
  * @typedef TMantleContext - The MantleContext object, which encapsulates functionality exposed by `MantleProvider`
+ * @property {MantleClient} client - The MantleClient instance
  * @property {Customer} customer - The current customer
  * @property {Subscription} subscription - The current subscription
  * @property {Array.<Plan>} plans - The available plans

@@ -25,6 +25,10 @@ export type Address = import('@heymantle/client').Address;
  */
 export type TMantleContext = {
     /**
+     * - The MantleClient instance
+     */
+    client: MantleClient;
+    /**
      * - The current customer
      */
     customer: Customer;
@@ -142,4 +146,5 @@ export type HostedSessionCallback = (params: {
     config: any;
 }) => Promise<HostedSession>;
 import React from "react";
+import { MantleClient } from "@heymantle/client";
 //# sourceMappingURL=MantleProvider.d.ts.map
