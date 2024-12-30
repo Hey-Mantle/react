@@ -90,6 +90,9 @@ export const MantleProvider = ({
     useSavedPaymentMethod = false,
     trialDays,
     hosted = true,
+    requireBillingAddress = false,
+    email,
+    metadata,
   }) => {
     return await mantleClient.subscribe({
       planId,
@@ -100,6 +103,9 @@ export const MantleProvider = ({
       useSavedPaymentMethod,
       trialDays,
       hosted,
+      requireBillingAddress,
+      email,
+      metadata,
     });
   };
 
@@ -267,7 +273,10 @@ export const useMantle = () => {
  * @param {string} [params.returnUrl] - The URL to return to after subscribing
  * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the customer
  * @param {number} [params.trialDays] - The number of trial days to offer
- * @param {boolean} [params.hosted] - Whether or not to use Stripe hosted checkout. Not applicable for Shopify billing as it always uses Shopify's charge screen. Defaults to true.
+ * @param {boolean} [params.hosted] - Whether or not to use Stripe checkout for the subscription. Not applicable for Shopify subscriptions as they are always hosted. Defaults to true
+ * @param {boolean} [params.requireBillingAddress] - (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address. Defaults to false.
+ * @param {string} [params.email] - (Stripe checkout only) Prefill the Stripe customer's email address. Defaults to null.
+ * @param {Object.<string, string>} [params.metadata] - (Stripe checkout only) The metadata to attach to the subscription. Key-value pairs of metadata to attach to the subscription. Defaults to null.
  * @returns {Promise<Subscription>} a promise that resolves to the created subscription
  */
 
