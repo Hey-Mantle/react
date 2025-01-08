@@ -1,4 +1,4 @@
-import O, { createContext as Y, useState as C, useEffect as _, useContext as k } from "react";
+import O, { createContext as Y, useState as E, useEffect as _, useContext as k } from "react";
 class B {
   /**
    * Creates a new MantleClient. If being used in the browser, or any frontend code, never use the apiKey parameter,
@@ -47,9 +47,9 @@ class B {
   /**
    * Identify the customer with Mantle. One of `platformId` or `myshopifyDomain` are required.
    * @param {Object} params
+   * @param {string} [params.platform] - The platform the customer is on, defaults to shopify
    * @param {string} [params.platformId] - The unique ID of the customer on the app platform, for Shopify this should be the Shop ID
    * @param {string} [params.myshopifyDomain] - The myshopify.com domain of the Shopify store
-   * @param {string} [params.platform] - The platform the customer is on, defaults to shopify
    * @param {string} [params.accessToken] - The access token for the platform API, for Shopify apps, this should be the Shop access token
    * @param {string} [params.name] - The name of the customer
    * @param {string} [params.email] - The email of the customer
@@ -63,48 +63,49 @@ class B {
    * @param {Address} [params.address] - The address of the customer
    * @param {Array.<Contact>} [params.contacts] - The contacts of the customer
    * @param {string} [params.defaultBillingProvider] - The default billing provider to use for the customer, if none is provided, use platform default
-   * @param {string} [params.stripeId] - The Stripe ID of the customer if using Stripe as a billing provider
-   * @param {string} [params.billingProviderId] - The ID of the customer on the external billing provider, if applicable
+   * @param {string} [params.stripeId] - The Stripe ID of the customer
    * @returns {Promise<Object.<string, string>} a promise that resolves to an object with the customer API token, `apiToken`
    */
   async identify({
-    platformId: t,
-    myshopifyDomain: n,
-    platform: s = "shopify",
+    platform: t = "shopify",
+    platformId: n,
+    myshopifyDomain: s,
     accessToken: a,
     name: c,
     email: d,
     platformPlanName: i,
     customFields: o,
-    features: b,
+    features: h,
     createdAt: p,
     rotateApiToken: m,
-    tags: h,
+    tags: y,
     operators: f,
     address: g,
     contacts: S,
-    defaultBillingProvider: w
+    defaultBillingProvider: w,
+    stripeId: P
   }) {
     return await this.mantleRequest({
       path: "identify",
       method: "POST",
       body: {
-        platformId: t,
-        myshopifyDomain: n,
-        platform: s,
+        platformId: n,
+        myshopifyDomain: s,
+        platform: t,
         accessToken: a,
         name: c,
         email: d,
         platformPlanName: i,
         customFields: o,
-        features: b,
+        features: h,
         createdAt: p,
         rotateApiToken: m,
-        tags: h,
+        tags: y,
         operators: f,
         address: g,
         contacts: S,
-        defaultBillingProvider: w
+        defaultBillingProvider: w,
+        stripeId: P
       }
     });
   }
@@ -127,12 +128,12 @@ class B {
    * @param {string} [params.discountId] - The ID of the discount to apply to the subscription
    * @param {string} params.returnUrl - The URL to redirect to after the subscription is complete
    * @param {string} [params.billingProvider] - The name of the billing provider to use, if none is provided, use sensible default
-   * @param {boolean} [params.useSavedPaymentMethod] - Whether to use the saved payment method for the subscription if available
    * @param {number} [params.trialDays] - The number of days to trial the subscription for
-   * @param {boolean} [params.hosted] - Whether or not to use Stripe checkout for the subscription. Not applicable for Shopify subscriptions as they are always hosted. Defaults to true
-   * @param {boolean} [params.requireBillingAddress] - (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address. Defaults to false.
-   * @param {string} [params.email] - (Stripe checkout only) Prefill the Stripe customer's email address. Defaults to null.
-   * @param {Object.<string, string>} [params.metadata] - (Stripe checkout only) The metadata to attach to the subscription. Key-value pairs of metadata to attach to the subscription. Defaults to null.
+   * @param {boolean} [params.hosted] - Whether or not to use Stripe checkout for the subscription. Not applicable for Shopify subscriptions as they are always hosted. Defaults to `true`.
+   * @param {boolean} [params.useSavedPaymentMethod] - (Stripe only) Whether to use the saved payment method for the subscription if available. Defaults to `false`.
+   * @param {boolean} [params.requireBillingAddress] - (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address. Defaults to `false`.
+   * @param {string} [params.email] - (Stripe checkout only) Prefill the Stripe customer's email address. Defaults to `null`.
+   * @param {Object.<string, string>} [params.metadata] - (Stripe checkout only) The metadata to attach to the subscription. Key-value pairs of metadata to attach to the subscription. Defaults to `null`.
    * @returns {Promise<Subscription>} a promise that resolves to the created subscription
    */
   async subscribe({
@@ -141,9 +142,12 @@ class B {
     discountId: s,
     returnUrl: a,
     billingProvider: c,
-    useSavedPaymentMethod: d = !1,
-    trialDays: i,
-    hosted: o = !0
+    trialDays: d,
+    hosted: i = !0,
+    useSavedPaymentMethod: o = !1,
+    requireBillingAddress: h = !1,
+    email: p,
+    metadata: m
   }) {
     return await this.mantleRequest({
       path: "subscriptions",
@@ -154,9 +158,12 @@ class B {
         discountId: s,
         returnUrl: a,
         billingProvider: c,
-        useSavedPaymentMethod: d,
-        trialDays: i,
-        hosted: o
+        trialDays: d,
+        hosted: i,
+        useSavedPaymentMethod: o,
+        requireBillingAddress: h,
+        email: p,
+        metadata: m
       }
     });
   }
@@ -340,7 +347,7 @@ const u = {
   ShopifyPlan: "shopifyPlan",
   Customer: "customer",
   Hidden: "hidden"
-}, P = {
+}, v = {
   AmountPerInterval: "{{ amount }} per {{ interval }}",
   Back: "Back",
   Cancel: "Cancel",
@@ -372,20 +379,20 @@ const u = {
   Subscription: "Subscription",
   SubscriptionCancelled: "Subscription cancelled",
   UsageCharges: "Usage charges"
-}, M = Y(), j = ({ feature: e, count: t = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? t < e.value || e.value === -1 : !1, W = ({
+}, T = Y(), j = ({ feature: e, count: t = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? t < e.value || e.value === -1 : !1, W = ({
   appId: e,
   customerApiToken: t,
   apiUrl: n = "https://appapi.heymantle.com/v1",
   children: s,
-  i18n: a = P,
+  i18n: a = v,
   waitForCustomer: c = !1,
   loadingComponent: d = null
 }) => {
-  const i = new H.MantleClient({ appId: e, customerApiToken: t, apiUrl: n }), [o, b] = C(null), [p, m] = C(!0), h = async () => {
+  const i = new H.MantleClient({ appId: e, customerApiToken: t, apiUrl: n }), [o, h] = E(null), [p, m] = E(!0), y = async () => {
     try {
       m(!0);
       const r = await i.getCustomer();
-      b(r);
+      h(r);
     } catch (r) {
       console.error("[MantleProvider] Error fetching customer: ", r);
     } finally {
@@ -396,8 +403,8 @@ const u = {
   }, g = async ({ usageId: r, period: l }) => await i.getUsageMetricReport({ id: r, period: l }), S = async ({
     planId: r,
     planIds: l,
-    discountId: v,
-    billingProvider: y,
+    discountId: C,
+    billingProvider: b,
     returnUrl: U,
     useSavedPaymentMethod: D = !1,
     trialDays: q,
@@ -408,8 +415,8 @@ const u = {
   }) => await i.subscribe({
     planId: r,
     planIds: l,
-    discountId: v,
-    billingProvider: y,
+    discountId: C,
+    billingProvider: b,
     returnUrl: U,
     useSavedPaymentMethod: D,
     trialDays: q,
@@ -419,22 +426,22 @@ const u = {
     metadata: N
   }), w = async ({ cancelReason: r } = {}) => await i.cancelSubscription({
     ...r && { cancelReason: r }
-  }), T = async ({ returnUrl: r }) => await i.addPaymentMethod({ returnUrl: r }), x = async ({ type: r, config: l }) => {
-    const y = new URL(document.location.toString()).searchParams.get("locale");
+  }), P = async ({ returnUrl: r }) => await i.addPaymentMethod({ returnUrl: r }), x = async ({ type: r, config: l }) => {
+    const b = new URL(document.location.toString()).searchParams.get("locale");
     return await i.createHostedSession({
       type: r,
       config: {
-        ...y ? { locale: y } : {},
+        ...b ? { locale: b } : {},
         ...l || {}
       }
     });
   };
   _(() => {
-    t && h();
+    t && y();
   }, [t]);
   const A = (o == null ? void 0 : o.plans) || [], R = o == null ? void 0 : o.subscription;
   return c && p ? d || "" : /* @__PURE__ */ O.createElement(
-    M.Provider,
+    T.Provider,
     {
       value: {
         client: i,
@@ -442,12 +449,12 @@ const u = {
         subscription: R,
         plans: A,
         loading: p,
-        i18n: { ...P, ...a },
+        i18n: { ...v, ...a },
         sendUsageEvent: f,
         getUsageReport: g,
         subscribe: S,
         cancelSubscription: w,
-        addPaymentMethod: T,
+        addPaymentMethod: P,
         createHostedSession: x,
         isFeatureEnabled: ({ featureKey: r, count: l = 0 }) => o != null && o.features[r] ? j({
           feature: o.features[r],
@@ -455,18 +462,18 @@ const u = {
         }) : !1,
         limitForFeature: ({ featureKey: r }) => o != null && o.features[r] && o.features[r].type === "limit" ? o.features[r].value : -1,
         refetch: async () => {
-          await h();
+          await y();
         }
       }
     },
     s
   );
 }, Q = () => {
-  const e = k(M);
+  const e = k(T);
   if (e === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return e;
-}, E = (e) => e.type === "boolean" && e.value == !0 || e.type === "limit" && e.value !== 0, Z = (e, t) => E(t) - E(e) || e.name.localeCompare(t.name), G = (e = "USD") => new Intl.NumberFormat("en-US", {
+}, M = (e) => e.type === "boolean" && e.value == !0 || e.type === "limit" && e.value !== 0, Z = (e, t) => M(t) - M(e) || e.name.localeCompare(t.name), G = (e = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: e,
   notation: "standard"
@@ -497,7 +504,7 @@ const u = {
   return !!((n = e.customFields) != null && n[t]);
 }, ne = ({ plan: e, customFieldKey: t = "buttonLabel" }) => {
   var n;
-  return ((n = e.customFields) == null ? void 0 : n[t]) || P.SelectPlan;
+  return ((n = e.customFields) == null ? void 0 : n[t]) || v.SelectPlan;
 }, se = ({ plan: e }) => {
   var t;
   return ((t = e.discounts) == null ? void 0 : t.length) > 0 ? e.discounts.reduce(
@@ -505,14 +512,14 @@ const u = {
   ) : void 0;
 }, ae = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, re = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
 export {
-  P as Labels,
+  v as Labels,
   W as MantleProvider,
   V as PlanAvailability,
   u as PlanInterval,
   re as columnCount,
   ae as columnSpan,
   ne as customButtonLabel,
-  E as featureEnabled,
+  M as featureEnabled,
   Z as featureSort,
   se as highestDiscount,
   ee as intervalLabel,
