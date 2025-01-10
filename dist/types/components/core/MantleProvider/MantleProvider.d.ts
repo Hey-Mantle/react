@@ -108,6 +108,10 @@ export type SubscribeCallback = (params: {
     useSavedPaymentMethod?: boolean;
     trialDays?: number;
     hosted?: boolean;
+    collectionMethod?: string;
+    daysUntilDue?: number;
+    paymentMethodTypes?: string[];
+    automaticTax?: boolean;
     requireBillingAddress?: boolean;
     email?: string;
     metadata?: {
