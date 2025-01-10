@@ -1,454 +1,732 @@
-import G, { createContext as X, useState as S, useEffect as V, useContext as J } from "react";
-var K = Object.defineProperty, w = Object.getOwnPropertySymbols, W = Object.prototype.hasOwnProperty, Q = Object.prototype.propertyIsEnumerable, C = (e, t, n) => t in e ? K(e, t, { enumerable: !0, configurable: !0, writable: !0, value: n }) : e[t] = n, l = (e, t) => {
-  for (var n in t || (t = {}))
-    W.call(t, n) && C(e, n, t[n]);
-  if (w)
-    for (var n of w(t))
-      Q.call(t, n) && C(e, n, t[n]);
-  return e;
-}, i = (e, t, n) => new Promise((o, u) => {
-  var h = (r) => {
-    try {
-      a(n.next(r));
-    } catch (p) {
-      u(p);
-    }
-  }, m = (r) => {
-    try {
-      a(n.throw(r));
-    } catch (p) {
-      u(p);
-    }
-  }, a = (r) => r.done ? o(r.value) : Promise.resolve(r.value).then(h, m);
-  a((n = n.apply(e, t)).next());
-}), Z = class {
-  /**
-   * Creates a new MantleClient. If being used in the browser, or any frontend code, never use the apiKey parameter,
-   * always use the customerApiToken for the customer that is currently authenticated on the frontend.
-   */
-  constructor({ appId: e, apiKey: t, customerApiToken: n, apiUrl: o = "https://appapi.heymantle.com/v1" }) {
-    if (!e)
-      throw new Error("MantleClient appId is required");
-    if (typeof window < "u" && t)
-      throw new Error("MantleClient apiKey should never be used in the browser");
-    this.appId = e, this.apiKey = t, this.customerApiToken = n, this.apiUrl = o;
+import Ae, { createContext as lr, useState as je, useEffect as cr, useContext as fr } from "react";
+import { MantleClient as dr } from "@heymantle/client";
+var ae = { exports: {} }, $ = {};
+/**
+ * @license React
+ * react-jsx-runtime.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var ke;
+function vr() {
+  if (ke)
+    return $;
+  ke = 1;
+  var d = Ae, m = Symbol.for("react.element"), A = Symbol.for("react.fragment"), w = Object.prototype.hasOwnProperty, x = d.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, j = { key: !0, ref: !0, __self: !0, __source: !0 };
+  function S(p, o, P) {
+    var b, h = {}, E = null, k = null;
+    P !== void 0 && (E = "" + P), o.key !== void 0 && (E = "" + o.key), o.ref !== void 0 && (k = o.ref);
+    for (b in o)
+      w.call(o, b) && !j.hasOwnProperty(b) && (h[b] = o[b]);
+    if (p && p.defaultProps)
+      for (b in o = p.defaultProps, o)
+        h[b] === void 0 && (h[b] = o[b]);
+    return { $$typeof: m, type: p, key: E, ref: k, props: h, _owner: x.current };
   }
-  /**
-   * Makes a request to the Mantle API
-   * @private
-   */
-  mantleRequest(e) {
-    return i(this, arguments, function* ({ path: t, method: n = "GET", body: o }) {
-      try {
-        const u = `${this.apiUrl}${t.startsWith("/") ? "" : "/"}${t}${o && n === "GET" ? `?${new URLSearchParams(o)}` : ""}`;
-        return yield (yield fetch(u, l({
-          method: n,
-          headers: l(l({
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "X-Mantle-App-Id": this.appId
-          }, this.apiKey ? { "X-Mantle-App-Api-Key": this.apiKey } : {}), this.customerApiToken ? { "X-Mantle-Customer-Api-Token": this.customerApiToken } : {})
-        }, o && n !== "GET" && {
-          body: JSON.stringify(o)
-        }))).json();
-      } catch (u) {
-        throw console.error(`[mantleRequest] ${t} error: ${u.message}`), u;
+  return $.Fragment = A, $.jsx = S, $.jsxs = S, $;
+}
+var U = {};
+/**
+ * @license React
+ * react-jsx-runtime.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var Fe;
+function pr() {
+  return Fe || (Fe = 1, process.env.NODE_ENV !== "production" && function() {
+    var d = Ae, m = Symbol.for("react.element"), A = Symbol.for("react.portal"), w = Symbol.for("react.fragment"), x = Symbol.for("react.strict_mode"), j = Symbol.for("react.profiler"), S = Symbol.for("react.provider"), p = Symbol.for("react.context"), o = Symbol.for("react.forward_ref"), P = Symbol.for("react.suspense"), b = Symbol.for("react.suspense_list"), h = Symbol.for("react.memo"), E = Symbol.for("react.lazy"), k = Symbol.for("react.offscreen"), W = Symbol.iterator, J = "@@iterator";
+    function G(e) {
+      if (e === null || typeof e != "object")
+        return null;
+      var r = W && e[W] || e[J];
+      return typeof r == "function" ? r : null;
+    }
+    var C = d.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+    function v(e) {
+      {
+        for (var r = arguments.length, t = new Array(r > 1 ? r - 1 : 0), n = 1; n < r; n++)
+          t[n - 1] = arguments[n];
+        z("error", e, t);
       }
-    });
-  }
-  /**
-   * Identify the customer with Mantle. One of `platformId` or `myshopifyDomain` are required.
-   * @param params.platform - The platform the customer is on, defaults to shopify
-   * @param params.platformId - The unique ID of the customer on the app platform, for Shopify this should be the Shop ID
-   * @param params.myshopifyDomain - The myshopify.com domain of the Shopify store
-   * @param params.accessToken - The access token for the platform API, for Shopify apps, this should be the Shop access token
-   * @param params.name - The name of the customer
-   * @param params.email - The email of the customer
-   * @param params.platformPlanName - The name of the plan on the platform (Shopify plan name)
-   * @param params.customFields - Custom fields to store on the customer, must be a JSON object
-   * @param params.features - Key-value pairs of features to override on the customer
-   * @param params.createdAt - The date the customer was created, defaults to now if not provided
-   * @param params.rotateApiToken - True to rotate the customer API token and return the new value
-   * @param params.tags - The tags to apply to the customer. Default operator is "replace"
-   * @param params.operators - The map of fields to operators to use for the query
-   * @param params.address - The address of the customer
-   * @param params.contacts - The contacts of the customer
-   * @param params.defaultBillingProvider - The default billing provider to use for the customer
-   * @param params.stripeId - The Stripe ID of the customer
-   * @returns A promise that resolves to an object with the customer API token
-   */
-  identify(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest({
-        path: "identify",
-        method: "POST",
-        body: e
-      });
-    });
-  }
-  /**
-   * Get the customer associated with the current customer API token
-   * @param id - The ID of the customer to get. Only required if using the API key for authentication instead of the customer API token
-   * @returns A promise that resolves to the current customer
-   */
-  getCustomer(e) {
-    return i(this, null, function* () {
-      return (yield this.mantleRequest(l({
-        path: "customer"
-      }, e ? { body: { id: e } } : {}))).customer;
-    });
-  }
-  /**
-   * Subscribe to a plan, or list of plans. Must provide either `planId` or `planIds`
-   * @param params.planId - The ID of the plan to subscribe to
-   * @param params.planIds - List of plan IDs to subscribe to
-   * @param params.discountId - The ID of the discount to apply to the subscription
-   * @param params.returnUrl - The URL to redirect to after the subscription is complete
-   * @param params.billingProvider - The name of the billing provider to use
-   * @param params.trialDays - The number of days to trial the subscription for
-   * @param params.hosted - Whether to use Stripe checkout for the subscription
-   * @param params.useSavedPaymentMethod - Whether to use the saved payment method
-   * @param params.collectionMethod - The collection method to use for the subscription
-   * @param params.daysUntilDue - The number of days until the subscription is due
-   * @param params.paymentMethodTypes - The payment method types to use for the subscription
-   * @param params.automaticTax - Whether to automatically calculate tax for the subscription
-   * @param params.requireBillingAddress - Tell the Stripe Checkout Session to require a billing address
-   * @param params.email - Prefill the Stripe customer's email address
-   * @param params.metadata - The metadata to attach to the subscription
-   * @returns A promise that resolves to the created subscription
-   */
-  subscribe(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest({
-        path: "subscriptions",
-        method: "POST",
-        body: e
-      });
-    });
-  }
-  /**
-   * Cancel the current subscription
-   * @param params.cancelReason - The reason for cancelling the subscription
-   * @returns A promise that resolves to the cancelled subscription
-   */
-  cancelSubscription(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest(l({
-        path: "subscriptions",
-        method: "DELETE"
-      }, (e == null ? void 0 : e.cancelReason) && {
-        body: { cancelReason: e.cancelReason }
-      }));
-    });
-  }
-  /**
-   * Update the subscription
-   * @param params.id - The ID of the subscription to update
-   * @param params.cappedAmount - The capped amount of the usage charge
-   * @returns A promise that resolves to the updated subscription
-   */
-  updateSubscription(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest({
-        path: "subscriptions",
-        method: "PUT",
-        body: e
-      });
-    });
-  }
-  /**
-   * Send a usage event
-   * @param params.eventId - The ID of the event
-   * @param params.eventName - The name of the event which can be tracked by usage metrics
-   * @param params.timestamp - The timestamp of the event, leave blank to use the current time
-   * @param params.customerId - Required if customerApiToken is not used for authentication
-   * @param params.properties - The event properties
-   * @returns A promise that resolves to true if the event was sent successfully
-   */
-  sendUsageEvent(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest({
-        path: "usage_events",
-        method: "POST",
-        body: e
-      });
-    });
-  }
-  /**
-   * Send multiple usage events of the same type in bulk
-   * @param params.events - The events to send
-   * @returns A promise that resolves to true if the events were sent successfully
-   */
-  sendUsageEvents(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest({
-        path: "usage_events",
-        method: "POST",
-        body: e
-      });
-    });
-  }
-  /**
-   * Initial step to start the process of connecting a new payment method from an external billing provider
-   * @param params.returnUrl - The URL to redirect to after a checkout has completed
-   * @returns A promise that resolves to the created SetupIntent with clientSecret
-   */
-  addPaymentMethod(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest(l({
-        path: "payment_methods",
-        method: "POST"
-      }, e.returnUrl && {
-        body: { returnUrl: e.returnUrl }
-      }));
-    });
-  }
-  /**
-   * Get report of a usage metric over time intervals
-   * @param params.id - The usage metric id
-   * @param params.period - The interval to get the report for
-   * @param params.customerId - The customer ID to get the report for
-   * @returns A promise that resolves to the usage metric report
-   */
-  getUsageMetricReport(e) {
-    return i(this, null, function* () {
-      return yield this.mantleRequest({
-        path: `usage_events/${e.id}/report`,
-        body: l(l({}, e.period ? { period: e.period } : {}), e.customerId ? { customerId: e.customerId } : {})
-      });
-    });
-  }
-  /**
-   * Get a list of invoices for the current customer
-   * @param params.page - The page number to get, defaults to 0
-   * @param params.limit - The number of invoices to get per page, defaults to 10
-   * @returns A promise that resolves to the list of invoices
-   */
-  listInvoices() {
-    return i(this, arguments, function* (e = {}) {
-      var t, n;
-      return yield this.mantleRequest({
-        path: "invoices",
-        body: {
-          page: (t = e.page) != null ? t : 0,
-          limit: (n = e.limit) != null ? n : 10
+    }
+    function z(e, r, t) {
+      {
+        var n = C.ReactDebugCurrentFrame, u = n.getStackAddendum();
+        u !== "" && (r += "%s", t = t.concat([u]));
+        var l = t.map(function(i) {
+          return String(i);
+        });
+        l.unshift("Warning: " + r), Function.prototype.apply.call(console[e], console, l);
+      }
+    }
+    var H = !1, s = !1, T = !1, ie = !1, L = !1, oe;
+    oe = Symbol.for("react.module.reference");
+    function Ie(e) {
+      return !!(typeof e == "string" || typeof e == "function" || e === w || e === j || L || e === x || e === P || e === b || ie || e === k || H || s || T || typeof e == "object" && e !== null && (e.$$typeof === E || e.$$typeof === h || e.$$typeof === S || e.$$typeof === p || e.$$typeof === o || // This needs to include all possible module reference object
+      // types supported by any Flight configuration anywhere since
+      // we don't know which Flight build this will end up being used
+      // with.
+      e.$$typeof === oe || e.getModuleId !== void 0));
+    }
+    function $e(e, r, t) {
+      var n = e.displayName;
+      if (n)
+        return n;
+      var u = r.displayName || r.name || "";
+      return u !== "" ? t + "(" + u + ")" : t;
+    }
+    function ue(e) {
+      return e.displayName || "Context";
+    }
+    function R(e) {
+      if (e == null)
+        return null;
+      if (typeof e.tag == "number" && v("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), typeof e == "function")
+        return e.displayName || e.name || null;
+      if (typeof e == "string")
+        return e;
+      switch (e) {
+        case w:
+          return "Fragment";
+        case A:
+          return "Portal";
+        case j:
+          return "Profiler";
+        case x:
+          return "StrictMode";
+        case P:
+          return "Suspense";
+        case b:
+          return "SuspenseList";
+      }
+      if (typeof e == "object")
+        switch (e.$$typeof) {
+          case p:
+            var r = e;
+            return ue(r) + ".Consumer";
+          case S:
+            var t = e;
+            return ue(t._context) + ".Provider";
+          case o:
+            return $e(e, e.render, "ForwardRef");
+          case h:
+            var n = e.displayName || null;
+            return n !== null ? n : R(e.type) || "Memo";
+          case E: {
+            var u = e, l = u._payload, i = u._init;
+            try {
+              return R(i(l));
+            } catch {
+              return null;
+            }
+          }
         }
-      });
-    });
-  }
-  /**
-   * Create a hosted session that can be used to send the customer to a hosted page to manage their subscription
-   * @param params.type - The type of hosted session to create
-   * @param params.config - The configuration for the hosted session
-   * @returns A promise that resolves to the hosted session with a url property
-   */
-  createHostedSession(e) {
-    return i(this, null, function* () {
-      const t = yield this.mantleRequest({
-        path: "hosted_sessions",
-        method: "POST",
-        body: e
-      });
-      return l(l({}, (t == null ? void 0 : t.session) || {}), (t == null ? void 0 : t.error) || { error: t.error });
-    });
-  }
-};
-const d = {
-  Annual: "ANNUAL",
-  Every30Days: "EVERY_30_DAYS"
-}, se = {
-  Public: "public",
-  CustomerTag: "customerTag",
-  ShopifyPlan: "shopifyPlan",
-  Customer: "customer",
-  Hidden: "hidden"
-}, f = {
-  AmountPerInterval: "{{ amount }} per {{ interval }}",
-  Back: "Back",
-  Cancel: "Cancel",
-  CancelConfirmation: "Are you sure you want to cancel your subscription?",
-  CancelPlan: "Cancel plan",
-  ChangePlan: "Change plan",
-  CurrentPlan: "Current plan",
-  CustomPlans: "Custom plans",
-  CustomPlansDescription: "Plans tailored to your specific needs",
-  DiscountAmount: "{{ amount }} discount",
-  DiscountAmountExpired: "{{ amount }} discount expired",
-  FreeTrialLength: "{{ trialDays }}-day free trial",
-  Features: "Features",
-  Month: "month",
-  MonthShort: "mo",
-  Monthly: "Monthly",
-  NextBillingDate: "Next billing date",
-  NotSubscribed: "You're not subscribed to a plan yet.",
-  Year: "year",
-  YearShort: "yr",
-  Yearly: "Yearly",
-  MostPopular: "Most popular",
-  Per: "/",
-  Plans: "Plans",
-  Price: "Price",
-  SelectPlan: "Select plan",
-  SubscribeSuccessTitle: "Subscription successful",
-  SubscribeSuccessBody: "Thanks for subscribing to our app!",
-  Subscription: "Subscription",
-  SubscriptionCancelled: "Subscription cancelled",
-  UsageCharges: "Usage charges"
-}, _ = X(), z = ({ feature: e, count: t = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? t < e.value || e.value === -1 : !1, oe = ({
-  appId: e,
-  customerApiToken: t,
-  apiUrl: n = "https://appapi.heymantle.com/v1",
-  children: o,
-  i18n: u = f,
-  waitForCustomer: h = !1,
-  loadingComponent: m = null
+      return null;
+    }
+    var O = Object.assign, M = 0, se, le, ce, fe, de, ve, pe;
+    function be() {
+    }
+    be.__reactDisabledLog = !0;
+    function Ue() {
+      {
+        if (M === 0) {
+          se = console.log, le = console.info, ce = console.warn, fe = console.error, de = console.group, ve = console.groupCollapsed, pe = console.groupEnd;
+          var e = {
+            configurable: !0,
+            enumerable: !0,
+            value: be,
+            writable: !0
+          };
+          Object.defineProperties(console, {
+            info: e,
+            log: e,
+            warn: e,
+            error: e,
+            group: e,
+            groupCollapsed: e,
+            groupEnd: e
+          });
+        }
+        M++;
+      }
+    }
+    function We() {
+      {
+        if (M--, M === 0) {
+          var e = {
+            configurable: !0,
+            enumerable: !0,
+            writable: !0
+          };
+          Object.defineProperties(console, {
+            log: O({}, e, {
+              value: se
+            }),
+            info: O({}, e, {
+              value: le
+            }),
+            warn: O({}, e, {
+              value: ce
+            }),
+            error: O({}, e, {
+              value: fe
+            }),
+            group: O({}, e, {
+              value: de
+            }),
+            groupCollapsed: O({}, e, {
+              value: ve
+            }),
+            groupEnd: O({}, e, {
+              value: pe
+            })
+          });
+        }
+        M < 0 && v("disabledDepth fell below zero. This is a bug in React. Please file an issue.");
+      }
+    }
+    var X = C.ReactCurrentDispatcher, K;
+    function N(e, r, t) {
+      {
+        if (K === void 0)
+          try {
+            throw Error();
+          } catch (u) {
+            var n = u.stack.trim().match(/\n( *(at )?)/);
+            K = n && n[1] || "";
+          }
+        return `
+` + K + e;
+      }
+    }
+    var Z = !1, Y;
+    {
+      var Le = typeof WeakMap == "function" ? WeakMap : Map;
+      Y = new Le();
+    }
+    function ge(e, r) {
+      if (!e || Z)
+        return "";
+      {
+        var t = Y.get(e);
+        if (t !== void 0)
+          return t;
+      }
+      var n;
+      Z = !0;
+      var u = Error.prepareStackTrace;
+      Error.prepareStackTrace = void 0;
+      var l;
+      l = X.current, X.current = null, Ue();
+      try {
+        if (r) {
+          var i = function() {
+            throw Error();
+          };
+          if (Object.defineProperty(i.prototype, "props", {
+            set: function() {
+              throw Error();
+            }
+          }), typeof Reflect == "object" && Reflect.construct) {
+            try {
+              Reflect.construct(i, []);
+            } catch (_) {
+              n = _;
+            }
+            Reflect.construct(e, [], i);
+          } else {
+            try {
+              i.call();
+            } catch (_) {
+              n = _;
+            }
+            e.call(i.prototype);
+          }
+        } else {
+          try {
+            throw Error();
+          } catch (_) {
+            n = _;
+          }
+          e();
+        }
+      } catch (_) {
+        if (_ && n && typeof _.stack == "string") {
+          for (var a = _.stack.split(`
+`), g = n.stack.split(`
+`), c = a.length - 1, f = g.length - 1; c >= 1 && f >= 0 && a[c] !== g[f]; )
+            f--;
+          for (; c >= 1 && f >= 0; c--, f--)
+            if (a[c] !== g[f]) {
+              if (c !== 1 || f !== 1)
+                do
+                  if (c--, f--, f < 0 || a[c] !== g[f]) {
+                    var y = `
+` + a[c].replace(" at new ", " at ");
+                    return e.displayName && y.includes("<anonymous>") && (y = y.replace("<anonymous>", e.displayName)), typeof e == "function" && Y.set(e, y), y;
+                  }
+                while (c >= 1 && f >= 0);
+              break;
+            }
+        }
+      } finally {
+        Z = !1, X.current = l, We(), Error.prepareStackTrace = u;
+      }
+      var D = e ? e.displayName || e.name : "", xe = D ? N(D) : "";
+      return typeof e == "function" && Y.set(e, xe), xe;
+    }
+    function Ne(e, r, t) {
+      return ge(e, !1);
+    }
+    function Ye(e) {
+      var r = e.prototype;
+      return !!(r && r.isReactComponent);
+    }
+    function V(e, r, t) {
+      if (e == null)
+        return "";
+      if (typeof e == "function")
+        return ge(e, Ye(e));
+      if (typeof e == "string")
+        return N(e);
+      switch (e) {
+        case P:
+          return N("Suspense");
+        case b:
+          return N("SuspenseList");
+      }
+      if (typeof e == "object")
+        switch (e.$$typeof) {
+          case o:
+            return Ne(e.render);
+          case h:
+            return V(e.type, r, t);
+          case E: {
+            var n = e, u = n._payload, l = n._init;
+            try {
+              return V(l(u), r, t);
+            } catch {
+            }
+          }
+        }
+      return "";
+    }
+    var q = Object.prototype.hasOwnProperty, he = {}, ye = C.ReactDebugCurrentFrame;
+    function B(e) {
+      if (e) {
+        var r = e._owner, t = V(e.type, e._source, r ? r.type : null);
+        ye.setExtraStackFrame(t);
+      } else
+        ye.setExtraStackFrame(null);
+    }
+    function Ve(e, r, t, n, u) {
+      {
+        var l = Function.call.bind(q);
+        for (var i in e)
+          if (l(e, i)) {
+            var a = void 0;
+            try {
+              if (typeof e[i] != "function") {
+                var g = Error((n || "React class") + ": " + t + " type `" + i + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof e[i] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                throw g.name = "Invariant Violation", g;
+              }
+              a = e[i](r, i, n, t, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+            } catch (c) {
+              a = c;
+            }
+            a && !(a instanceof Error) && (B(u), v("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", n || "React class", t, i, typeof a), B(null)), a instanceof Error && !(a.message in he) && (he[a.message] = !0, B(u), v("Failed %s type: %s", t, a.message), B(null));
+          }
+      }
+    }
+    var qe = Array.isArray;
+    function Q(e) {
+      return qe(e);
+    }
+    function Be(e) {
+      {
+        var r = typeof Symbol == "function" && Symbol.toStringTag, t = r && e[Symbol.toStringTag] || e.constructor.name || "Object";
+        return t;
+      }
+    }
+    function Je(e) {
+      try {
+        return me(e), !1;
+      } catch {
+        return !0;
+      }
+    }
+    function me(e) {
+      return "" + e;
+    }
+    function Ee(e) {
+      if (Je(e))
+        return v("The provided key is an unsupported type %s. This value must be coerced to a string before before using it here.", Be(e)), me(e);
+    }
+    var I = C.ReactCurrentOwner, Ge = {
+      key: !0,
+      ref: !0,
+      __self: !0,
+      __source: !0
+    }, Re, _e, ee;
+    ee = {};
+    function ze(e) {
+      if (q.call(e, "ref")) {
+        var r = Object.getOwnPropertyDescriptor(e, "ref").get;
+        if (r && r.isReactWarning)
+          return !1;
+      }
+      return e.ref !== void 0;
+    }
+    function He(e) {
+      if (q.call(e, "key")) {
+        var r = Object.getOwnPropertyDescriptor(e, "key").get;
+        if (r && r.isReactWarning)
+          return !1;
+      }
+      return e.key !== void 0;
+    }
+    function Xe(e, r) {
+      if (typeof e.ref == "string" && I.current && r && I.current.stateNode !== r) {
+        var t = R(I.current.type);
+        ee[t] || (v('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', R(I.current.type), e.ref), ee[t] = !0);
+      }
+    }
+    function Ke(e, r) {
+      {
+        var t = function() {
+          Re || (Re = !0, v("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)", r));
+        };
+        t.isReactWarning = !0, Object.defineProperty(e, "key", {
+          get: t,
+          configurable: !0
+        });
+      }
+    }
+    function Ze(e, r) {
+      {
+        var t = function() {
+          _e || (_e = !0, v("%s: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)", r));
+        };
+        t.isReactWarning = !0, Object.defineProperty(e, "ref", {
+          get: t,
+          configurable: !0
+        });
+      }
+    }
+    var Qe = function(e, r, t, n, u, l, i) {
+      var a = {
+        // This tag allows us to uniquely identify this as a React Element
+        $$typeof: m,
+        // Built-in properties that belong on the element
+        type: e,
+        key: r,
+        ref: t,
+        props: i,
+        // Record the component responsible for creating this element.
+        _owner: l
+      };
+      return a._store = {}, Object.defineProperty(a._store, "validated", {
+        configurable: !1,
+        enumerable: !1,
+        writable: !0,
+        value: !1
+      }), Object.defineProperty(a, "_self", {
+        configurable: !1,
+        enumerable: !1,
+        writable: !1,
+        value: n
+      }), Object.defineProperty(a, "_source", {
+        configurable: !1,
+        enumerable: !1,
+        writable: !1,
+        value: u
+      }), Object.freeze && (Object.freeze(a.props), Object.freeze(a)), a;
+    };
+    function er(e, r, t, n, u) {
+      {
+        var l, i = {}, a = null, g = null;
+        t !== void 0 && (Ee(t), a = "" + t), He(r) && (Ee(r.key), a = "" + r.key), ze(r) && (g = r.ref, Xe(r, u));
+        for (l in r)
+          q.call(r, l) && !Ge.hasOwnProperty(l) && (i[l] = r[l]);
+        if (e && e.defaultProps) {
+          var c = e.defaultProps;
+          for (l in c)
+            i[l] === void 0 && (i[l] = c[l]);
+        }
+        if (a || g) {
+          var f = typeof e == "function" ? e.displayName || e.name || "Unknown" : e;
+          a && Ke(i, f), g && Ze(i, f);
+        }
+        return Qe(e, a, g, u, n, I.current, i);
+      }
+    }
+    var re = C.ReactCurrentOwner, we = C.ReactDebugCurrentFrame;
+    function F(e) {
+      if (e) {
+        var r = e._owner, t = V(e.type, e._source, r ? r.type : null);
+        we.setExtraStackFrame(t);
+      } else
+        we.setExtraStackFrame(null);
+    }
+    var te;
+    te = !1;
+    function ne(e) {
+      return typeof e == "object" && e !== null && e.$$typeof === m;
+    }
+    function Pe() {
+      {
+        if (re.current) {
+          var e = R(re.current.type);
+          if (e)
+            return `
+
+Check the render method of \`` + e + "`.";
+        }
+        return "";
+      }
+    }
+    function rr(e) {
+      {
+        if (e !== void 0) {
+          var r = e.fileName.replace(/^.*[\\\/]/, ""), t = e.lineNumber;
+          return `
+
+Check your code at ` + r + ":" + t + ".";
+        }
+        return "";
+      }
+    }
+    var Ce = {};
+    function tr(e) {
+      {
+        var r = Pe();
+        if (!r) {
+          var t = typeof e == "string" ? e : e.displayName || e.name;
+          t && (r = `
+
+Check the top-level render call using <` + t + ">.");
+        }
+        return r;
+      }
+    }
+    function Se(e, r) {
+      {
+        if (!e._store || e._store.validated || e.key != null)
+          return;
+        e._store.validated = !0;
+        var t = tr(r);
+        if (Ce[t])
+          return;
+        Ce[t] = !0;
+        var n = "";
+        e && e._owner && e._owner !== re.current && (n = " It was passed a child from " + R(e._owner.type) + "."), F(e), v('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', t, n), F(null);
+      }
+    }
+    function Te(e, r) {
+      {
+        if (typeof e != "object")
+          return;
+        if (Q(e))
+          for (var t = 0; t < e.length; t++) {
+            var n = e[t];
+            ne(n) && Se(n, r);
+          }
+        else if (ne(e))
+          e._store && (e._store.validated = !0);
+        else if (e) {
+          var u = G(e);
+          if (typeof u == "function" && u !== e.entries)
+            for (var l = u.call(e), i; !(i = l.next()).done; )
+              ne(i.value) && Se(i.value, r);
+        }
+      }
+    }
+    function nr(e) {
+      {
+        var r = e.type;
+        if (r == null || typeof r == "string")
+          return;
+        var t;
+        if (typeof r == "function")
+          t = r.propTypes;
+        else if (typeof r == "object" && (r.$$typeof === o || // Note: Memo only checks outer props here.
+        // Inner props are checked in the reconciler.
+        r.$$typeof === h))
+          t = r.propTypes;
+        else
+          return;
+        if (t) {
+          var n = R(r);
+          Ve(t, e.props, "prop", n, e);
+        } else if (r.PropTypes !== void 0 && !te) {
+          te = !0;
+          var u = R(r);
+          v("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", u || "Unknown");
+        }
+        typeof r.getDefaultProps == "function" && !r.getDefaultProps.isReactClassApproved && v("getDefaultProps is only used on classic React.createClass definitions. Use a static property named `defaultProps` instead.");
+      }
+    }
+    function ar(e) {
+      {
+        for (var r = Object.keys(e.props), t = 0; t < r.length; t++) {
+          var n = r[t];
+          if (n !== "children" && n !== "key") {
+            F(e), v("Invalid prop `%s` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props.", n), F(null);
+            break;
+          }
+        }
+        e.ref !== null && (F(e), v("Invalid attribute `ref` supplied to `React.Fragment`."), F(null));
+      }
+    }
+    function Oe(e, r, t, n, u, l) {
+      {
+        var i = Ie(e);
+        if (!i) {
+          var a = "";
+          (e === void 0 || typeof e == "object" && e !== null && Object.keys(e).length === 0) && (a += " You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.");
+          var g = rr(u);
+          g ? a += g : a += Pe();
+          var c;
+          e === null ? c = "null" : Q(e) ? c = "array" : e !== void 0 && e.$$typeof === m ? (c = "<" + (R(e.type) || "Unknown") + " />", a = " Did you accidentally export a JSX literal instead of a component?") : c = typeof e, v("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", c, a);
+        }
+        var f = er(e, r, t, u, l);
+        if (f == null)
+          return f;
+        if (i) {
+          var y = r.children;
+          if (y !== void 0)
+            if (n)
+              if (Q(y)) {
+                for (var D = 0; D < y.length; D++)
+                  Te(y[D], e);
+                Object.freeze && Object.freeze(y);
+              } else
+                v("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
+            else
+              Te(y, e);
+        }
+        return e === w ? ar(f) : nr(f), f;
+      }
+    }
+    function ir(e, r, t) {
+      return Oe(e, r, t, !0);
+    }
+    function or(e, r, t) {
+      return Oe(e, r, t, !1);
+    }
+    var ur = or, sr = ir;
+    U.Fragment = w, U.jsx = ur, U.jsxs = sr;
+  }()), U;
+}
+process.env.NODE_ENV === "production" ? ae.exports = vr() : ae.exports = pr();
+var br = ae.exports;
+const De = {
+  // Common
+  loading: "Loading...",
+  error: "An error occurred",
+  retry: "Retry",
+  cancel: "Cancel",
+  continue: "Continue",
+  // Subscription
+  subscribe: "Subscribe",
+  subscribeNow: "Subscribe Now",
+  upgradeNow: "Upgrade Now",
+  manageSubscription: "Manage Subscription",
+  cancelSubscription: "Cancel Subscription",
+  // Payment
+  addPaymentMethod: "Add Payment Method",
+  updatePaymentMethod: "Update Payment Method",
+  // Features
+  featureNotAvailable: "This feature is not available on your current plan",
+  upgradeRequired: "Upgrade Required",
+  limitReached: "Limit Reached"
+}, Me = lr(void 0), gr = ({ feature: d, count: m = 0 }) => (d == null ? void 0 : d.type) === "boolean" ? d.value : (d == null ? void 0 : d.type) === "limit" ? m < d.value || d.value === -1 : !1, mr = ({
+  appId: d,
+  customerApiToken: m,
+  apiUrl: A = "https://appapi.heymantle.com/v1",
+  children: w,
+  i18n: x = De,
+  waitForCustomer: j = !1,
+  loadingComponent: S = null
 }) => {
-  const a = new Z({ appId: e, customerApiToken: t, apiUrl: n }), [r, p] = S(null), [b, v] = S(!0), g = async () => {
+  const p = new dr({ appId: d, customerApiToken: m, apiUrl: A }), [o, P] = je(null), [b, h] = je(!0), E = async () => {
     try {
-      v(!0);
-      const s = await a.getCustomer();
-      p(s);
+      h(!0);
+      const s = await p.getCustomer();
+      P(s);
     } catch (s) {
       console.error("[MantleProvider] Error fetching customer: ", s);
     } finally {
-      v(!1);
+      h(!1);
     }
-  }, M = async (s) => {
-    await a.sendUsageEvent(s);
-  }, R = async ({ usageId: s, period: c }) => await a.getUsageMetricReport({ id: s, period: c }), U = async ({
-    planId: s,
-    planIds: c,
-    discountId: P,
-    billingProvider: y,
-    returnUrl: q,
-    useSavedPaymentMethod: L = !1,
-    trialDays: I,
-    hosted: F = !0,
-    collectionMethod: $ = "charge_automatically",
-    daysUntilDue: N,
-    paymentMethodTypes: Y = ["card"],
-    automaticTax: j = !0,
-    requireBillingAddress: B = !1,
-    email: H,
-    metadata: k
-  }) => await a.subscribe({
-    planId: s,
-    planIds: c,
-    discountId: P,
-    billingProvider: y,
-    returnUrl: q,
-    useSavedPaymentMethod: L,
-    trialDays: I,
-    hosted: F,
-    collectionMethod: $,
-    daysUntilDue: N,
-    paymentMethodTypes: Y,
-    automaticTax: j,
-    requireBillingAddress: B,
-    email: H,
-    metadata: k
-  }), x = async ({ cancelReason: s } = {}) => await a.cancelSubscription({
+  }, k = async (s) => {
+    await p.sendUsageEvent(s);
+  }, W = async ({ usageId: s, period: T }) => await p.getUsageMetricReport({ id: s, period: T }), J = async (s) => await p.subscribe(s), G = async ({ cancelReason: s } = {}) => await p.cancelSubscription({
     ...s && { cancelReason: s }
-  }), A = async ({ returnUrl: s }) => await a.addPaymentMethod({ returnUrl: s }), T = async ({ type: s, config: c }) => {
-    const y = new URL(document.location.toString()).searchParams.get("locale");
-    return await a.createHostedSession({
+  }), C = async ({ returnUrl: s }) => {
+    if (!s)
+      throw new Error("returnUrl is required");
+    return await p.addPaymentMethod({ returnUrl: s });
+  }, v = async ({ type: s, config: T }) => {
+    if (!s)
+      throw new Error("type is required");
+    const L = new URL(document.location.toString()).searchParams.get("locale");
+    return await p.createHostedSession({
       type: s,
       config: {
-        ...y ? { locale: y } : {},
-        ...c || {}
+        ...L ? { locale: L } : {},
+        ...T || {}
       }
     });
   };
-  V(() => {
-    t && g();
-  }, [t]);
-  const D = (r == null ? void 0 : r.plans) || [], O = r == null ? void 0 : r.subscription;
-  return h && b ? m || "" : /* @__PURE__ */ G.createElement(
-    _.Provider,
+  cr(() => {
+    m && E();
+  }, [m]);
+  const z = (o == null ? void 0 : o.plans) || [], H = (o == null ? void 0 : o.subscription) || null;
+  return j && b ? S || null : /* @__PURE__ */ br.jsx(
+    Me.Provider,
     {
       value: {
-        client: a,
-        customer: r,
-        subscription: O,
-        plans: D,
+        client: p,
+        customer: o,
+        subscription: H,
+        plans: z,
         loading: b,
-        i18n: { ...f, ...u },
-        sendUsageEvent: M,
-        getUsageReport: R,
-        subscribe: U,
-        cancelSubscription: x,
-        addPaymentMethod: A,
-        createHostedSession: T,
-        isFeatureEnabled: ({ featureKey: s, count: c = 0 }) => r != null && r.features[s] ? z({
-          feature: r.features[s],
-          count: c
+        i18n: { ...De, ...x },
+        sendUsageEvent: k,
+        getUsageReport: W,
+        subscribe: J,
+        cancelSubscription: G,
+        addPaymentMethod: C,
+        createHostedSession: v,
+        isFeatureEnabled: ({ featureKey: s, count: T = 0 }) => o != null && o.features[s] ? gr({
+          feature: o.features[s],
+          count: T
         }) : !1,
-        limitForFeature: ({ featureKey: s }) => r != null && r.features[s] && r.features[s].type === "limit" ? r.features[s].value : -1,
+        limitForFeature: ({ featureKey: s }) => o != null && o.features[s] && o.features[s].type === "limit" ? o.features[s].value : -1,
         refetch: async () => {
-          await g();
+          await E();
         }
-      }
-    },
-    o
+      },
+      children: w
+    }
   );
-}, ae = () => {
-  const e = J(_);
-  if (e === void 0)
+}, Er = () => {
+  const d = fr(Me);
+  if (d === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
-  return e;
-}, E = (e) => e.type === "boolean" && e.value == !0 || e.type === "limit" && e.value !== 0, ie = (e, t) => E(t) - E(e) || e.name.localeCompare(t.name), ee = (e = "USD") => new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: e,
-  notation: "standard"
-}), le = (e, t = "USD", n = !0) => {
-  let o = ee(t).format(e);
-  return n && (o = o.replace(/\.00$/, "")), o;
-}, te = (e = d.Every30Days) => {
-  switch (e) {
-    case d.Annual:
-      return "year";
-    case d.Every30Days:
-    default:
-      return "month";
-  }
-}, ne = (e = d.Every30Days) => {
-  switch (e) {
-    case d.Annual:
-      return "yr";
-    case d.Every30Days:
-    default:
-      return "mo";
-  }
-}, ue = ({
-  interval: e = d.Every30Days,
-  useShortFormPlanIntervals: t = !0
-}) => t ? ne(e) : te(e), ce = ({ plan: e, customFieldKey: t = "recommended" }) => {
-  var n;
-  return !!((n = e.customFields) != null && n[t]);
-}, de = ({ plan: e, customFieldKey: t = "buttonLabel" }) => {
-  var n;
-  return ((n = e.customFields) == null ? void 0 : n[t]) || f.SelectPlan;
-}, pe = ({ plan: e }) => {
-  var t;
-  return ((t = e.discounts) == null ? void 0 : t.length) > 0 ? e.discounts.reduce(
-    (n, o) => n.discountedAmount < o.discountedAmount ? n : o
-  ) : void 0;
-}, he = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, me = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
-export {
-  f as Labels,
-  oe as MantleProvider,
-  se as PlanAvailability,
-  d as PlanInterval,
-  me as columnCount,
-  he as columnSpan,
-  de as customButtonLabel,
-  E as featureEnabled,
-  ie as featureSort,
-  pe as highestDiscount,
-  ue as intervalLabel,
-  te as intervalLabelLong,
-  ne as intervalLabelShort,
-  ce as isRecommendedPlan,
-  le as money,
-  ae as useMantle
+  return d;
 };
+export {
+  De as Labels,
+  mr as MantleProvider,
+  Er as useMantle
+};
+//# sourceMappingURL=index.mjs.map

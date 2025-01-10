@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/react",
   "description": "Mantle's React component library",
-  "version": "0.0.45",
+  "version": "0.0.47",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
@@ -13,18 +13,26 @@
   "engines": {
     "node": "^16.17.0 || >=18.12.0"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build": "NODE_ENV=production vite build",
+    "build": "tsc && vite build",
     "test": "exit 0",
-    "build-and-publish": "npm install && npm run build && npx tsc && npm publish"
+    "build-and-publish": "npm install && npm run build && npm publish"
   },
   "keywords": [
     "mantle",
@@ -46,19 +54,23 @@
     "@storybook/react": "^7.5.2",
     "@storybook/react-webpack5": "^7.5.2",
     "@storybook/testing-library": "^0.2.2",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": ">16.3",
     "rollup": "^3.12.0",
     "rollup-plugin-node-externals": "^5.1.0",
     "storybook": "^7.5.2",
     "typescript": "^5.4.3",
-    "vite": "^4.5.0"
+    "vite": "^4.5.0",
+    "vite-plugin-dts": "^3.7.0"
   },
   "peerDependencies": {
     "react": ">16.3"
   },
   "dependencies": {
-    "@heymantle/client": "^1.1.39"
+    "@heymantle/client": "^1.1.41"
   },
   "publishConfig": {
     "@heymantle:registry": "https://registry.npmjs.org/",
