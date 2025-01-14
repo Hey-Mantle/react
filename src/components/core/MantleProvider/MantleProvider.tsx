@@ -64,7 +64,7 @@ export type BaseSubscribeParams = {
   billingProvider?: string;
   /** The URL to return to after subscribing */
   returnUrl?: string;
-  /** Whether to use the saved payment method for the customer */
+  /** Whether to use the saved payment method for the customer. Defaults to true. */
   useSavedPaymentMethod?: boolean;
   /** The number of trial days to offer */
   trialDays?: number;
@@ -76,7 +76,7 @@ export type BaseSubscribeParams = {
   daysUntilDue?: number;
   /** (Stripe only) The payment method types to use for the subscription */
   paymentMethodTypes?: string[];
-  /** (Stripe only) Whether to automatically calculate tax for the subscription */
+  /** (Stripe only) Whether to automatically calculate tax for the subscription. Defaults to false. */
   automaticTax?: boolean;
   /** (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address */
   requireBillingAddress?: boolean;
