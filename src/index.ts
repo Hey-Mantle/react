@@ -1,5 +1,5 @@
 export { MantleProvider, useMantle } from './components/core/MantleProvider/MantleProvider';
-export { Labels } from './utils/constants';
+export * from './utils';  
 export type {
   TMantleContext,
   MantleProviderProps,
