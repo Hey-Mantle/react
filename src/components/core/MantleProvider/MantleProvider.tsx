@@ -9,6 +9,7 @@ import type {
   UsageEvent,
   SetupIntent,
   HostedSession,
+  RequirePaymentMethodOptions,
 } from "@heymantle/client";
 
 /** The main context interface that encapsulates functionality exposed by MantleProvider */
@@ -76,6 +77,8 @@ export type BaseSubscribeParams = {
   daysUntilDue?: number;
   /** (Stripe only) The payment method types to use for the subscription */
   paymentMethodTypes?: string[];
+  /** (Stripe only) When to require a payment method for the subscription */
+  requirePaymentMethod?: RequirePaymentMethodOptions;
   /** (Stripe only) Whether to automatically calculate tax for the subscription. Defaults to false. */
   automaticTax?: boolean;
   /** (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address */

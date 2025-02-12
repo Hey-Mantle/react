@@ -1,4 +1,4 @@
-import { MantleClient, Customer, Subscription, Plan, UsageEvent, SetupIntent, HostedSession } from '@heymantle/client';
+import { MantleClient, Customer, Subscription, Plan, UsageEvent, SetupIntent, HostedSession, RequirePaymentMethodOptions } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -64,6 +64,8 @@ export type BaseSubscribeParams = {
     daysUntilDue?: number;
     /** (Stripe only) The payment method types to use for the subscription */
     paymentMethodTypes?: string[];
+    /** (Stripe only) When to require a payment method for the subscription */
+    requirePaymentMethod?: RequirePaymentMethodOptions;
     /** (Stripe only) Whether to automatically calculate tax for the subscription. Defaults to false. */
     automaticTax?: boolean;
     /** (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address */
