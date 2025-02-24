@@ -1,4 +1,4 @@
-import { Plan, Discount } from '@heymantle/client';
+import { Discount, Plan } from '@heymantle/client';
 
 export declare enum PlanInterval {
     Annual = "ANNUAL",

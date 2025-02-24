@@ -1,5 +1,5 @@
+import type { Discount, Plan } from "@heymantle/client";
 import { Labels } from "./constants";
-import type { Plan, Discount } from "@heymantle/client";
 
 export enum PlanInterval {
   Annual = "ANNUAL",
