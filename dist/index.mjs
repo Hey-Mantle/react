@@ -1,4 +1,4 @@
-import Ye, { createContext as cr, useState as Ae, useEffect as fr, useContext as dr } from "react";
+import Ye, { createContext as cr, useState as je, useEffect as fr, useContext as dr } from "react";
 import { MantleClient as vr } from "@heymantle/client";
 var ae = { exports: {} }, N = {};
 /**
@@ -15,20 +15,20 @@ function pr() {
   if (De)
     return N;
   De = 1;
-  var n = Ye, f = Symbol.for("react.element"), m = Symbol.for("react.fragment"), h = Object.prototype.hasOwnProperty, j = n.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, A = { key: !0, ref: !0, __self: !0, __source: !0 };
-  function T(b, u, C) {
-    var g, E = {}, _ = null, D = null;
-    C !== void 0 && (_ = "" + C), u.key !== void 0 && (_ = "" + u.key), u.ref !== void 0 && (D = u.ref);
-    for (g in u)
-      h.call(u, g) && !A.hasOwnProperty(g) && (E[g] = u[g]);
+  var n = Ye, f = Symbol.for("react.element"), m = Symbol.for("react.fragment"), h = Object.prototype.hasOwnProperty, A = n.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, j = { key: !0, ref: !0, __self: !0, __source: !0 };
+  function T(b, u, P) {
+    var y, E = {}, _ = null, D = null;
+    P !== void 0 && (_ = "" + P), u.key !== void 0 && (_ = "" + u.key), u.ref !== void 0 && (D = u.ref);
+    for (y in u)
+      h.call(u, y) && !j.hasOwnProperty(y) && (E[y] = u[y]);
     if (b && b.defaultProps)
-      for (g in u = b.defaultProps, u)
-        E[g] === void 0 && (E[g] = u[g]);
-    return { $$typeof: f, type: b, key: _, ref: D, props: E, _owner: j.current };
+      for (y in u = b.defaultProps, u)
+        E[y] === void 0 && (E[y] = u[y]);
+    return { $$typeof: f, type: b, key: _, ref: D, props: E, _owner: A.current };
   }
   return N.Fragment = m, N.jsx = T, N.jsxs = T, N;
 }
-var M = {};
+var L = {};
 /**
  * @license React
  * react-jsx-runtime.development.js
@@ -41,14 +41,14 @@ var M = {};
 var Fe;
 function mr() {
   return Fe || (Fe = 1, process.env.NODE_ENV !== "production" && function() {
-    var n = Ye, f = Symbol.for("react.element"), m = Symbol.for("react.portal"), h = Symbol.for("react.fragment"), j = Symbol.for("react.strict_mode"), A = Symbol.for("react.profiler"), T = Symbol.for("react.provider"), b = Symbol.for("react.context"), u = Symbol.for("react.forward_ref"), C = Symbol.for("react.suspense"), g = Symbol.for("react.suspense_list"), E = Symbol.for("react.memo"), _ = Symbol.for("react.lazy"), D = Symbol.for("react.offscreen"), U = Symbol.iterator, J = "@@iterator";
+    var n = Ye, f = Symbol.for("react.element"), m = Symbol.for("react.portal"), h = Symbol.for("react.fragment"), A = Symbol.for("react.strict_mode"), j = Symbol.for("react.profiler"), T = Symbol.for("react.provider"), b = Symbol.for("react.context"), u = Symbol.for("react.forward_ref"), P = Symbol.for("react.suspense"), y = Symbol.for("react.suspense_list"), E = Symbol.for("react.memo"), _ = Symbol.for("react.lazy"), D = Symbol.for("react.offscreen"), U = Symbol.iterator, J = "@@iterator";
     function G(e) {
       if (e === null || typeof e != "object")
         return null;
       var r = U && e[U] || e[J];
       return typeof r == "function" ? r : null;
     }
-    var P = n.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+    var w = n.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
     function p(e) {
       {
         for (var r = arguments.length, t = new Array(r > 1 ? r - 1 : 0), a = 1; a < r; a++)
@@ -58,7 +58,7 @@ function mr() {
     }
     function H(e, r, t) {
       {
-        var a = P.ReactDebugCurrentFrame, s = a.getStackAddendum();
+        var a = w.ReactDebugCurrentFrame, s = a.getStackAddendum();
         s !== "" && (r += "%s", t = t.concat([s]));
         var c = t.map(function(i) {
           return String(i);
@@ -69,13 +69,13 @@ function mr() {
     var X = !1, l = !1, x = !1, ie = !1, I = !1, ue;
     ue = Symbol.for("react.module.reference");
     function Ne(e) {
-      return !!(typeof e == "string" || typeof e == "function" || e === h || e === A || I || e === j || e === C || e === g || ie || e === D || X || l || x || typeof e == "object" && e !== null && (e.$$typeof === _ || e.$$typeof === E || e.$$typeof === T || e.$$typeof === b || e.$$typeof === u || // This needs to include all possible module reference object
+      return !!(typeof e == "string" || typeof e == "function" || e === h || e === j || I || e === A || e === P || e === y || ie || e === D || X || l || x || typeof e == "object" && e !== null && (e.$$typeof === _ || e.$$typeof === E || e.$$typeof === T || e.$$typeof === b || e.$$typeof === u || // This needs to include all possible module reference object
       // types supported by any Flight configuration anywhere since
       // we don't know which Flight build this will end up being used
       // with.
       e.$$typeof === ue || e.getModuleId !== void 0));
     }
-    function Me(e, r, t) {
+    function Le(e, r, t) {
       var a = e.displayName;
       if (a)
         return a;
@@ -97,13 +97,13 @@ function mr() {
           return "Fragment";
         case m:
           return "Portal";
-        case A:
-          return "Profiler";
         case j:
+          return "Profiler";
+        case A:
           return "StrictMode";
-        case C:
+        case P:
           return "Suspense";
-        case g:
+        case y:
           return "SuspenseList";
       }
       if (typeof e == "object")
@@ -115,7 +115,7 @@ function mr() {
             var t = e;
             return se(t._context) + ".Provider";
           case u:
-            return Me(e, e.render, "ForwardRef");
+            return Le(e, e.render, "ForwardRef");
           case E:
             var a = e.displayName || null;
             return a !== null ? a : S(e.type) || "Memo";
@@ -192,7 +192,7 @@ function mr() {
         Y < 0 && p("disabledDepth fell below zero. This is a bug in React. Please file an issue.");
       }
     }
-    var z = P.ReactCurrentDispatcher, K;
+    var z = w.ReactCurrentDispatcher, K;
     function $(e, r, t) {
       {
         if (K === void 0)
@@ -211,7 +211,7 @@ function mr() {
       var $e = typeof WeakMap == "function" ? WeakMap : Map;
       W = new $e();
     }
-    function ge(e, r) {
+    function ye(e, r) {
       if (!e || Z)
         return "";
       {
@@ -237,37 +237,37 @@ function mr() {
           }), typeof Reflect == "object" && Reflect.construct) {
             try {
               Reflect.construct(i, []);
-            } catch (w) {
-              a = w;
+            } catch (C) {
+              a = C;
             }
             Reflect.construct(e, [], i);
           } else {
             try {
               i.call();
-            } catch (w) {
-              a = w;
+            } catch (C) {
+              a = C;
             }
             e.call(i.prototype);
           }
         } else {
           try {
             throw Error();
-          } catch (w) {
-            a = w;
+          } catch (C) {
+            a = C;
           }
           e();
         }
-      } catch (w) {
-        if (w && a && typeof w.stack == "string") {
-          for (var o = w.stack.split(`
-`), y = a.stack.split(`
-`), d = o.length - 1, v = y.length - 1; d >= 1 && v >= 0 && o[d] !== y[v]; )
+      } catch (C) {
+        if (C && a && typeof C.stack == "string") {
+          for (var o = C.stack.split(`
+`), g = a.stack.split(`
+`), d = o.length - 1, v = g.length - 1; d >= 1 && v >= 0 && o[d] !== g[v]; )
             v--;
           for (; d >= 1 && v >= 0; d--, v--)
-            if (o[d] !== y[v]) {
+            if (o[d] !== g[v]) {
               if (d !== 1 || v !== 1)
                 do
-                  if (d--, v--, v < 0 || o[d] !== y[v]) {
+                  if (d--, v--, v < 0 || o[d] !== g[v]) {
                     var R = `
 ` + o[d].replace(" at new ", " at ");
                     return e.displayName && R.includes("<anonymous>") && (R = R.replace("<anonymous>", e.displayName)), typeof e == "function" && W.set(e, R), R;
@@ -279,11 +279,11 @@ function mr() {
       } finally {
         Z = !1, z.current = c, Ie(), Error.prepareStackTrace = s;
       }
-      var k = e ? e.displayName || e.name : "", je = k ? $(k) : "";
-      return typeof e == "function" && W.set(e, je), je;
+      var k = e ? e.displayName || e.name : "", Ae = k ? $(k) : "";
+      return typeof e == "function" && W.set(e, Ae), Ae;
     }
     function We(e, r, t) {
-      return ge(e, !1);
+      return ye(e, !1);
     }
     function Ve(e) {
       var r = e.prototype;
@@ -293,13 +293,13 @@ function mr() {
       if (e == null)
         return "";
       if (typeof e == "function")
-        return ge(e, Ve(e));
+        return ye(e, Ve(e));
       if (typeof e == "string")
         return $(e);
       switch (e) {
-        case C:
+        case P:
           return $("Suspense");
-        case g:
+        case y:
           return $("SuspenseList");
       }
       if (typeof e == "object")
@@ -318,36 +318,36 @@ function mr() {
         }
       return "";
     }
-    var q = Object.prototype.hasOwnProperty, he = {}, ye = P.ReactDebugCurrentFrame;
-    function B(e) {
+    var B = Object.prototype.hasOwnProperty, he = {}, ge = w.ReactDebugCurrentFrame;
+    function q(e) {
       if (e) {
         var r = e._owner, t = V(e.type, e._source, r ? r.type : null);
-        ye.setExtraStackFrame(t);
+        ge.setExtraStackFrame(t);
       } else
-        ye.setExtraStackFrame(null);
+        ge.setExtraStackFrame(null);
     }
-    function qe(e, r, t, a, s) {
+    function Be(e, r, t, a, s) {
       {
-        var c = Function.call.bind(q);
+        var c = Function.call.bind(B);
         for (var i in e)
           if (c(e, i)) {
             var o = void 0;
             try {
               if (typeof e[i] != "function") {
-                var y = Error((a || "React class") + ": " + t + " type `" + i + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof e[i] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
-                throw y.name = "Invariant Violation", y;
+                var g = Error((a || "React class") + ": " + t + " type `" + i + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof e[i] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                throw g.name = "Invariant Violation", g;
               }
               o = e[i](r, i, a, t, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
             } catch (d) {
               o = d;
             }
-            o && !(o instanceof Error) && (B(s), p("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", a || "React class", t, i, typeof o), B(null)), o instanceof Error && !(o.message in he) && (he[o.message] = !0, B(s), p("Failed %s type: %s", t, o.message), B(null));
+            o && !(o instanceof Error) && (q(s), p("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", a || "React class", t, i, typeof o), q(null)), o instanceof Error && !(o.message in he) && (he[o.message] = !0, q(s), p("Failed %s type: %s", t, o.message), q(null));
           }
       }
     }
-    var Be = Array.isArray;
+    var qe = Array.isArray;
     function Q(e) {
-      return Be(e);
+      return qe(e);
     }
     function Je(e) {
       {
@@ -369,7 +369,7 @@ function mr() {
       if (Ge(e))
         return p("The provided key is an unsupported type %s. This value must be coerced to a string before before using it here.", Je(e)), Ee(e);
     }
-    var L = P.ReactCurrentOwner, He = {
+    var M = w.ReactCurrentOwner, He = {
       key: !0,
       ref: !0,
       __self: !0,
@@ -377,7 +377,7 @@ function mr() {
     }, _e, Se, ee;
     ee = {};
     function Xe(e) {
-      if (q.call(e, "ref")) {
+      if (B.call(e, "ref")) {
         var r = Object.getOwnPropertyDescriptor(e, "ref").get;
         if (r && r.isReactWarning)
           return !1;
@@ -385,7 +385,7 @@ function mr() {
       return e.ref !== void 0;
     }
     function ze(e) {
-      if (q.call(e, "key")) {
+      if (B.call(e, "key")) {
         var r = Object.getOwnPropertyDescriptor(e, "key").get;
         if (r && r.isReactWarning)
           return !1;
@@ -393,9 +393,9 @@ function mr() {
       return e.key !== void 0;
     }
     function Ke(e, r) {
-      if (typeof e.ref == "string" && L.current && r && L.current.stateNode !== r) {
-        var t = S(L.current.type);
-        ee[t] || (p('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', S(L.current.type), e.ref), ee[t] = !0);
+      if (typeof e.ref == "string" && M.current && r && M.current.stateNode !== r) {
+        var t = S(M.current.type);
+        ee[t] || (p('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', S(M.current.type), e.ref), ee[t] = !0);
       }
     }
     function Ze(e, r) {
@@ -451,36 +451,36 @@ function mr() {
     };
     function rr(e, r, t, a, s) {
       {
-        var c, i = {}, o = null, y = null;
-        t !== void 0 && (Re(t), o = "" + t), ze(r) && (Re(r.key), o = "" + r.key), Xe(r) && (y = r.ref, Ke(r, s));
+        var c, i = {}, o = null, g = null;
+        t !== void 0 && (Re(t), o = "" + t), ze(r) && (Re(r.key), o = "" + r.key), Xe(r) && (g = r.ref, Ke(r, s));
         for (c in r)
-          q.call(r, c) && !He.hasOwnProperty(c) && (i[c] = r[c]);
+          B.call(r, c) && !He.hasOwnProperty(c) && (i[c] = r[c]);
         if (e && e.defaultProps) {
           var d = e.defaultProps;
           for (c in d)
             i[c] === void 0 && (i[c] = d[c]);
         }
-        if (o || y) {
+        if (o || g) {
           var v = typeof e == "function" ? e.displayName || e.name || "Unknown" : e;
-          o && Ze(i, v), y && Qe(i, v);
+          o && Ze(i, v), g && Qe(i, v);
         }
-        return er(e, o, y, s, a, L.current, i);
+        return er(e, o, g, s, a, M.current, i);
       }
     }
-    var re = P.ReactCurrentOwner, we = P.ReactDebugCurrentFrame;
+    var re = w.ReactCurrentOwner, Ce = w.ReactDebugCurrentFrame;
     function F(e) {
       if (e) {
         var r = e._owner, t = V(e.type, e._source, r ? r.type : null);
-        we.setExtraStackFrame(t);
+        Ce.setExtraStackFrame(t);
       } else
-        we.setExtraStackFrame(null);
+        Ce.setExtraStackFrame(null);
     }
     var te;
     te = !1;
     function ne(e) {
       return typeof e == "object" && e !== null && e.$$typeof === f;
     }
-    function Ce() {
+    function Pe() {
       {
         if (re.current) {
           var e = S(re.current.type);
@@ -503,10 +503,10 @@ Check your code at ` + r + ":" + t + ".";
         return "";
       }
     }
-    var Pe = {};
+    var we = {};
     function nr(e) {
       {
-        var r = Ce();
+        var r = Pe();
         if (!r) {
           var t = typeof e == "string" ? e : e.displayName || e.name;
           t && (r = `
@@ -522,9 +522,9 @@ Check the top-level render call using <` + t + ">.");
           return;
         e._store.validated = !0;
         var t = nr(r);
-        if (Pe[t])
+        if (we[t])
           return;
-        Pe[t] = !0;
+        we[t] = !0;
         var a = "";
         e && e._owner && e._owner !== re.current && (a = " It was passed a child from " + S(e._owner.type) + "."), F(e), p('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', t, a), F(null);
       }
@@ -564,7 +564,7 @@ Check the top-level render call using <` + t + ">.");
           return;
         if (t) {
           var a = S(r);
-          qe(t, e.props, "prop", a, e);
+          Be(t, e.props, "prop", a, e);
         } else if (r.PropTypes !== void 0 && !te) {
           te = !0;
           var s = S(r);
@@ -591,8 +591,8 @@ Check the top-level render call using <` + t + ">.");
         if (!i) {
           var o = "";
           (e === void 0 || typeof e == "object" && e !== null && Object.keys(e).length === 0) && (o += " You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.");
-          var y = tr(s);
-          y ? o += y : o += Ce();
+          var g = tr(s);
+          g ? o += g : o += Pe();
           var d;
           e === null ? d = "null" : Q(e) ? d = "array" : e !== void 0 && e.$$typeof === f ? (d = "<" + (S(e.type) || "Unknown") + " />", o = " Did you accidentally export a JSX literal instead of a component?") : d = typeof e, p("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", d, o);
         }
@@ -622,12 +622,49 @@ Check the top-level render call using <` + t + ">.");
       return Oe(e, r, t, !1);
     }
     var sr = ur, lr = ir;
-    M.Fragment = h, M.jsx = sr, M.jsxs = lr;
-  }()), M;
+    L.Fragment = h, L.jsx = sr, L.jsxs = lr;
+  }()), L;
 }
 process.env.NODE_ENV === "production" ? ae.exports = pr() : ae.exports = mr();
 var br = ae.exports;
-const oe = {
+const Cr = {
+  Public: "public",
+  CustomerTag: "customerTag",
+  ShopifyPlan: "shopifyPlan",
+  Customer: "customer",
+  Hidden: "hidden"
+}, oe = {
+  AmountPerInterval: "{{ amount }} per {{ interval }}",
+  Back: "Back",
+  Cancel: "Cancel",
+  CancelConfirmation: "Are you sure you want to cancel your subscription?",
+  CancelPlan: "Cancel plan",
+  ChangePlan: "Change plan",
+  CurrentPlan: "Current plan",
+  CustomPlans: "Custom plans",
+  CustomPlansDescription: "Plans tailored to your specific needs",
+  DiscountAmount: "{{ amount }} discount",
+  DiscountAmountExpired: "{{ amount }} discount expired",
+  FreeTrialLength: "{{ trialDays }}-day free trial",
+  Features: "Features",
+  Month: "month",
+  MonthShort: "mo",
+  Monthly: "Monthly",
+  NextBillingDate: "Next billing date",
+  NotSubscribed: "You're not subscribed to a plan yet.",
+  Year: "year",
+  YearShort: "yr",
+  Yearly: "Yearly",
+  MostPopular: "Most popular",
+  Per: "/",
+  Plans: "Plans",
+  Price: "Price",
+  SelectPlan: "Select plan",
+  SubscribeSuccessTitle: "Subscription successful",
+  SubscribeSuccessBody: "Thanks for subscribing to our app!",
+  Subscription: "Subscription",
+  SubscriptionCancelled: "Subscription cancelled",
+  UsageCharges: "Usage charges",
   // Common
   loading: "Loading...",
   error: "An error occurred",
@@ -647,20 +684,20 @@ const oe = {
   featureNotAvailable: "This feature is not available on your current plan",
   upgradeRequired: "Upgrade Required",
   limitReached: "Limit Reached"
-}, Le = cr(void 0), gr = ({ feature: n, count: f = 0 }) => (n == null ? void 0 : n.type) === "boolean" ? n.value : (n == null ? void 0 : n.type) === "limit" ? f < n.value || n.value === -1 : !1, wr = ({
+}, Me = cr(void 0), yr = ({ feature: n, count: f = 0 }) => (n == null ? void 0 : n.type) === "boolean" ? n.value : (n == null ? void 0 : n.type) === "limit" ? f < n.value || n.value === -1 : !1, Pr = ({
   appId: n,
   customerApiToken: f,
   apiUrl: m = "https://appapi.heymantle.com/v1",
   children: h,
-  i18n: j = oe,
-  waitForCustomer: A = !1,
+  i18n: A = oe,
+  waitForCustomer: j = !1,
   loadingComponent: T = null
 }) => {
-  const b = new vr({ appId: n, customerApiToken: f, apiUrl: m }), [u, C] = Ae(null), [g, E] = Ae(!0), _ = async () => {
+  const b = new vr({ appId: n, customerApiToken: f, apiUrl: m }), [u, P] = je(null), [y, E] = je(!0), _ = async () => {
     try {
       E(!0);
       const l = await b.getCustomer();
-      C(l);
+      P(l);
     } catch (l) {
       console.error("[MantleProvider] Error fetching customer: ", l);
     } finally {
@@ -670,7 +707,7 @@ const oe = {
     await b.sendUsageEvent(l);
   }, U = async ({ usageId: l, period: x }) => await b.getUsageMetricReport({ id: l, period: x }), J = async (l) => await b.subscribe(l), G = async ({ cancelReason: l } = {}) => await b.cancelSubscription({
     ...l && { cancelReason: l }
-  }), P = async ({ returnUrl: l }) => {
+  }), w = async ({ returnUrl: l }) => {
     if (!l)
       throw new Error("returnUrl is required");
     return await b.addPaymentMethod({ returnUrl: l });
@@ -690,23 +727,23 @@ const oe = {
     f && _();
   }, [f]);
   const H = (u == null ? void 0 : u.plans) || [], X = (u == null ? void 0 : u.subscription) || null;
-  return A && g ? T || null : /* @__PURE__ */ br.jsx(
-    Le.Provider,
+  return j && y ? T || null : /* @__PURE__ */ br.jsx(
+    Me.Provider,
     {
       value: {
         client: b,
         customer: u,
         subscription: X,
         plans: H,
-        loading: g,
-        i18n: { ...oe, ...j },
+        loading: y,
+        i18n: { ...oe, ...A },
         sendUsageEvent: D,
         getUsageReport: U,
         subscribe: J,
         cancelSubscription: G,
-        addPaymentMethod: P,
+        addPaymentMethod: w,
         createHostedSession: p,
-        isFeatureEnabled: ({ featureKey: l, count: x = 0 }) => u != null && u.features[l] ? gr({
+        isFeatureEnabled: ({ featureKey: l, count: x = 0 }) => u != null && u.features[l] ? yr({
           feature: u.features[l],
           count: x
         }) : !1,
@@ -718,20 +755,20 @@ const oe = {
       children: h
     }
   );
-}, Cr = () => {
-  const n = dr(Le);
+}, wr = () => {
+  const n = dr(Me);
   if (n === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return n;
-}, ke = (n) => n.type === "boolean" && n.value === !0 || n.type === "limit" && n.value !== 0, Pr = (n, f) => Number(ke(f)) - Number(ke(n)) || n.name.localeCompare(f.name), hr = (n = "USD") => new Intl.NumberFormat("en-US", {
+}, ke = (n) => n.type === "boolean" && n.value === !0 || n.type === "limit" && n.value !== 0, Tr = (n, f) => Number(ke(f)) - Number(ke(n)) || n.name.localeCompare(f.name), hr = (n = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: n,
   notation: "standard"
-}), Tr = (n, f = "USD", m = !0) => {
+}), xr = (n, f = "USD", m = !0) => {
   let h = hr(f).format(n);
   return m && (h = h.replace(/\.00$/, "")), h;
 };
-var yr = /* @__PURE__ */ ((n) => (n.Annual = "ANNUAL", n.Every30Days = "EVERY_30_DAYS", n))(yr || {});
+var gr = /* @__PURE__ */ ((n) => (n.Annual = "ANNUAL", n.Every30Days = "EVERY_30_DAYS", n))(gr || {});
 const Er = (n = "EVERY_30_DAYS") => {
   switch (n) {
     case "ANNUAL":
@@ -748,10 +785,10 @@ const Er = (n = "EVERY_30_DAYS") => {
     default:
       return "mo";
   }
-}, xr = ({
+}, Or = ({
   interval: n = "EVERY_30_DAYS",
   useShortFormPlanIntervals: f = !0
-}) => f ? Rr(n) : Er(n), Or = ({
+}) => f ? Rr(n) : Er(n), Ar = ({
   plan: n,
   customFieldKey: f = "recommended"
 }) => {
@@ -763,27 +800,28 @@ const Er = (n = "EVERY_30_DAYS") => {
 }) => {
   var m;
   return ((m = n.customFields) == null ? void 0 : m[f]) || oe.subscribe;
-}, Ar = ({ plan: n }) => {
+}, Dr = ({ plan: n }) => {
   var f;
   return ((f = n.discounts) == null ? void 0 : f.length) > 0 ? n.discounts.reduce(
     (m, h) => m.discountedAmount < h.discountedAmount ? m : h
   ) : void 0;
-}, Dr = (n = 4) => n % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : n % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : n % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : n === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, Fr = (n = 4) => n % 4 === 0 ? 4 : n % 3 === 0 ? 3 : n % 2 === 0 ? 2 : n === 1 ? 1 : 4;
+}, Fr = (n = 4) => n % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : n % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : n % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : n === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, kr = (n = 4) => n % 4 === 0 ? 4 : n % 3 === 0 ? 3 : n % 2 === 0 ? 2 : n === 1 ? 1 : 4;
 export {
   oe as Labels,
-  wr as MantleProvider,
-  yr as PlanInterval,
-  Fr as columnCount,
-  Dr as columnSpan,
+  Pr as MantleProvider,
+  Cr as PlanAvailability,
+  gr as PlanInterval,
+  kr as columnCount,
+  Fr as columnSpan,
   jr as customButtonLabel,
   ke as featureEnabled,
-  Pr as featureSort,
-  Ar as highestDiscount,
-  xr as intervalLabel,
+  Tr as featureSort,
+  Dr as highestDiscount,
+  Or as intervalLabel,
   Er as intervalLabelLong,
   Rr as intervalLabelShort,
-  Or as isRecommendedPlan,
-  Tr as money,
-  Cr as useMantle
+  Ar as isRecommendedPlan,
+  xr as money,
+  wr as useMantle
 };
 //# sourceMappingURL=index.mjs.map
