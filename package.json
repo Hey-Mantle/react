@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/react",
   "description": "Mantle's React component library",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
@@ -67,7 +67,7 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "peerDependencies": {
-    "react": ">16.3"
+    "react": ">16.14"
   },
   "dependencies": {
     "@heymantle/client": "^1.1.46"
