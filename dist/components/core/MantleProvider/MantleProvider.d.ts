@@ -1,4 +1,4 @@
-import { MantleClient, Customer, Subscription, Plan, UsageEvent, SetupIntent, HostedSession, RequirePaymentMethodOptions } from '@heymantle/client';
+import { Customer, HostedSession, Notify, Plan, RequirePaymentMethodOptions, SetupIntent, Subscription, UsageEvent, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -34,6 +34,10 @@ export interface TMantleContext {
     limitForFeature: FeatureLimitCallback;
     /** Create a hosted session */
     createHostedSession: HostedSessionCallback;
+    /** Send a notification */
+    notify: NotifyCallback;
+    /** Get a notifications */
+    listNotifies: ListNotifiesCallback;
 }
 /** Callback to send a new usage event to Mantle */
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<void>;
@@ -120,6 +124,16 @@ export type HostedSessionCallback = (params: {
     /** The configuration for the hosted session */
     config: Record<string, any>;
 }) => Promise<HostedSession>;
+export type ListNotifiesCallback = () => Promise<{
+    notifies: Notify[];
+    hasMore: boolean;
+}>;
+/** Callback to send a notification */
+export type NotifyCallback = (params: {
+    templateId: string;
+}) => Promise<string[]>;
+/** Callback to list notifications */
+export type ListNotificationsCallback = () => Promise<Notification[]>;
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
     /** The Mantle App ID provided by Mantle */

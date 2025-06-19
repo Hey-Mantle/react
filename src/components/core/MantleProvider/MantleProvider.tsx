@@ -1,16 +1,17 @@
-import { MantleClient } from "@heymantle/client";
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { Labels } from "../../../utils/constants";
 import type {
-  Feature,
   Customer,
-  Subscription,
-  Plan,
-  UsageEvent,
-  SetupIntent,
+  Feature,
   HostedSession,
+  Notify,
+  Plan,
   RequirePaymentMethodOptions,
+  SetupIntent,
+  Subscription,
+  UsageEvent,
 } from "@heymantle/client";
+import { MantleClient } from "@heymantle/client";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { Labels } from "../../../utils/constants";
 
 /** The main context interface that encapsulates functionality exposed by MantleProvider */
 export interface TMantleContext {
@@ -44,6 +45,10 @@ export interface TMantleContext {
   limitForFeature: FeatureLimitCallback;
   /** Create a hosted session */
   createHostedSession: HostedSessionCallback;
+  /** Send a notification */
+  notify: NotifyCallback;
+  /** Get a notifications */
+  listNotifies: ListNotifiesCallback;
 }
 
 /** Callback to send a new usage event to Mantle */
@@ -106,7 +111,9 @@ export type MultiPlanSubscribe = BaseSubscribeParams & {
 };
 
 /** Callback to subscribe to a new plan or plans */
-export type SubscribeCallback = (params: SinglePlanSubscribe | MultiPlanSubscribe) => Promise<Subscription>;
+export type SubscribeCallback = (
+  params: SinglePlanSubscribe | MultiPlanSubscribe
+) => Promise<Subscription>;
 
 /** Callback to cancel the current subscription */
 export type CancelSubscriptionCallback = (params?: {
@@ -142,6 +149,19 @@ export type HostedSessionCallback = (params: {
   config: Record<string, any>;
 }) => Promise<HostedSession>;
 
+export type ListNotifiesCallback = () => Promise<{
+  notifies: Notify[];
+  hasMore: boolean;
+}>;
+
+/** Callback to send a notification */
+export type NotifyCallback = (params: {
+  templateId: string;
+}) => Promise<string[]>;
+
+/** Callback to list notifications */
+export type ListNotificationsCallback = () => Promise<Notification[]>;
+
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
   /** The Mantle App ID provided by Mantle */
@@ -169,7 +189,13 @@ const MantleContext = createContext<TMantleContext | undefined>(undefined);
  * @param count - The count to evaluate against if the feature is a limit type
  * @returns Whether the feature is considered enabled
  */
-const evaluateFeature = ({ feature, count = 0 }: { feature: Feature; count?: number }): boolean => {
+const evaluateFeature = ({
+  feature,
+  count = 0,
+}: {
+  feature: Feature;
+  count?: number;
+}): boolean => {
   if (feature?.type === "boolean") {
     return feature.value;
   } else if (feature?.type === "limit") {
@@ -181,7 +207,7 @@ const evaluateFeature = ({ feature, count = 0 }: { feature: Feature; count?: num
 /**
  * MantleProvider uses the React Context API to provide a MantleClient instance and
  * the current customer to its children, which can be accessed using the useMantle hook.
- * 
+ *
  * @example
  * ```tsx
  * function App() {
@@ -239,7 +265,10 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.period - The period to get the report for
    * @returns The usage report data
    */
-  const getUsageReport: GetUsageReportCallback = async ({ usageId, period }) => {
+  const getUsageReport: GetUsageReportCallback = async ({
+    usageId,
+    period,
+  }) => {
     return await mantleClient.getUsageMetricReport({ id: usageId, period });
   };
 
@@ -257,7 +286,9 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.cancelReason - Optional reason for cancellation
    * @returns The cancelled subscription
    */
-  const cancelSubscription: CancelSubscriptionCallback = async ({ cancelReason } = {}) => {
+  const cancelSubscription: CancelSubscriptionCallback = async ({
+    cancelReason,
+  } = {}) => {
     return await mantleClient.cancelSubscription({
       ...(cancelReason && { cancelReason }),
     });
@@ -283,7 +314,10 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @returns The created hosted session
    * @throws Error if type is not provided
    */
-  const createHostedSession: HostedSessionCallback = async ({ type, config }) => {
+  const createHostedSession: HostedSessionCallback = async ({
+    type,
+    config,
+  }) => {
     if (!type) {
       throw new Error("type is required");
     }
@@ -296,6 +330,14 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         ...(config || {}),
       },
     });
+  };
+
+  const notify: NotifyCallback = async ({ templateId }) => {
+    return await mantleClient.notify({ templateId });
+  };
+
+  const listNotifies: ListNotifiesCallback = async () => {
+    return await mantleClient.listNotifies();
   };
 
   // Fetch customer when the token changes
@@ -327,6 +369,8 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         cancelSubscription,
         addPaymentMethod,
         createHostedSession,
+        notify,
+        listNotifies,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (customer?.features[featureKey]) {
             return evaluateFeature({
@@ -358,7 +402,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
 /**
  * React hook to access the Mantle context
  * Must be used within a MantleProvider component
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
@@ -366,16 +410,16 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
  *   return <div>Hello {customer?.name}</div>;
  * }
  * ```
- * 
+ *
  * @returns The Mantle context containing all Mantle functionality
  * @throws Error if used outside of a MantleProvider
  */
 export const useMantle = (): TMantleContext => {
   const context = useContext(MantleContext);
-  
+
   if (context === undefined) {
     throw new Error("useMantle must be used within a MantleProvider");
   }
 
   return context;
-}; 
+};
