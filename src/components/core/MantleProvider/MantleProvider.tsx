@@ -48,7 +48,9 @@ export interface TMantleContext {
   /** Send a notification */
   notify: NotifyCallback;
   /** Get a notifications */
-  listNotifies: ListNotifiesCallback;
+  listNotifications: ListNotificationsCallback;
+  /** Trigger a notification CTA */
+  triggerNotificationCta: TriggerNotificationCtaCallback;
 }
 
 /** Callback to send a new usage event to Mantle */
@@ -149,18 +151,21 @@ export type HostedSessionCallback = (params: {
   config: Record<string, any>;
 }) => Promise<HostedSession>;
 
-export type ListNotifiesCallback = () => Promise<{
+/** Callback to list notifications */
+export type ListNotificationsCallback = () => Promise<{
   notifies: Notify[];
   hasMore: boolean;
 }>;
+
+/** Callback to trigger a notification CTA */
+export type TriggerNotificationCtaCallback = (params: {
+  id: string;
+}) => Promise<{ success: boolean }>;
 
 /** Callback to send a notification */
 export type NotifyCallback = (params: {
   templateId: string;
 }) => Promise<string[]>;
-
-/** Callback to list notifications */
-export type ListNotificationsCallback = () => Promise<Notification[]>;
 
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
@@ -336,8 +341,14 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return await mantleClient.notify({ templateId });
   };
 
-  const listNotifies: ListNotifiesCallback = async () => {
-    return await mantleClient.listNotifies();
+  const listNotifications: ListNotificationsCallback = async () => {
+    return await mantleClient.listNotifications();
+  };
+
+  const triggerNotificationCta: TriggerNotificationCtaCallback = async ({
+    id,
+  }) => {
+    return await mantleClient.triggerNotificationCta({ id });
   };
 
   // Fetch customer when the token changes
@@ -370,7 +381,8 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         addPaymentMethod,
         createHostedSession,
         notify,
-        listNotifies,
+        listNotifications,
+        triggerNotificationCta,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (customer?.features[featureKey]) {
             return evaluateFeature({
