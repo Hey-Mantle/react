@@ -70,7 +70,7 @@
     "react": ">16.14"
   },
   "dependencies": {
-    "@heymantle/client": "file:/Users/jasongao/mantle-client/heymantle-client-1.1.48.tgz"
+    "@heymantle/client": "^1.1.48"
   },
   "publishConfig": {
     "@heymantle:registry": "https://registry.npmjs.org/",

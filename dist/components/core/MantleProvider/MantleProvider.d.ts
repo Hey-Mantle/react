@@ -34,10 +34,12 @@ export interface TMantleContext {
     limitForFeature: FeatureLimitCallback;
     /** Create a hosted session */
     createHostedSession: HostedSessionCallback;
-    /** Send a notification */
-    notify: NotifyCallback;
     /** Get a notifications */
-    listNotifies: ListNotifiesCallback;
+    listNotifications: ListNotificationsCallback;
+    /** Trigger a notification CTA */
+    triggerNotificationCta: TriggerNotificationCtaCallback;
+    /** Update a notification */
+    updateNotification: UpdateNotificationCallback;
 }
 /** Callback to send a new usage event to Mantle */
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<void>;
@@ -124,16 +126,25 @@ export type HostedSessionCallback = (params: {
     /** The configuration for the hosted session */
     config: Record<string, any>;
 }) => Promise<HostedSession>;
-export type ListNotifiesCallback = () => Promise<{
+/** Callback to list notifications */
+export type ListNotificationsCallback = () => Promise<{
     notifies: Notify[];
     hasMore: boolean;
 }>;
-/** Callback to send a notification */
-export type NotifyCallback = (params: {
-    templateId: string;
-}) => Promise<string[]>;
-/** Callback to list notifications */
-export type ListNotificationsCallback = () => Promise<Notification[]>;
+/** Callback to trigger a notification CTA */
+export type TriggerNotificationCtaCallback = (params: {
+    id: string;
+}) => Promise<{
+    success: boolean;
+}>;
+/** Callback to update a notification */
+export type UpdateNotificationCallback = (params: {
+    id: string;
+    readAt?: Date;
+    dismissedAt?: Date;
+}) => Promise<{
+    success: boolean;
+}>;
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
     /** The Mantle App ID provided by Mantle */

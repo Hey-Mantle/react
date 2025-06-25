@@ -45,12 +45,12 @@ export interface TMantleContext {
   limitForFeature: FeatureLimitCallback;
   /** Create a hosted session */
   createHostedSession: HostedSessionCallback;
-  /** Send a notification */
-  notify: NotifyCallback;
   /** Get a notifications */
   listNotifications: ListNotificationsCallback;
   /** Trigger a notification CTA */
   triggerNotificationCta: TriggerNotificationCtaCallback;
+  /** Update a notification */
+  updateNotification: UpdateNotificationCallback;
 }
 
 /** Callback to send a new usage event to Mantle */
@@ -162,10 +162,12 @@ export type TriggerNotificationCtaCallback = (params: {
   id: string;
 }) => Promise<{ success: boolean }>;
 
-/** Callback to send a notification */
-export type NotifyCallback = (params: {
-  templateId: string;
-}) => Promise<string[]>;
+/** Callback to update a notification */
+export type UpdateNotificationCallback = (params: {
+  id: string;
+  readAt?: Date;
+  dismissedAt?: Date;
+}) => Promise<{ success: boolean }>;
 
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
@@ -337,10 +339,6 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     });
   };
 
-  const notify: NotifyCallback = async ({ templateId }) => {
-    return await mantleClient.notify({ templateId });
-  };
-
   const listNotifications: ListNotificationsCallback = async () => {
     return await mantleClient.listNotifications();
   };
@@ -349,6 +347,14 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     id,
   }) => {
     return await mantleClient.triggerNotificationCta({ id });
+  };
+
+  const updateNotification: UpdateNotificationCallback = async ({
+    id,
+    readAt,
+    dismissedAt,
+  }) => {
+    return await mantleClient.updateNotification({ id, readAt, dismissedAt });
   };
 
   // Fetch customer when the token changes
@@ -380,9 +386,9 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         cancelSubscription,
         addPaymentMethod,
         createHostedSession,
-        notify,
         listNotifications,
         triggerNotificationCta,
+        updateNotification,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (customer?.features[featureKey]) {
             return evaluateFeature({
