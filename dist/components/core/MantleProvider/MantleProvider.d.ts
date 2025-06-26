@@ -40,6 +40,10 @@ export interface TMantleContext {
     triggerNotificationCta: TriggerNotificationCtaCallback;
     /** Update a notification */
     updateNotification: UpdateNotificationCallback;
+    /** Get the checklist */
+    getChecklist: GetChecklistCallback;
+    /** Complete a checklist step */
+    completeChecklistStep: CompleteChecklistStepCallback;
 }
 /** Callback to send a new usage event to Mantle */
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<void>;
@@ -49,6 +53,15 @@ export type GetUsageReportCallback = (params: {
     usageId: string;
     /** The period to get the usage report for */
     period: string;
+}) => Promise<any>;
+/** Callback to get the checklist */
+export type GetChecklistCallback = () => Promise<any>;
+/** Callback to complete a checklist step */
+export type CompleteChecklistStepCallback = (params: {
+    /** The ID of the checklist */
+    checklistId: string;
+    /** The ID of the checklist step to complete */
+    checklistStepId: string;
 }) => Promise<any>;
 /** Common subscription parameters without the plan selection */
 export type BaseSubscribeParams = {
