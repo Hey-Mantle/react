@@ -107,7 +107,7 @@ const O = {
         ...o || {}
       }
     });
-  }, M = async () => await a.listNotifications(), x = async ({
+  }, M = async (t) => await a.listNotifications(t), x = async ({
     id: t
   }) => await a.triggerNotificationCta({ id: t }), Y = async ({
     id: t,

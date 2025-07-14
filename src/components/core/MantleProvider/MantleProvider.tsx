@@ -167,7 +167,9 @@ export type HostedSessionCallback = (params: {
 }) => Promise<HostedSession>;
 
 /** Callback to list notifications */
-export type ListNotificationsCallback = () => Promise<{
+export type ListNotificationsCallback = (params?: {
+  email?: string;
+}) => Promise<{
   notifies: Notify[];
   hasMore: boolean;
 }>;
@@ -354,8 +356,8 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     });
   };
 
-  const listNotifications: ListNotificationsCallback = async () => {
-    return await mantleClient.listNotifications();
+  const listNotifications: ListNotificationsCallback = async (params) => {
+    return await mantleClient.listNotifications(params);
   };
 
   const triggerNotificationCta: TriggerNotificationCtaCallback = async ({

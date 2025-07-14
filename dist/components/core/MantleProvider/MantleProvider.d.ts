@@ -140,7 +140,9 @@ export type HostedSessionCallback = (params: {
     config: Record<string, any>;
 }) => Promise<HostedSession>;
 /** Callback to list notifications */
-export type ListNotificationsCallback = () => Promise<{
+export type ListNotificationsCallback = (params?: {
+    email?: string;
+}) => Promise<{
     notifies: Notify[];
     hasMore: boolean;
 }>;
