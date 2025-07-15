@@ -1,4 +1,4 @@
-import { Customer, HostedSession, Notify, Plan, RequirePaymentMethodOptions, SetupIntent, Subscription, UsageEvent, MantleClient } from '@heymantle/client';
+import { Customer, HostedSession, MantleError, Notify, Plan, RequirePaymentMethodOptions, SetupIntent, Subscription, SuccessResponse, UsageEvent, UsageMetricReport, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -46,14 +46,16 @@ export interface TMantleContext {
     completeChecklistStep: CompleteChecklistStepCallback;
 }
 /** Callback to send a new usage event to Mantle */
-export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<void>;
+export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<SuccessResponse>;
 /** Callback to get a usage report for a usage metric */
 export type GetUsageReportCallback = (params: {
     /** The ID of the usage metric to get a report for */
     usageId: string;
     /** The period to get the usage report for */
     period: string;
-}) => Promise<any>;
+}) => Promise<{
+    report: UsageMetricReport;
+} | MantleError>;
 /** Callback to get the checklist */
 export type GetChecklistCallback = () => Promise<any>;
 /** Callback to complete a checklist step */
@@ -109,17 +111,17 @@ export type MultiPlanSubscribe = BaseSubscribeParams & {
     planIds: string[];
 };
 /** Callback to subscribe to a new plan or plans */
-export type SubscribeCallback = (params: SinglePlanSubscribe | MultiPlanSubscribe) => Promise<Subscription>;
+export type SubscribeCallback = (params: SinglePlanSubscribe | MultiPlanSubscribe) => Promise<Subscription | MantleError>;
 /** Callback to cancel the current subscription */
 export type CancelSubscriptionCallback = (params?: {
     /** The reason for canceling the subscription */
     cancelReason?: string;
-}) => Promise<Subscription>;
+}) => Promise<Subscription | MantleError>;
 /** Callback to start the process of adding a new payment method */
 export type AddPaymentMethodCallback = (params: {
     /** The URL to return to after connecting a new PaymentMethod */
     returnUrl: string;
-}) => Promise<SetupIntent>;
+}) => Promise<SetupIntent | MantleError>;
 /** Callback to check if a feature is enabled */
 export type FeatureEnabledCallback = (params: {
     /** The key of the feature to evaluate */
@@ -138,28 +140,24 @@ export type HostedSessionCallback = (params: {
     type: string;
     /** The configuration for the hosted session */
     config: Record<string, any>;
-}) => Promise<HostedSession>;
+}) => Promise<HostedSession | MantleError>;
 /** Callback to list notifications */
 export type ListNotificationsCallback = (params?: {
     email?: string;
 }) => Promise<{
     notifies: Notify[];
     hasMore: boolean;
-}>;
+} | MantleError>;
 /** Callback to trigger a notification CTA */
 export type TriggerNotificationCtaCallback = (params: {
     id: string;
-}) => Promise<{
-    success: boolean;
-}>;
+}) => Promise<SuccessResponse | MantleError>;
 /** Callback to update a notification */
 export type UpdateNotificationCallback = (params: {
     id: string;
     readAt?: Date;
     dismissedAt?: Date;
-}) => Promise<{
-    success: boolean;
-}>;
+}) => Promise<SuccessResponse | MantleError>;
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
     /** The Mantle App ID provided by Mantle */
@@ -176,6 +174,8 @@ export interface MantleProviderProps {
     waitForCustomer?: boolean;
     /** The component to render while waiting for the customer to be fetched */
     loadingComponent?: React.ReactNode;
+    /** Whether to throw an error if an error occurs */
+    throwOnError?: boolean;
 }
 /**
  * MantleProvider uses the React Context API to provide a MantleClient instance and
