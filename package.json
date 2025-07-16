@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/react",
   "description": "Mantle's React component library",
-  "version": "0.0.59",
+  "version": "0.0.60",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
@@ -70,7 +70,7 @@
     "react": ">16.14"
   },
   "dependencies": {
-    "@heymantle/client": "^1.1.56"
+    "@heymantle/client": "^1.1.58"
   },
   "publishConfig": {
     "@heymantle:registry": "https://registry.npmjs.org/",
