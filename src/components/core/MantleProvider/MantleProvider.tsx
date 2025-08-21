@@ -54,14 +54,20 @@ export interface TMantleContext {
   triggerNotificationCta: TriggerNotificationCtaCallback;
   /** Update a notification */
   updateNotification: UpdateNotificationCallback;
-  /** Get the checklist */
+  /** Get the active checklist */
   getChecklist: GetChecklistCallback;
+  /** Get all checklists */
+  getChecklists: GetChecklistsCallback;
   /** Complete a checklist step */
   completeChecklistStep: CompleteChecklistStepCallback;
+  /** Mark a checklist as shown */
+  showChecklist: ShowChecklistCallback;
 }
 
 /** Callback to send a new usage event to Mantle */
-export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<SuccessResponse>;
+export type SendUsageEventCallback = (
+  usageEvent: UsageEvent
+) => Promise<SuccessResponse>;
 
 /** Callback to get a usage report for a usage metric */
 export type GetUsageReportCallback = (params: {
@@ -73,6 +79,17 @@ export type GetUsageReportCallback = (params: {
 
 /** Callback to get the checklist */
 export type GetChecklistCallback = () => Promise<any>;
+
+/** Callback to show a checklist */
+export type ShowChecklistCallback = (params: {
+  /** The ID of the checklist to show */
+  checklistId: string;
+}) => Promise<any>;
+
+/** Callback to get all checklists */
+export type GetChecklistsCallback = (
+  handle?: string
+) => Promise<any[] | MantleError>;
 
 /** Callback to complete a checklist step */
 export type CompleteChecklistStepCallback = (params: {
@@ -170,7 +187,9 @@ export type HostedSessionCallback = (params: {
 }) => Promise<HostedSession | MantleError>;
 
 /** Callback to list notifications */
-export type ListNotificationsCallback = (params?: { email?: string }) => Promise<
+export type ListNotificationsCallback = (params?: {
+  email?: string;
+}) => Promise<
   | {
       notifies: Notify[];
       hasMore: boolean;
@@ -219,7 +238,13 @@ const MantleContext = createContext<TMantleContext | undefined>(undefined);
  * @param count - The count to evaluate against if the feature is a limit type
  * @returns Whether the feature is considered enabled
  */
-const evaluateFeature = ({ feature, count = 0 }: { feature: Feature; count?: number }): boolean => {
+const evaluateFeature = ({
+  feature,
+  count = 0,
+}: {
+  feature: Feature;
+  count?: number;
+}): boolean => {
   if (feature?.type === "boolean") {
     return feature.value;
   } else if (feature?.type === "limit") {
@@ -307,8 +332,14 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.period - The period to get the report for
    * @returns The usage report data
    */
-  const getUsageReport: GetUsageReportCallback = async ({ usageId, period }) => {
-    const result = await mantleClient.getUsageMetricReport({ id: usageId, period });
+  const getUsageReport: GetUsageReportCallback = async ({
+    usageId,
+    period,
+  }) => {
+    const result = await mantleClient.getUsageMetricReport({
+      id: usageId,
+      period,
+    });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
     }
@@ -333,7 +364,9 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.cancelReason - Optional reason for cancellation
    * @returns The cancelled subscription
    */
-  const cancelSubscription: CancelSubscriptionCallback = async ({ cancelReason } = {}) => {
+  const cancelSubscription: CancelSubscriptionCallback = async ({
+    cancelReason,
+  } = {}) => {
     const result = await mantleClient.cancelSubscription({
       ...(cancelReason && { cancelReason }),
     });
@@ -367,7 +400,10 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @returns The created hosted session
    * @throws Error if type is not provided
    */
-  const createHostedSession: HostedSessionCallback = async ({ type, config }) => {
+  const createHostedSession: HostedSessionCallback = async ({
+    type,
+    config,
+  }) => {
     if (!type) {
       throw new Error("type is required");
     }
@@ -394,7 +430,9 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
-  const triggerNotificationCta: TriggerNotificationCtaCallback = async ({ id }) => {
+  const triggerNotificationCta: TriggerNotificationCtaCallback = async ({
+    id,
+  }) => {
     const result = await mantleClient.triggerNotificationCta({ id });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
@@ -402,8 +440,16 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
-  const updateNotification: UpdateNotificationCallback = async ({ id, readAt, dismissedAt }) => {
-    const result = await mantleClient.updateNotification({ id, readAt, dismissedAt });
+  const updateNotification: UpdateNotificationCallback = async ({
+    id,
+    readAt,
+    dismissedAt,
+  }) => {
+    const result = await mantleClient.updateNotification({
+      id,
+      readAt,
+      dismissedAt,
+    });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
     }
@@ -423,6 +469,32 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
   };
 
   /**
+   * Gets all checklists for the current customer
+   * @param handle - An optional handle filter for checklist(s) to get, can be a CSV list of handles.
+   * @returns The checklist data
+   */
+  const getChecklists: GetChecklistsCallback = async (handle) => {
+    const result = await mantleClient.getChecklists(handle);
+    if (result && "error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
+  /**
+   * Shows a checklist for the current customer
+   * @param params.checklistId - The ID of the checklist to mark as shown
+   * @returns The show result
+   */
+  const showChecklist: ShowChecklistCallback = async ({ checklistId }) => {
+    const result = await mantleClient.showChecklist({ checklistId });
+    if (result && "error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
+  /**
    * Completes a specific checklist step
    * @param params.checklistId - The ID of the checklist
    * @param params.checklistStepId - The ID of the checklist step to complete
@@ -432,7 +504,10 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     checklistId,
     checklistStepId,
   }) => {
-    const result = await mantleClient.completeChecklistStep({ checklistId, checklistStepId });
+    const result = await mantleClient.completeChecklistStep({
+      checklistId,
+      checklistStepId,
+    });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
     }
@@ -472,7 +547,9 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         triggerNotificationCta,
         updateNotification,
         getChecklist,
+        getChecklists,
         completeChecklistStep,
+        showChecklist,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (customer?.features[featureKey]) {
             return evaluateFeature({
@@ -483,7 +560,10 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
           return false;
         },
         limitForFeature: ({ featureKey }) => {
-          if (customer?.features[featureKey] && customer.features[featureKey].type === "limit") {
+          if (
+            customer?.features[featureKey] &&
+            customer.features[featureKey].type === "limit"
+          ) {
             return customer.features[featureKey].value;
           }
           return -1;
