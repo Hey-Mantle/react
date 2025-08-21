@@ -40,10 +40,14 @@ export interface TMantleContext {
     triggerNotificationCta: TriggerNotificationCtaCallback;
     /** Update a notification */
     updateNotification: UpdateNotificationCallback;
-    /** Get the checklist */
+    /** Get the active checklist */
     getChecklist: GetChecklistCallback;
+    /** Get all checklists */
+    getChecklists: GetChecklistsCallback;
     /** Complete a checklist step */
     completeChecklistStep: CompleteChecklistStepCallback;
+    /** Mark a checklist as shown */
+    showChecklist: ShowChecklistCallback;
 }
 /** Callback to send a new usage event to Mantle */
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<SuccessResponse>;
@@ -58,6 +62,13 @@ export type GetUsageReportCallback = (params: {
 } | MantleError>;
 /** Callback to get the checklist */
 export type GetChecklistCallback = () => Promise<any>;
+/** Callback to show a checklist */
+export type ShowChecklistCallback = (params: {
+    /** The ID of the checklist to show */
+    checklistId: string;
+}) => Promise<any>;
+/** Callback to get all checklists */
+export type GetChecklistsCallback = (handle?: string) => Promise<any[] | MantleError>;
 /** Callback to complete a checklist step */
 export type CompleteChecklistStepCallback = (params: {
     /** The ID of the checklist */
