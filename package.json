@@ -6,7 +6,10 @@
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
   "homepage": "https://heymantle.com/docs",
-  "repository": "https://github.com/Hey-Mantle/react",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hey-Mantle/react.git"
+  },
   "bugs": {
     "url": "https://github.com/Hey-Mantle/react/issues"
   },
