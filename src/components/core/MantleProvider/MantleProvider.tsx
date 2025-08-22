@@ -60,6 +60,8 @@ export interface TMantleContext {
   getChecklists: GetChecklistsCallback;
   /** Complete a checklist step */
   completeChecklistStep: CompleteChecklistStepCallback;
+  /** Skip a checklist step */
+  skipChecklistStep: SkipChecklistStepCallback;
   /** Mark a checklist as shown */
   showChecklist: ShowChecklistCallback;
 }
@@ -96,6 +98,12 @@ export type CompleteChecklistStepCallback = (params: {
   /** The ID of the checklist */
   checklistId: string;
   /** The ID of the checklist step to complete */
+  checklistStepId: string;
+}) => Promise<any>;
+
+/** Callback to skip a checklist step */
+export type SkipChecklistStepCallback = (params: {
+  checklistId: string;
   checklistStepId: string;
 }) => Promise<any>;
 
@@ -495,6 +503,26 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
   };
 
   /**
+   * Skips a checklist step for the current customer
+   * @param params.checklistId - The ID of the checklist
+   * @param params.checklistStepId - The ID of the checklist step to skip
+   * @returns The skip result
+   */
+  const skipChecklistStep: SkipChecklistStepCallback = async ({
+    checklistId,
+    checklistStepId,
+  }) => {
+    const result = await mantleClient.skipChecklistStep({
+      checklistId,
+      checklistStepId,
+    });
+    if (result && "error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
+  /**
    * Completes a specific checklist step
    * @param params.checklistId - The ID of the checklist
    * @param params.checklistStepId - The ID of the checklist step to complete
@@ -550,6 +578,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         getChecklists,
         completeChecklistStep,
         showChecklist,
+        skipChecklistStep,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (customer?.features[featureKey]) {
             return evaluateFeature({
