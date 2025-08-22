@@ -46,6 +46,8 @@ export interface TMantleContext {
     getChecklists: GetChecklistsCallback;
     /** Complete a checklist step */
     completeChecklistStep: CompleteChecklistStepCallback;
+    /** Skip a checklist step */
+    skipChecklistStep: SkipChecklistStepCallback;
     /** Mark a checklist as shown */
     showChecklist: ShowChecklistCallback;
 }
@@ -74,6 +76,11 @@ export type CompleteChecklistStepCallback = (params: {
     /** The ID of the checklist */
     checklistId: string;
     /** The ID of the checklist step to complete */
+    checklistStepId: string;
+}) => Promise<any>;
+/** Callback to skip a checklist step */
+export type SkipChecklistStepCallback = (params: {
+    checklistId: string;
     checklistStepId: string;
 }) => Promise<any>;
 /** Common subscription parameters without the plan selection */
