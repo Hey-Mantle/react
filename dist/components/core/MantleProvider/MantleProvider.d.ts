@@ -1,4 +1,4 @@
-import { Customer, HostedSession, MantleError, Notify, Plan, RequirePaymentMethodOptions, SetupIntent, Subscription, SuccessResponse, UsageEvent, UsageMetricReport, MantleClient } from '@heymantle/client';
+import { Customer, HostedSession, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, SuccessResponse, UsageEvent, UsageMetricReport, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -107,6 +107,8 @@ export type BaseSubscribeParams = {
     requirePaymentMethod?: RequirePaymentMethodOptions;
     /** (Stripe only) Whether to automatically calculate tax for the subscription. Defaults to false. */
     automaticTax?: boolean;
+    /** (Stripe only) The `proration_behavior` to use for the subscription */
+    prorationBehavior?: ProrationBehaviorOptions;
     /** (Stripe checkout only) Tell the Stripe Checkout Session to require a billing address */
     requireBillingAddress?: boolean;
     /** (Stripe checkout only) Prefill the Stripe customer's email address */
