@@ -68,9 +68,7 @@ export interface TMantleContext {
 }
 
 /** Callback to send a new usage event to Mantle */
-export type SendUsageEventCallback = (
-  usageEvent: UsageEvent
-) => Promise<SuccessResponse>;
+export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<SuccessResponse>;
 
 /** Callback to get a usage report for a usage metric */
 export type GetUsageReportCallback = (params: {
@@ -90,9 +88,7 @@ export type ShowChecklistCallback = (params: {
 }) => Promise<any>;
 
 /** Callback to get all checklists */
-export type GetChecklistsCallback = (
-  handle?: string
-) => Promise<any[] | MantleError>;
+export type GetChecklistsCallback = (handle?: string) => Promise<any[] | MantleError>;
 
 /** Callback to complete a checklist step */
 export type CompleteChecklistStepCallback = (params: {
@@ -173,6 +169,8 @@ export type CancelSubscriptionCallback = (params?: {
 export type AddPaymentMethodCallback = (params: {
   /** The URL to return to after connecting a new PaymentMethod */
   returnUrl: string;
+  /** Whether to update payment methods that are already attached to existing subscriptions */
+  updateExistingPaymentMethods?: boolean;
 }) => Promise<SetupIntent | MantleError>;
 
 /** Callback to check if a feature is enabled */
@@ -198,9 +196,7 @@ export type HostedSessionCallback = (params: {
 }) => Promise<HostedSession | MantleError>;
 
 /** Callback to list notifications */
-export type ListNotificationsCallback = (params?: {
-  email?: string;
-}) => Promise<
+export type ListNotificationsCallback = (params?: { email?: string }) => Promise<
   | {
       notifies: Notify[];
       hasMore: boolean;
@@ -249,13 +245,7 @@ const MantleContext = createContext<TMantleContext | undefined>(undefined);
  * @param count - The count to evaluate against if the feature is a limit type
  * @returns Whether the feature is considered enabled
  */
-const evaluateFeature = ({
-  feature,
-  count = 0,
-}: {
-  feature: Feature;
-  count?: number;
-}): boolean => {
+const evaluateFeature = ({ feature, count = 0 }: { feature: Feature; count?: number }): boolean => {
   if (feature?.type === "boolean") {
     return feature.value;
   } else if (feature?.type === "limit") {
@@ -343,10 +333,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.period - The period to get the report for
    * @returns The usage report data
    */
-  const getUsageReport: GetUsageReportCallback = async ({
-    usageId,
-    period,
-  }) => {
+  const getUsageReport: GetUsageReportCallback = async ({ usageId, period }) => {
     const result = await mantleClient.getUsageMetricReport({
       id: usageId,
       period,
@@ -375,9 +362,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.cancelReason - Optional reason for cancellation
    * @returns The cancelled subscription
    */
-  const cancelSubscription: CancelSubscriptionCallback = async ({
-    cancelReason,
-  } = {}) => {
+  const cancelSubscription: CancelSubscriptionCallback = async ({ cancelReason } = {}) => {
     const result = await mantleClient.cancelSubscription({
       ...(cancelReason && { cancelReason }),
     });
@@ -390,14 +375,18 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
   /**
    * Initiates the process of adding a new payment method
    * @param params.returnUrl - The URL to return to after adding the payment method
+   * @param params.updateExistingPaymentMethods - Whether to update payment methods that are already attached to existing subscriptions
    * @returns A SetupIntent for completing the payment method addition
    * @throws Error if returnUrl is not provided
    */
-  const addPaymentMethod: AddPaymentMethodCallback = async ({ returnUrl }) => {
+  const addPaymentMethod: AddPaymentMethodCallback = async ({
+    returnUrl,
+    updateExistingPaymentMethods,
+  }) => {
     if (!returnUrl) {
       throw new Error("returnUrl is required");
     }
-    const result = await mantleClient.addPaymentMethod({ returnUrl });
+    const result = await mantleClient.addPaymentMethod({ returnUrl, updateExistingPaymentMethods });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
     }
@@ -411,10 +400,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @returns The created hosted session
    * @throws Error if type is not provided
    */
-  const createHostedSession: HostedSessionCallback = async ({
-    type,
-    config,
-  }) => {
+  const createHostedSession: HostedSessionCallback = async ({ type, config }) => {
     if (!type) {
       throw new Error("type is required");
     }
@@ -441,9 +427,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
-  const triggerNotificationCta: TriggerNotificationCtaCallback = async ({
-    id,
-  }) => {
+  const triggerNotificationCta: TriggerNotificationCtaCallback = async ({ id }) => {
     const result = await mantleClient.triggerNotificationCta({ id });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
@@ -451,11 +435,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
-  const updateNotification: UpdateNotificationCallback = async ({
-    id,
-    readAt,
-    dismissedAt,
-  }) => {
+  const updateNotification: UpdateNotificationCallback = async ({ id, readAt, dismissedAt }) => {
     const result = await mantleClient.updateNotification({
       id,
       readAt,
@@ -511,10 +491,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
    * @param params.checklistStepId - The ID of the checklist step to skip
    * @returns The skip result
    */
-  const skipChecklistStep: SkipChecklistStepCallback = async ({
-    checklistId,
-    checklistStepId,
-  }) => {
+  const skipChecklistStep: SkipChecklistStepCallback = async ({ checklistId, checklistStepId }) => {
     const result = await mantleClient.skipChecklistStep({
       checklistId,
       checklistStepId,
@@ -592,10 +569,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
           return false;
         },
         limitForFeature: ({ featureKey }) => {
-          if (
-            customer?.features[featureKey] &&
-            customer.features[featureKey].type === "limit"
-          ) {
+          if (customer?.features[featureKey] && customer.features[featureKey].type === "limit") {
             return customer.features[featureKey].value;
           }
           return -1;

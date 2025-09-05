@@ -141,6 +141,8 @@ export type CancelSubscriptionCallback = (params?: {
 export type AddPaymentMethodCallback = (params: {
     /** The URL to return to after connecting a new PaymentMethod */
     returnUrl: string;
+    /** Whether to update payment methods that are already attached to existing subscriptions */
+    updateExistingPaymentMethods?: boolean;
 }) => Promise<SetupIntent | MantleError>;
 /** Callback to check if a feature is enabled */
 export type FeatureEnabledCallback = (params: {
