@@ -58,7 +58,10 @@ const K = {
   featureNotAvailable: "This feature is not available on your current plan",
   upgradeRequired: "Upgrade Required",
   limitReached: "Limit Reached"
-}, w = H(void 0), $ = ({ feature: e, count: n = 0 }) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? n < e.value || e.value === -1 : !1, O = ({
+}, w = H(void 0), $ = ({
+  feature: e,
+  count: n = 0
+}) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? n < e.value || e.value === -1 : !1, O = ({
   appId: e,
   customerApiToken: n,
   apiUrl: c = "https://appapi.heymantle.com/v1",
@@ -71,119 +74,139 @@ const K = {
   const o = new T({ appId: e, customerApiToken: n, apiUrl: c }), [i, P] = b(null), [p, f] = b(!0), h = async () => {
     try {
       f(!0);
-      const r = await o.getCustomer();
-      if (r && "error" in r)
-        throw new Error(r.error);
-      P(r);
-    } catch (r) {
+      const t = await o.getCustomer();
+      if (t && "error" in t)
+        throw new Error(t.error);
+      P(t);
+    } catch (t) {
       if (a)
-        throw r;
-      console.error("[MantleProvider] Error fetching customer: ", r);
+        throw t;
+      console.error("[MantleProvider] Error fetching customer: ", t);
     } finally {
       f(!1);
     }
-  }, v = async (r) => {
-    const t = await o.sendUsageEvent(r);
-    if ("error" in t) {
+  }, v = async (t) => {
+    const r = await o.sendUsageEvent(t);
+    if ("error" in r) {
       if (a)
-        throw new Error(t.error);
+        throw new Error(r.error);
       return {
         success: !1
       };
     }
-    return t;
-  }, E = async ({ usageId: r, period: t }) => {
-    const s = await o.getUsageMetricReport({
-      id: r,
-      period: t
-    });
-    if ("error" in s && a)
-      throw new Error(s.error);
-    return s;
-  }, N = async (r) => {
-    const t = await o.subscribe(r);
-    if ("error" in t && a)
-      throw new Error(t.error);
-    return t;
-  }, A = async ({ cancelReason: r } = {}) => {
-    const t = await o.cancelSubscription({
-      ...r && { cancelReason: r }
-    });
-    if ("error" in t && a)
-      throw new Error(t.error);
-    return t;
-  }, M = async ({
-    returnUrl: r,
-    updateExistingPaymentMethods: t
+    return r;
+  }, E = async ({
+    usageId: t,
+    period: r
   }) => {
-    if (!r)
-      throw new Error("returnUrl is required");
-    const s = await o.addPaymentMethod({ returnUrl: r, updateExistingPaymentMethods: t });
+    const s = await o.getUsageMetricReport({
+      id: t,
+      period: r
+    });
     if ("error" in s && a)
       throw new Error(s.error);
     return s;
-  }, x = async ({ type: r, config: t }) => {
-    if (!r)
+  }, N = async (t) => {
+    const r = await o.subscribe(t);
+    if ("error" in r && a)
+      throw new Error(r.error);
+    return r;
+  }, A = async ({
+    cancelReason: t
+  } = {}) => {
+    const r = await o.cancelSubscription({
+      ...t && { cancelReason: t }
+    });
+    if ("error" in r && a)
+      throw new Error(r.error);
+    return r;
+  }, M = async ({
+    returnUrl: t,
+    updateExistingPaymentMethods: r
+  }) => {
+    if (!t)
+      throw new Error("returnUrl is required");
+    const s = await o.addPaymentMethod({
+      returnUrl: t,
+      updateExistingPaymentMethods: r
+    });
+    if ("error" in s && a)
+      throw new Error(s.error);
+    return s;
+  }, x = async ({
+    type: t,
+    config: r
+  }) => {
+    if (!t)
       throw new Error("type is required");
     const u = new URL(document.location.toString()).searchParams.get("locale"), d = await o.createHostedSession({
-      type: r,
+      type: t,
       config: {
         ...u ? { locale: u } : {},
-        ...t || {}
+        ...r || {}
       }
     });
     if ("error" in d && a)
       throw new Error(d.error);
     return d;
-  }, Y = async (r) => {
-    const t = await o.listNotifications(r);
-    if ("error" in t && a)
-      throw new Error(t.error);
-    return t;
-  }, U = async ({ id: r }) => {
-    const t = await o.triggerNotificationCta({ id: r });
-    if ("error" in t && a)
-      throw new Error(t.error);
-    return t;
-  }, D = async ({ id: r, readAt: t, dismissedAt: s }) => {
+  }, Y = async (t) => {
+    const r = await o.listNotifications(t);
+    if ("error" in r && a)
+      throw new Error(r.error);
+    return r;
+  }, U = async ({
+    id: t
+  }) => {
+    const r = await o.triggerNotificationCta({ id: t });
+    if ("error" in r && a)
+      throw new Error(r.error);
+    return r;
+  }, D = async ({
+    id: t,
+    readAt: r,
+    dismissedAt: s
+  }) => {
     const u = await o.updateNotification({
-      id: r,
-      readAt: t,
+      id: t,
+      readAt: r,
       dismissedAt: s
     });
     if ("error" in u && a)
       throw new Error(u.error);
     return u;
-  }, L = async () => {
-    const r = await o.getChecklist();
+  }, L = async (t) => {
+    const r = await o.getChecklist(t);
     if (r && "error" in r && a)
       throw new Error(r.error);
     return r;
-  }, R = async (r) => {
-    const t = await o.getChecklists(r);
-    if (t && "error" in t && a)
-      throw new Error(t.error);
-    return t;
-  }, k = async ({ checklistId: r }) => {
-    const t = await o.showChecklist({ checklistId: r });
-    if (t && "error" in t && a)
-      throw new Error(t.error);
-    return t;
-  }, _ = async ({ checklistId: r, checklistStepId: t }) => {
+  }, R = async (t) => {
+    const r = await o.getChecklists(t);
+    if (r && "error" in r && a)
+      throw new Error(r.error);
+    return r;
+  }, k = async ({ idOrHandle: t }) => {
+    const r = await o.showChecklist({ idOrHandle: t });
+    if (r && "error" in r && a)
+      throw new Error(r.error);
+    return r;
+  }, _ = async ({
+    idOrHandle: t,
+    stepIdOrHandle: r
+  }) => {
     const s = await o.skipChecklistStep({
-      checklistId: r,
-      checklistStepId: t
+      idOrHandle: t,
+      stepIdOrHandle: r
     });
     if (s && "error" in s && a)
       throw new Error(s.error);
     return s;
   }, F = async ({
-    checklistId: r,
-    checklistStepId: t
+    idOrHandle: t,
+    stepIdOrHandle: r
   }) => {
     const s = await o.completeChecklistStep({
-      checklistId: r,
-      checklistStepId: t
+      idOrHandle: t,
+      stepIdOrHandle: r
     });
     if ("error" in s && a)
       throw new Error(s.error);
@@ -217,11 +240,11 @@ const K = {
         completeChecklistStep: F,
         showChecklist: k,
         skipChecklistStep: _,
-        isFeatureEnabled: ({ featureKey: r, count: t = 0 }) => i != null && i.features[r] ? $({
-          feature: i.features[r],
-          count: t
+        isFeatureEnabled: ({ featureKey: t, count: r = 0 }) => i != null && i.features[t] ? $({
+          feature: i.features[t],
+          count: r
         }) : !1,
-        limitForFeature: ({ featureKey: r }) => i != null && i.features[r] && i.features[r].type === "limit" ? i.features[r].value : -1,
+        limitForFeature: ({ featureKey: t }) => i != null && i.features[t] && i.features[t].type === "limit" ? i.features[t].value : -1,
         refetch: async () => {
           await h();
         }

@@ -63,25 +63,25 @@ export type GetUsageReportCallback = (params: {
     report: UsageMetricReport;
 } | MantleError>;
 /** Callback to get the checklist */
-export type GetChecklistCallback = () => Promise<any>;
+export type GetChecklistCallback = (handle: string) => Promise<any>;
 /** Callback to show a checklist */
 export type ShowChecklistCallback = (params: {
     /** The ID of the checklist to show */
-    checklistId: string;
+    idOrHandle: string;
 }) => Promise<any>;
 /** Callback to get all checklists */
-export type GetChecklistsCallback = (handle?: string) => Promise<any[] | MantleError>;
+export type GetChecklistsCallback = (handles?: string[]) => Promise<any[] | MantleError>;
 /** Callback to complete a checklist step */
 export type CompleteChecklistStepCallback = (params: {
     /** The ID of the checklist */
-    checklistId: string;
+    idOrHandle: string;
     /** The ID of the checklist step to complete */
-    checklistStepId: string;
+    stepIdOrHandle: string;
 }) => Promise<any>;
 /** Callback to skip a checklist step */
 export type SkipChecklistStepCallback = (params: {
-    checklistId: string;
-    checklistStepId: string;
+    idOrHandle: string;
+    stepIdOrHandle: string;
 }) => Promise<any>;
 /** Common subscription parameters without the plan selection */
 export type BaseSubscribeParams = {
