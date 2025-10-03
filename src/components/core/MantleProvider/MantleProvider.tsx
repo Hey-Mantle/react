@@ -9,6 +9,7 @@ import type {
   RequirePaymentMethodOptions,
   SetupIntent,
   Subscription,
+  OneTimeCharge,
   SuccessResponse,
   UsageEvent,
   UsageMetricReport,
@@ -41,6 +42,8 @@ export interface TMantleContext {
   subscribe: SubscribeCallback;
   /** Cancel the current subscription */
   cancelSubscription: CancelSubscriptionCallback;
+  /** Create a one-time charge */
+  createOneTimeCharge: CreateOneTimeChargeCallback;
   /** Start the process of adding a new payment method */
   addPaymentMethod: AddPaymentMethodCallback;
   /** Check if a feature is enabled */
@@ -168,6 +171,20 @@ export type CancelSubscriptionCallback = (params?: {
   /** The reason for canceling the subscription */
   cancelReason?: string;
 }) => Promise<Subscription | MantleError>;
+
+/** Callback to create a one-time charge */
+export type CreateOneTimeChargeCallback = (params: {
+  /** The amount to charge */
+  amount: number;
+  /** The name of the charge */
+  name: string;
+  /** The currency to charge in, defaults to USD */
+  currencyCode?: string;
+  /** The URL to return to after the charge, defaults to app root */
+  returnUrl?: string;
+  /** Whether to test the charge, defaults to false */
+  test?: boolean;
+}) => Promise<OneTimeCharge | MantleError>;
 
 /** Callback to start the process of adding a new payment method */
 export type AddPaymentMethodCallback = (params: {
@@ -390,6 +407,33 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
   };
 
   /**
+   * Create a one-time charge
+   * @param params.amount - The amount to charge
+   * @param params.name - The name of the charge
+   * @param params.currency - The currency to charge in
+   * @returns The created charge
+   */
+  const createOneTimeCharge: CreateOneTimeChargeCallback = async ({
+    amount,
+    name,
+    currencyCode,
+    returnUrl,
+    test,
+  }) => {
+    const result = await mantleClient.createOneTimeCharge({
+      amount,
+      name,
+      currencyCode,
+      returnUrl,
+      test,
+    });
+    if ("error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
+  /**
    * Initiates the process of adding a new payment method
    * @param params.returnUrl - The URL to return to after adding the payment method
    * @param params.updateExistingPaymentMethods - Whether to update payment methods that are already attached to existing subscriptions
@@ -581,6 +625,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         getUsageReport,
         subscribe,
         cancelSubscription,
+        createOneTimeCharge,
         addPaymentMethod,
         createHostedSession,
         listNotifications,

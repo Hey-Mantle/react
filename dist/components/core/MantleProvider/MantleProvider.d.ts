@@ -1,4 +1,4 @@
-import { Customer, HostedSession, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, SuccessResponse, UsageEvent, UsageMetricReport, MantleClient } from '@heymantle/client';
+import { Customer, HostedSession, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -26,6 +26,8 @@ export interface TMantleContext {
     subscribe: SubscribeCallback;
     /** Cancel the current subscription */
     cancelSubscription: CancelSubscriptionCallback;
+    /** Create a one-time charge */
+    createOneTimeCharge: CreateOneTimeChargeCallback;
     /** Start the process of adding a new payment method */
     addPaymentMethod: AddPaymentMethodCallback;
     /** Check if a feature is enabled */
@@ -137,6 +139,19 @@ export type CancelSubscriptionCallback = (params?: {
     /** The reason for canceling the subscription */
     cancelReason?: string;
 }) => Promise<Subscription | MantleError>;
+/** Callback to create a one-time charge */
+export type CreateOneTimeChargeCallback = (params: {
+    /** The amount to charge */
+    amount: number;
+    /** The name of the charge */
+    name: string;
+    /** The currency to charge in, defaults to USD */
+    currencyCode?: string;
+    /** The URL to return to after the charge, defaults to app root */
+    returnUrl?: string;
+    /** Whether to test the charge, defaults to false */
+    test?: boolean;
+}) => Promise<OneTimeCharge | MantleError>;
 /** Callback to start the process of adding a new payment method */
 export type AddPaymentMethodCallback = (params: {
     /** The URL to return to after connecting a new PaymentMethod */
