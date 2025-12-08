@@ -1,7 +1,7 @@
-import { jsx as H } from "react/jsx-runtime";
+import { jsx as I } from "react/jsx-runtime";
 import { MantleClient as j } from "@heymantle/client";
-import { createContext as I, useState as y, useEffect as $, useContext as G } from "react";
-const ee = {
+import { createContext as $, useState as y, useEffect as G, useContext as J } from "react";
+const re = {
   Public: "public",
   CustomerTag: "customerTag",
   ShopifyPlan: "shopifyPlan",
@@ -58,10 +58,10 @@ const ee = {
   featureNotAvailable: "This feature is not available on your current plan",
   upgradeRequired: "Upgrade Required",
   limitReached: "Limit Reached"
-}, g = I(void 0), J = ({
+}, g = $(void 0), Q = ({
   feature: e,
   count: s = 0
-}) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? s < e.value || e.value === -1 : !1, re = ({
+}) => (e == null ? void 0 : e.type) === "boolean" ? e.value : (e == null ? void 0 : e.type) === "limit" ? s < e.value || e.value === -1 : !1, te = ({
   appId: e,
   customerApiToken: s,
   apiUrl: c = "https://appapi.heymantle.com/v1",
@@ -69,33 +69,33 @@ const ee = {
   i18n: C = p,
   waitForCustomer: S = !1,
   loadingComponent: P = null,
-  throwOnError: i = !1
+  throwOnError: a = !1
 }) => {
-  const o = new j({ appId: e, customerApiToken: s, apiUrl: c }), [a, v] = y(null), [h, f] = y(!0), b = async () => {
+  const o = new j({ appId: e, customerApiToken: s, apiUrl: c }), [i, v] = y(null), [f, h] = y(!0), b = async () => {
     try {
-      f(!0);
+      h(!0);
       const t = await o.getCustomer();
       if (t && "error" in t)
         throw new Error(t.error);
       v(t);
     } catch (t) {
-      if (i)
+      if (a)
         throw t;
       console.error("[MantleProvider] Error fetching customer: ", t);
     } finally {
-      f(!1);
+      h(!1);
     }
   }, E = async (t) => {
     const r = await o.sendUsageEvent(t);
     if ("error" in r) {
-      if (i)
+      if (a)
         throw new Error(r.error);
       return {
         success: !1
       };
     }
     return r;
-  }, N = async ({
+  }, A = async ({
     usageId: t,
     period: r
   }) => {
@@ -103,12 +103,12 @@ const ee = {
       id: t,
       period: r
     });
-    if ("error" in n && i)
+    if ("error" in n && a)
       throw new Error(n.error);
     return n;
-  }, A = async (t) => {
+  }, N = async (t) => {
     const r = await o.subscribe(t);
-    if ("error" in r && i)
+    if ("error" in r && a)
       throw new Error(r.error);
     return r;
   }, M = async ({
@@ -117,7 +117,7 @@ const ee = {
     const r = await o.cancelSubscription({
       ...t && { cancelReason: t }
     });
-    if ("error" in r && i)
+    if ("error" in r && a)
       throw new Error(r.error);
     return r;
   }, x = async ({
@@ -134,7 +134,7 @@ const ee = {
       returnUrl: u,
       test: d
     });
-    if ("error" in m && i)
+    if ("error" in m && a)
       throw new Error(m.error);
     return m;
   }, Y = async ({
@@ -147,7 +147,7 @@ const ee = {
       returnUrl: t,
       updateExistingPaymentMethods: r
     });
-    if ("error" in n && i)
+    if ("error" in n && a)
       throw new Error(n.error);
     return n;
   }, U = async ({
@@ -163,19 +163,19 @@ const ee = {
         ...r || {}
       }
     });
-    if ("error" in d && i)
+    if ("error" in d && a)
       throw new Error(d.error);
     return d;
   }, D = async (t) => {
     const r = await o.listNotifications(t);
-    if ("error" in r && i)
+    if ("error" in r && a)
       throw new Error(r.error);
     return r;
   }, L = async ({
     id: t
   }) => {
     const r = await o.triggerNotificationCta({ id: t });
-    if ("error" in r && i)
+    if ("error" in r && a)
       throw new Error(r.error);
     return r;
   }, R = async ({
@@ -188,22 +188,22 @@ const ee = {
       readAt: r,
       dismissedAt: n
     });
-    if ("error" in u && i)
+    if ("error" in u && a)
       throw new Error(u.error);
     return u;
   }, k = async (t) => {
     const r = await o.getChecklist(t);
-    if (r && "error" in r && i)
+    if (r && "error" in r && a)
       throw new Error(r.error);
     return r;
   }, _ = async (t) => {
     const r = await o.getChecklists(t);
-    if (r && "error" in r && i)
+    if (r && "error" in r && a)
       throw new Error(r.error);
     return r;
   }, F = async ({ idOrHandle: t }) => {
     const r = await o.showChecklist({ idOrHandle: t });
-    if (r && "error" in r && i)
+    if (r && "error" in r && a)
       throw new Error(r.error);
     return r;
   }, T = async ({
@@ -214,7 +214,7 @@ const ee = {
       idOrHandle: t,
       stepIdOrHandle: r
     });
-    if (n && "error" in n && i)
+    if (n && "error" in n && a)
       throw new Error(n.error);
     return n;
   }, V = async ({
@@ -225,27 +225,36 @@ const ee = {
       idOrHandle: t,
       stepIdOrHandle: r
     });
-    if ("error" in n && i)
+    if ("error" in n && a)
       throw new Error(n.error);
     return n;
+  }, B = async ({
+    customerId: t
+  } = {}) => {
+    const r = await o.getAppInstallations({
+      ...t && { customerId: t }
+    });
+    if ("error" in r && a)
+      throw new Error(r.error);
+    return r;
   };
-  $(() => {
+  G(() => {
     s && b();
   }, [s]);
-  const B = (a == null ? void 0 : a.plans) || [], q = (a == null ? void 0 : a.subscription) || null;
-  return S && h ? P || null : /* @__PURE__ */ H(
+  const q = (i == null ? void 0 : i.plans) || [], H = (i == null ? void 0 : i.subscription) || null;
+  return S && f ? P || null : /* @__PURE__ */ I(
     g.Provider,
     {
       value: {
         client: o,
-        customer: a,
-        subscription: q,
-        plans: B,
-        loading: h,
+        customer: i,
+        subscription: H,
+        plans: q,
+        loading: f,
         i18n: { ...p, ...C },
         sendUsageEvent: E,
-        getUsageReport: N,
-        subscribe: A,
+        getUsageReport: A,
+        subscribe: N,
         cancelSubscription: M,
         createOneTimeCharge: x,
         addPaymentMethod: Y,
@@ -258,11 +267,12 @@ const ee = {
         completeChecklistStep: V,
         showChecklist: F,
         skipChecklistStep: T,
-        isFeatureEnabled: ({ featureKey: t, count: r = 0 }) => a != null && a.features[t] ? J({
-          feature: a.features[t],
+        getAppInstallations: B,
+        isFeatureEnabled: ({ featureKey: t, count: r = 0 }) => i != null && i.features[t] ? Q({
+          feature: i.features[t],
           count: r
         }) : !1,
-        limitForFeature: ({ featureKey: t }) => a != null && a.features[t] && a.features[t].type === "limit" ? a.features[t].value : -1,
+        limitForFeature: ({ featureKey: t }) => i != null && i.features[t] && i.features[t].type === "limit" ? i.features[t].value : -1,
         refetch: async () => {
           await b();
         }
@@ -270,21 +280,21 @@ const ee = {
       children: l
     }
   );
-}, te = () => {
-  const e = G(g);
+}, ne = () => {
+  const e = J(g);
   if (e === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return e;
-}, w = (e) => e.type === "boolean" && e.value === !0 || e.type === "limit" && e.value !== 0, ne = (e, s) => Number(w(s)) - Number(w(e)) || e.name.localeCompare(s.name), Q = (e = "USD") => new Intl.NumberFormat("en-US", {
+}, w = (e) => e.type === "boolean" && e.value === !0 || e.type === "limit" && e.value !== 0, se = (e, s) => Number(w(s)) - Number(w(e)) || e.name.localeCompare(s.name), W = (e = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: e,
   notation: "standard"
-}), se = (e, s = "USD", c = !0) => {
-  let l = Q(s).format(e);
+}), oe = (e, s = "USD", c = !0) => {
+  let l = W(s).format(e);
   return c && (l = l.replace(/\.00$/, "")), l;
 };
-var W = /* @__PURE__ */ ((e) => (e.Annual = "ANNUAL", e.Every30Days = "EVERY_30_DAYS", e))(W || {});
-const X = (e = "EVERY_30_DAYS") => {
+var X = /* @__PURE__ */ ((e) => (e.Annual = "ANNUAL", e.Every30Days = "EVERY_30_DAYS", e))(X || {});
+const Z = (e = "EVERY_30_DAYS") => {
   switch (e) {
     case "ANNUAL":
       return "year";
@@ -292,7 +302,7 @@ const X = (e = "EVERY_30_DAYS") => {
     default:
       return "month";
   }
-}, Z = (e = "EVERY_30_DAYS") => {
+}, z = (e = "EVERY_30_DAYS") => {
   switch (e) {
     case "ANNUAL":
       return "yr";
@@ -300,43 +310,43 @@ const X = (e = "EVERY_30_DAYS") => {
     default:
       return "mo";
   }
-}, oe = ({
+}, ae = ({
   interval: e = "EVERY_30_DAYS",
   useShortFormPlanIntervals: s = !0
-}) => s ? Z(e) : X(e), ie = ({
+}) => s ? z(e) : Z(e), ie = ({
   plan: e,
   customFieldKey: s = "recommended"
 }) => {
   var c;
   return !!((c = e.customFields) != null && c[s]);
-}, ae = ({
+}, ce = ({
   plan: e,
   customFieldKey: s = "buttonLabel"
 }) => {
   var c;
   return ((c = e.customFields) == null ? void 0 : c[s]) || p.subscribe;
-}, ce = ({ plan: e }) => {
+}, le = ({ plan: e }) => {
   var s;
   return ((s = e.discounts) == null ? void 0 : s.length) > 0 ? e.discounts.reduce(
     (c, l) => c.discountedAmount < l.discountedAmount ? c : l
   ) : void 0;
-}, le = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, ue = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
+}, ue = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, de = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
 export {
   p as Labels,
-  re as MantleProvider,
-  ee as PlanAvailability,
-  W as PlanInterval,
-  ue as columnCount,
-  le as columnSpan,
-  ae as customButtonLabel,
+  te as MantleProvider,
+  re as PlanAvailability,
+  X as PlanInterval,
+  de as columnCount,
+  ue as columnSpan,
+  ce as customButtonLabel,
   w as featureEnabled,
-  ne as featureSort,
-  ce as highestDiscount,
-  oe as intervalLabel,
-  X as intervalLabelLong,
-  Z as intervalLabelShort,
+  se as featureSort,
+  le as highestDiscount,
+  ae as intervalLabel,
+  Z as intervalLabelLong,
+  z as intervalLabelShort,
   ie as isRecommendedPlan,
-  se as money,
-  te as useMantle
+  oe as money,
+  ne as useMantle
 };
 //# sourceMappingURL=index.mjs.map

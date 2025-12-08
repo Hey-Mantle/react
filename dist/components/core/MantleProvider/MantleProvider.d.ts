@@ -1,4 +1,4 @@
-import { Customer, HostedSession, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, MantleClient } from '@heymantle/client';
+import { Customer, HostedSession, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, GetAppInstallationsResponse, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -52,6 +52,8 @@ export interface TMantleContext {
     skipChecklistStep: SkipChecklistStepCallback;
     /** Mark a checklist as shown */
     showChecklist: ShowChecklistCallback;
+    /** Get app installations */
+    getAppInstallations: GetAppInstallationsCallback;
 }
 /** Callback to send a new usage event to Mantle */
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<SuccessResponse>;
@@ -71,6 +73,11 @@ export type ShowChecklistCallback = (params: {
     /** The ID of the checklist to show */
     idOrHandle: string;
 }) => Promise<any>;
+/** Callback to get app installations */
+export type GetAppInstallationsCallback = (params?: {
+    /** The customer ID / Shopify domain, api token. Only required if using the API key for authentication instead of the customer API token */
+    customerId?: string;
+}) => Promise<GetAppInstallationsResponse | MantleError>;
 /** Callback to get all checklists */
 export type GetChecklistsCallback = (handles?: string[]) => Promise<any[] | MantleError>;
 /** Callback to complete a checklist step */

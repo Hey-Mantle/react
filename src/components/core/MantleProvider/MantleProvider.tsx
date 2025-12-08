@@ -13,6 +13,7 @@ import type {
   SuccessResponse,
   UsageEvent,
   UsageMetricReport,
+  GetAppInstallationsResponse,
 } from "@heymantle/client";
 import { MantleClient } from "@heymantle/client";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -68,6 +69,8 @@ export interface TMantleContext {
   skipChecklistStep: SkipChecklistStepCallback;
   /** Mark a checklist as shown */
   showChecklist: ShowChecklistCallback;
+  /** Get app installations */
+  getAppInstallations: GetAppInstallationsCallback;
 }
 
 /** Callback to send a new usage event to Mantle */
@@ -91,6 +94,12 @@ export type ShowChecklistCallback = (params: {
   /** The ID of the checklist to show */
   idOrHandle: string;
 }) => Promise<any>;
+
+/** Callback to get app installations */
+export type GetAppInstallationsCallback = (params?: {
+  /** The customer ID / Shopify domain, api token. Only required if using the API key for authentication instead of the customer API token */
+  customerId?: string;
+}) => Promise<GetAppInstallationsResponse | MantleError>;
 
 /** Callback to get all checklists */
 export type GetChecklistsCallback = (
@@ -598,6 +607,23 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
+  /**
+   * Get the list of app installations for the customer
+   * @param params.customerId - The customer ID / Shopify domain, api token. Only required if using the API key for authentication instead of the customer API token
+   * @returns The list of app installations
+   */
+  const getAppInstallations: GetAppInstallationsCallback = async ({
+    customerId,
+  } = {}) => {
+    const result = await mantleClient.getAppInstallations({
+      ...(customerId && { customerId }),
+    });
+    if ("error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
   // Fetch customer when the token changes
   useEffect(() => {
     if (customerApiToken) {
@@ -636,6 +662,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         completeChecklistStep,
         showChecklist,
         skipChecklistStep,
+        getAppInstallations,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (customer?.features[featureKey]) {
             return evaluateFeature({
