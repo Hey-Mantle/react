@@ -94,8 +94,12 @@ export const customButtonLabel = ({
  * @returns The highest discount for the plan, or undefined if none found
  */
 export const highestDiscount = ({ plan }: { plan: Plan }): Discount | undefined => {
-  return plan.discounts?.length > 0
-    ? plan.discounts.reduce((prev, current) =>
+  const discounts = [
+    ...(plan.discounts || []),
+    ...(plan?.bundleDiscounts || []),
+  ];
+  return discounts?.length > 0
+    ? discounts.reduce((prev, current) =>
         prev.discountedAmount < current.discountedAmount ? prev : current
       )
     : undefined;
