@@ -32,6 +32,7 @@ export declare const intervalLabel: ({ interval, useShortFormPlanIntervals, }: I
 interface PlanParams {
     plan: Plan;
     customFieldKey?: string;
+    defaultLabel?: string;
 }
 /**
  * Check if the plan is recommended by using custom fields
@@ -39,20 +40,20 @@ interface PlanParams {
  * @param params.customFieldKey - The key to check for the recommended status
  * @returns Whether the plan is recommended
  */
-export declare const isRecommendedPlan: ({ plan, customFieldKey }: PlanParams) => boolean;
+export declare const isRecommendedPlan: ({ plan, customFieldKey, }: PlanParams) => boolean;
 /**
  * Get the custom button label for the plan, or the default label
  * @param params.plan - The Mantle plan to check
  * @param params.customFieldKey - The key to check for the button label
  * @returns The custom button label or the default label
  */
-export declare const customButtonLabel: ({ plan, customFieldKey }: PlanParams) => string;
+export declare const customButtonLabel: ({ plan, customFieldKey, defaultLabel, }: PlanParams) => string;
 /**
  * Get the best discount for the plan
  * @param params.plan - The Mantle plan to check for a discount
  * @returns The highest discount for the plan, or undefined if none found
  */
-export declare const highestDiscount: ({ plan }: {
+export declare const highestDiscount: ({ plan, }: {
     plan: Plan;
 }) => Discount | undefined;
 export {};

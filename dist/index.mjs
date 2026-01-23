@@ -69,9 +69,9 @@ const re = {
   i18n: C = p,
   waitForCustomer: S = !1,
   loadingComponent: P = null,
-  throwOnError: a = !1
+  throwOnError: i = !1
 }) => {
-  const o = new j({ appId: e, customerApiToken: s, apiUrl: c }), [i, v] = y(null), [f, h] = y(!0), b = async () => {
+  const o = new j({ appId: e, customerApiToken: s, apiUrl: c }), [a, v] = y(null), [f, h] = y(!0), b = async () => {
     try {
       h(!0);
       const t = await o.getCustomer();
@@ -79,7 +79,7 @@ const re = {
         throw new Error(t.error);
       v(t);
     } catch (t) {
-      if (a)
+      if (i)
         throw t;
       console.error("[MantleProvider] Error fetching customer: ", t);
     } finally {
@@ -88,7 +88,7 @@ const re = {
   }, E = async (t) => {
     const r = await o.sendUsageEvent(t);
     if ("error" in r) {
-      if (a)
+      if (i)
         throw new Error(r.error);
       return {
         success: !1
@@ -103,12 +103,12 @@ const re = {
       id: t,
       period: r
     });
-    if ("error" in n && a)
+    if ("error" in n && i)
       throw new Error(n.error);
     return n;
   }, N = async (t) => {
     const r = await o.subscribe(t);
-    if ("error" in r && a)
+    if ("error" in r && i)
       throw new Error(r.error);
     return r;
   }, M = async ({
@@ -117,7 +117,7 @@ const re = {
     const r = await o.cancelSubscription({
       ...t && { cancelReason: t }
     });
-    if ("error" in r && a)
+    if ("error" in r && i)
       throw new Error(r.error);
     return r;
   }, x = async ({
@@ -134,7 +134,7 @@ const re = {
       returnUrl: u,
       test: d
     });
-    if ("error" in m && a)
+    if ("error" in m && i)
       throw new Error(m.error);
     return m;
   }, Y = async ({
@@ -147,7 +147,7 @@ const re = {
       returnUrl: t,
       updateExistingPaymentMethods: r
     });
-    if ("error" in n && a)
+    if ("error" in n && i)
       throw new Error(n.error);
     return n;
   }, U = async ({
@@ -163,19 +163,19 @@ const re = {
         ...r || {}
       }
     });
-    if ("error" in d && a)
+    if ("error" in d && i)
       throw new Error(d.error);
     return d;
   }, D = async (t) => {
     const r = await o.listNotifications(t);
-    if ("error" in r && a)
+    if ("error" in r && i)
       throw new Error(r.error);
     return r;
   }, L = async ({
     id: t
   }) => {
     const r = await o.triggerNotificationCta({ id: t });
-    if ("error" in r && a)
+    if ("error" in r && i)
       throw new Error(r.error);
     return r;
   }, R = async ({
@@ -188,22 +188,22 @@ const re = {
       readAt: r,
       dismissedAt: n
     });
-    if ("error" in u && a)
+    if ("error" in u && i)
       throw new Error(u.error);
     return u;
   }, k = async (t) => {
     const r = await o.getChecklist(t);
-    if (r && "error" in r && a)
+    if (r && "error" in r && i)
       throw new Error(r.error);
     return r;
   }, _ = async (t) => {
     const r = await o.getChecklists(t);
-    if (r && "error" in r && a)
+    if (r && "error" in r && i)
       throw new Error(r.error);
     return r;
   }, F = async ({ idOrHandle: t }) => {
     const r = await o.showChecklist({ idOrHandle: t });
-    if (r && "error" in r && a)
+    if (r && "error" in r && i)
       throw new Error(r.error);
     return r;
   }, T = async ({
@@ -214,7 +214,7 @@ const re = {
       idOrHandle: t,
       stepIdOrHandle: r
     });
-    if (n && "error" in n && a)
+    if (n && "error" in n && i)
       throw new Error(n.error);
     return n;
   }, V = async ({
@@ -225,7 +225,7 @@ const re = {
       idOrHandle: t,
       stepIdOrHandle: r
     });
-    if ("error" in n && a)
+    if ("error" in n && i)
       throw new Error(n.error);
     return n;
   }, B = async ({
@@ -234,20 +234,20 @@ const re = {
     const r = await o.getAppInstallations({
       ...t && { customerId: t }
     });
-    if ("error" in r && a)
+    if ("error" in r && i)
       throw new Error(r.error);
     return r;
   };
   G(() => {
     s && b();
   }, [s]);
-  const q = (i == null ? void 0 : i.plans) || [], H = (i == null ? void 0 : i.subscription) || null;
+  const q = (a == null ? void 0 : a.plans) || [], H = (a == null ? void 0 : a.subscription) || null;
   return S && f ? P || null : /* @__PURE__ */ I(
     g.Provider,
     {
       value: {
         client: o,
-        customer: i,
+        customer: a,
         subscription: H,
         plans: q,
         loading: f,
@@ -268,11 +268,11 @@ const re = {
         showChecklist: F,
         skipChecklistStep: T,
         getAppInstallations: B,
-        isFeatureEnabled: ({ featureKey: t, count: r = 0 }) => i != null && i.features[t] ? Q({
-          feature: i.features[t],
+        isFeatureEnabled: ({ featureKey: t, count: r = 0 }) => a != null && a.features[t] ? Q({
+          feature: a.features[t],
           count: r
         }) : !1,
-        limitForFeature: ({ featureKey: t }) => i != null && i.features[t] && i.features[t].type === "limit" ? i.features[t].value : -1,
+        limitForFeature: ({ featureKey: t }) => a != null && a.features[t] && a.features[t].type === "limit" ? a.features[t].value : -1,
         refetch: async () => {
           await b();
         }
@@ -310,10 +310,10 @@ const Z = (e = "EVERY_30_DAYS") => {
     default:
       return "mo";
   }
-}, ae = ({
+}, ie = ({
   interval: e = "EVERY_30_DAYS",
   useShortFormPlanIntervals: s = !0
-}) => s ? z(e) : Z(e), ie = ({
+}) => s ? z(e) : Z(e), ae = ({
   plan: e,
   customFieldKey: s = "recommended"
 }) => {
@@ -321,16 +321,16 @@ const Z = (e = "EVERY_30_DAYS") => {
   return !!((c = e.customFields) != null && c[s]);
 }, ce = ({
   plan: e,
-  customFieldKey: s = "buttonLabel"
+  customFieldKey: s = "buttonLabel",
+  defaultLabel: c = p.subscribe
 }) => {
-  var c;
-  return ((c = e.customFields) == null ? void 0 : c[s]) || p.subscribe;
-}, le = ({ plan: e }) => {
-  var s;
-  return ((s = e.discounts) == null ? void 0 : s.length) > 0 ? e.discounts.reduce(
-    (c, l) => c.discountedAmount < l.discountedAmount ? c : l
-  ) : void 0;
-}, ue = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, de = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
+  var l;
+  return ((l = e.customFields) == null ? void 0 : l[s]) || c;
+}, le = ({
+  plan: e
+}) => e.discounts && e.discounts.length > 0 ? e.discounts.reduce(
+  (s, c) => s.discountedAmount < c.discountedAmount ? s : c
+) : void 0, ue = (e = 4) => e % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : e % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : e % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : e === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, de = (e = 4) => e % 4 === 0 ? 4 : e % 3 === 0 ? 3 : e % 2 === 0 ? 2 : e === 1 ? 1 : 4;
 export {
   p as Labels,
   te as MantleProvider,
@@ -342,10 +342,10 @@ export {
   w as featureEnabled,
   se as featureSort,
   le as highestDiscount,
-  ae as intervalLabel,
+  ie as intervalLabel,
   Z as intervalLabelLong,
   z as intervalLabelShort,
-  ie as isRecommendedPlan,
+  ae as isRecommendedPlan,
   oe as money,
   ne as useMantle
 };

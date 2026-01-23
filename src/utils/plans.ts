@@ -14,7 +14,9 @@ type IntervalLabelShortType = "yr" | "mo";
  * @param interval - The interval to generate a label for
  * @returns The long label for the interval
  */
-export const intervalLabelLong = (interval: PlanInterval = PlanInterval.Every30Days): IntervalLabelType => {
+export const intervalLabelLong = (
+  interval: PlanInterval = PlanInterval.Every30Days,
+): IntervalLabelType => {
   switch (interval) {
     case PlanInterval.Annual:
       return "year";
@@ -29,7 +31,9 @@ export const intervalLabelLong = (interval: PlanInterval = PlanInterval.Every30D
  * @param interval - The interval to generate a label for
  * @returns The short label for the interval
  */
-export const intervalLabelShort = (interval: PlanInterval = PlanInterval.Every30Days): IntervalLabelShortType => {
+export const intervalLabelShort = (
+  interval: PlanInterval = PlanInterval.Every30Days,
+): IntervalLabelShortType => {
   switch (interval) {
     case PlanInterval.Annual:
       return "yr";
@@ -54,12 +58,15 @@ export const intervalLabel = ({
   interval = PlanInterval.Every30Days,
   useShortFormPlanIntervals = true,
 }: IntervalLabelParams): IntervalLabelType | IntervalLabelShortType => {
-  return useShortFormPlanIntervals ? intervalLabelShort(interval) : intervalLabelLong(interval);
+  return useShortFormPlanIntervals
+    ? intervalLabelShort(interval)
+    : intervalLabelLong(interval);
 };
 
 interface PlanParams {
   plan: Plan;
   customFieldKey?: string;
+  defaultLabel?: string;
 }
 
 /**
@@ -68,9 +75,9 @@ interface PlanParams {
  * @param params.customFieldKey - The key to check for the recommended status
  * @returns Whether the plan is recommended
  */
-export const isRecommendedPlan = ({ 
-  plan, 
-  customFieldKey = "recommended" 
+export const isRecommendedPlan = ({
+  plan,
+  customFieldKey = "recommended",
 }: PlanParams): boolean => {
   return !!plan.customFields?.[customFieldKey];
 };
@@ -81,11 +88,12 @@ export const isRecommendedPlan = ({
  * @param params.customFieldKey - The key to check for the button label
  * @returns The custom button label or the default label
  */
-export const customButtonLabel = ({ 
-  plan, 
-  customFieldKey = "buttonLabel" 
+export const customButtonLabel = ({
+  plan,
+  customFieldKey = "buttonLabel",
+  defaultLabel = Labels.subscribe,
 }: PlanParams): string => {
-  return plan.customFields?.[customFieldKey] || Labels.subscribe;
+  return plan.customFields?.[customFieldKey] || defaultLabel;
 };
 
 /**
@@ -93,10 +101,15 @@ export const customButtonLabel = ({
  * @param params.plan - The Mantle plan to check for a discount
  * @returns The highest discount for the plan, or undefined if none found
  */
-export const highestDiscount = ({ plan }: { plan: Plan }): Discount | undefined => {
-  return plan.discounts?.length > 0
-    ? plan.discounts.reduce((prev, current) =>
-        prev.discountedAmount < current.discountedAmount ? prev : current
+export const highestDiscount = ({
+  plan,
+}: {
+  plan: Plan;
+}): Discount | undefined => {
+  return plan.discounts && plan.discounts.length > 0
+    ? plan.discounts.reduce(
+        (prev: Discount, current: Discount) =>
+          prev.discountedAmount < current.discountedAmount ? prev : current
       )
     : undefined;
-}; 
+};
