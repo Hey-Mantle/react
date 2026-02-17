@@ -57,6 +57,8 @@ export interface TMantleContext {
   listNotifications: ListNotificationsCallback;
   /** Trigger a notification CTA */
   triggerNotificationCta: TriggerNotificationCtaCallback;
+  /** Track a CTA click on an engagement */
+  trackEngagementCtaClick: TrackEngagementCtaClickCallback;
   /** Update a notification */
   updateNotification: UpdateNotificationCallback;
   /** Get the active checklist */
@@ -239,6 +241,14 @@ export type ListNotificationsCallback = (params?: {
 /** Callback to trigger a notification CTA */
 export type TriggerNotificationCtaCallback = (params: {
   id: string;
+}) => Promise<SuccessResponse | MantleError>;
+
+/** Callback to track a CTA click on an engagement */
+export type TrackEngagementCtaClickCallback = (params: {
+  /** The ID of the engagement that was clicked */
+  id: string;
+  /** The type of engagement (e.g. "notification", "checklist") */
+  engagementType: "notification" | "checklist";
 }) => Promise<SuccessResponse | MantleError>;
 
 /** Callback to update a notification */
@@ -513,6 +523,14 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
+  const trackEngagementCtaClick: TrackEngagementCtaClickCallback = async ({ id, engagementType }) => {
+    const result = await mantleClient.trackEngagementCtaClick({ id, engagementType });
+    if ("error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
   const updateNotification: UpdateNotificationCallback = async ({
     id,
     readAt,
@@ -656,6 +674,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         createHostedSession,
         listNotifications,
         triggerNotificationCta,
+        trackEngagementCtaClick,
         updateNotification,
         getChecklist,
         getChecklists,
