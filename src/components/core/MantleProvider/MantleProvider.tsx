@@ -245,10 +245,8 @@ export type TriggerNotificationCtaCallback = (params: {
 
 /** Callback to track a CTA click on an engagement */
 export type TrackEngagementCtaClickCallback = (params: {
-  /** The ID of the engagement that was clicked */
+  /** The ID of the notification (Notify record) that was clicked */
   id: string;
-  /** The type of engagement (e.g. "notification", "checklist") */
-  engagementType: "notification" | "checklist";
 }) => Promise<SuccessResponse | MantleError>;
 
 /** Callback to update a notification */
@@ -523,8 +521,8 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
     return result;
   };
 
-  const trackEngagementCtaClick: TrackEngagementCtaClickCallback = async ({ id, engagementType }) => {
-    const result = await mantleClient.trackEngagementCtaClick({ id, engagementType });
+  const trackEngagementCtaClick: TrackEngagementCtaClickCallback = async ({ id }) => {
+    const result = await mantleClient.trackEngagementCtaClick({ id });
     if ("error" in result && throwOnError) {
       throw new Error(result.error);
     }
