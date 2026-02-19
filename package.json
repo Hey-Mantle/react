@@ -73,7 +73,7 @@
     "react": ">16.14"
   },
   "dependencies": {
-    "@heymantle/client": "^1.1.70"
+    "@heymantle/client": "^1.1.72"
   },
   "publishConfig": {
     "@heymantle:registry": "https://registry.npmjs.org/",
