@@ -11,4 +11,11 @@ export type {
   FeatureEnabledCallback,
   FeatureLimitCallback,
   HostedSessionCallback,
-} from './components/core/MantleProvider/MantleProvider'; 
+  GetAffiliateProgramCallback,
+  GetAffiliateCallback,
+  EnrollAffiliateCallback,
+  SubmitReferralRequestCallback,
+  GetAffiliateReferralsCallback,
+  GetAffiliateReferralRequestsCallback,
+  GetAffiliateMetricsCallback,
+} from './components/core/MantleProvider/MantleProvider';

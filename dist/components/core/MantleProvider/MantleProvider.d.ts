@@ -1,4 +1,4 @@
-import { Customer, HostedSession, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, GetAppInstallationsResponse, MantleClient } from '@heymantle/client';
+import { Affiliate, AffiliateMetrics, AffiliateProgram, AffiliateReferralRequest, Customer, HostedSession, ListAffiliateReferralRequestsResponse, ListAffiliateReferralsResponse, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, GetAppInstallationsResponse, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -40,6 +40,8 @@ export interface TMantleContext {
     listNotifications: ListNotificationsCallback;
     /** Trigger a notification CTA */
     triggerNotificationCta: TriggerNotificationCtaCallback;
+    /** Track a notification CTA */
+    trackNotificationCta: TrackNotificationCtaCallback;
     /** Update a notification */
     updateNotification: UpdateNotificationCallback;
     /** Get the active checklist */
@@ -54,6 +56,20 @@ export interface TMantleContext {
     showChecklist: ShowChecklistCallback;
     /** Get app installations */
     getAppInstallations: GetAppInstallationsCallback;
+    /** Get the affiliate program for the current app */
+    getAffiliateProgram: GetAffiliateProgramCallback;
+    /** Get the current customer's affiliate status */
+    getAffiliate: GetAffiliateCallback;
+    /** Enroll the current customer as an affiliate */
+    enrollAffiliate: EnrollAffiliateCallback;
+    /** Submit a referral attribution request */
+    submitReferralRequest: SubmitReferralRequestCallback;
+    /** Get the affiliate's confirmed referrals */
+    getAffiliateReferrals: GetAffiliateReferralsCallback;
+    /** Get the affiliate's referral attribution requests */
+    getAffiliateReferralRequests: GetAffiliateReferralRequestsCallback;
+    /** Get the affiliate's performance metrics */
+    getAffiliateMetrics: GetAffiliateMetricsCallback;
 }
 /** Callback to send a new usage event to Mantle */
 export type SendUsageEventCallback = (usageEvent: UsageEvent) => Promise<SuccessResponse>;
@@ -196,12 +212,63 @@ export type ListNotificationsCallback = (params?: {
 export type TriggerNotificationCtaCallback = (params: {
     id: string;
 }) => Promise<SuccessResponse | MantleError>;
+/** Callback to track a notification CTA */
+export type TrackNotificationCtaCallback = (params: {
+    /** The ID of the notification (Notify record) */
+    id: string;
+    /** The type of CTA interaction. Defaults to "trigger" */
+    type?: "trigger" | "click";
+}) => Promise<SuccessResponse | MantleError>;
 /** Callback to update a notification */
 export type UpdateNotificationCallback = (params: {
     id: string;
     readAt?: Date;
     dismissedAt?: Date;
 }) => Promise<SuccessResponse | MantleError>;
+/** Callback to get the affiliate program for the current app */
+export type GetAffiliateProgramCallback = () => Promise<AffiliateProgram | MantleError>;
+/** Callback to get the current customer's affiliate status */
+export type GetAffiliateCallback = () => Promise<Affiliate | null | MantleError>;
+/** Callback to enroll the current customer as an affiliate */
+export type EnrollAffiliateCallback = (params?: {
+    /** The name of the affiliate, defaults to the customer's name */
+    name?: string;
+    /** The email of the affiliate, defaults to the customer's email */
+    email?: string;
+    /** Whether the affiliate has agreed to the program terms */
+    agreedToTerms?: boolean;
+}) => Promise<Affiliate | MantleError>;
+/** Callback to submit a referral attribution request */
+export type SubmitReferralRequestCallback = (params: {
+    /** The Shopify domain of the referred shop */
+    shopDomain?: string;
+    /** The name of the referred customer */
+    customerName?: string;
+    /** Notes about the referral */
+    notes?: string;
+    /** The date of the referral (ISO date string) */
+    date?: string;
+}) => Promise<AffiliateReferralRequest | MantleError>;
+/** Callback to get the affiliate's confirmed referrals */
+export type GetAffiliateReferralsCallback = (params?: {
+    /** The page number, defaults to 0 */
+    page?: number;
+    /** The number of referrals per page, defaults to 25 */
+    limit?: number;
+    /** Sort field */
+    sort?: "createdAt" | "date";
+    /** Sort direction */
+    sortDirection?: "asc" | "desc";
+}) => Promise<ListAffiliateReferralsResponse | MantleError>;
+/** Callback to get the affiliate's referral attribution requests */
+export type GetAffiliateReferralRequestsCallback = (params?: {
+    /** The page number, defaults to 0 */
+    page?: number;
+    /** The number of requests per page, defaults to 25 */
+    limit?: number;
+}) => Promise<ListAffiliateReferralRequestsResponse | MantleError>;
+/** Callback to get the affiliate's performance metrics */
+export type GetAffiliateMetricsCallback = () => Promise<AffiliateMetrics | MantleError>;
 /** Props for the MantleProvider component */
 export interface MantleProviderProps {
     /** The Mantle App ID provided by Mantle */
