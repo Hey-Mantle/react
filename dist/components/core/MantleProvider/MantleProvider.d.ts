@@ -1,4 +1,4 @@
-import { Affiliate, AffiliateMetrics, AffiliateProgram, AffiliateReferralRequest, Customer, HostedSession, ListAffiliateReferralRequestsResponse, ListAffiliateReferralsResponse, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, GetAppInstallationsResponse, MantleClient } from '@heymantle/client';
+import { Affiliate, AffiliateMetrics, AffiliateProgram, AffiliateReferralRequest, Customer, HostedSession, InvoiceUrlResponse, ListAffiliateReferralRequestsResponse, ListAffiliateReferralsResponse, MantleError, Notify, Plan, ProrationBehaviorOptions, RequirePaymentMethodOptions, SetupIntent, Subscription, OneTimeCharge, SuccessResponse, UsageEvent, UsageMetricReport, GetAppInstallationsResponse, MantleClient } from '@heymantle/client';
 import { default as React } from 'react';
 import { Labels } from '../../../utils/constants';
 
@@ -54,6 +54,8 @@ export interface TMantleContext {
     skipChecklistStep: SkipChecklistStepCallback;
     /** Mark a checklist as shown */
     showChecklist: ShowChecklistCallback;
+    /** Get the hosted invoice URL for a specific invoice */
+    getInvoiceUrl: GetInvoiceUrlCallback;
     /** Get app installations */
     getAppInstallations: GetAppInstallationsCallback;
     /** Get the affiliate program for the current app */
@@ -267,6 +269,11 @@ export type GetAffiliateReferralRequestsCallback = (params?: {
     /** The number of requests per page, defaults to 25 */
     limit?: number;
 }) => Promise<ListAffiliateReferralRequestsResponse | MantleError>;
+/** Callback to get the hosted invoice URL for a specific invoice */
+export type GetInvoiceUrlCallback = (params: {
+    /** The ID of the invoice */
+    invoiceId: string;
+}) => Promise<InvoiceUrlResponse | MantleError>;
 /** Callback to get the affiliate's performance metrics */
 export type GetAffiliateMetricsCallback = () => Promise<AffiliateMetrics | MantleError>;
 /** Props for the MantleProvider component */

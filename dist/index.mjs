@@ -1,7 +1,7 @@
-import { jsx as Z } from "react/jsx-runtime";
-import { MantleClient as z } from "@heymantle/client";
-import { createContext as K, useState as g, useEffect as O, useContext as ee } from "react";
-const le = {
+import { jsx as z } from "react/jsx-runtime";
+import { MantleClient as K } from "@heymantle/client";
+import { createContext as O, useState as y, useEffect as ee, useContext as re } from "react";
+const ue = {
   Public: "public",
   CustomerTag: "customerTag",
   ShopifyPlan: "shopifyPlan",
@@ -58,10 +58,10 @@ const le = {
   featureNotAvailable: "This feature is not available on your current plan",
   upgradeRequired: "Upgrade Required",
   limitReached: "Limit Reached"
-}, b = K(void 0), re = ({
+}, b = O(void 0), te = ({
   feature: t,
   count: i = 0
-}) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? i < t.value || t.value === -1 : !1, ue = ({
+}) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? i < t.value || t.value === -1 : !1, fe = ({
   appId: t,
   customerApiToken: i,
   apiUrl: c = "https://appapi.heymantle.com/v1",
@@ -71,65 +71,65 @@ const le = {
   loadingComponent: A = null,
   throwOnError: s = !1
 }) => {
-  const n = new z({ appId: t, customerApiToken: i, apiUrl: c }), [a, P] = g(null), [w, p] = g(!0), y = async () => {
+  const n = new K({ appId: t, customerApiToken: i, apiUrl: c }), [a, P] = y(null), [w, p] = y(!0), g = async () => {
     try {
       p(!0);
-      const e = await n.getCustomer();
-      if (e && "error" in e)
-        throw new Error(e.error);
-      P(e);
-    } catch (e) {
+      const r = await n.getCustomer();
+      if (r && "error" in r)
+        throw new Error(r.error);
+      P(r);
+    } catch (r) {
       if (s)
-        throw e;
-      console.error("[MantleProvider] Error fetching customer: ", e);
+        throw r;
+      console.error("[MantleProvider] Error fetching customer: ", r);
     } finally {
       p(!1);
     }
-  }, v = async (e) => {
-    const r = await n.sendUsageEvent(e);
-    if ("error" in r) {
+  }, v = async (r) => {
+    const e = await n.sendUsageEvent(r);
+    if ("error" in e) {
       if (s)
-        throw new Error(r.error);
+        throw new Error(e.error);
       return {
         success: !1
       };
     }
-    return r;
+    return e;
   }, N = async ({
-    usageId: e,
-    period: r
+    usageId: r,
+    period: e
   }) => {
     const o = await n.getUsageMetricReport({
-      id: e,
-      period: r
+      id: r,
+      period: e
     });
     if ("error" in o && s)
       throw new Error(o.error);
     return o;
-  }, E = async (e) => {
-    const r = await n.subscribe(e);
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
+  }, E = async (r) => {
+    const e = await n.subscribe(r);
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
   }, R = async ({
-    cancelReason: e
+    cancelReason: r
   } = {}) => {
-    const r = await n.cancelSubscription({
-      ...e && { cancelReason: e }
+    const e = await n.cancelSubscription({
+      ...r && { cancelReason: r }
     });
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
   }, M = async ({
-    amount: e,
-    name: r,
+    amount: r,
+    name: e,
     currencyCode: o,
     returnUrl: u,
     test: f
   }) => {
     const d = await n.createOneTimeCharge({
-      amount: e,
-      name: r,
+      amount: r,
+      name: e,
       currencyCode: o,
       returnUrl: u,
       test: f
@@ -138,158 +138,163 @@ const le = {
       throw new Error(d.error);
     return d;
   }, x = async ({
-    returnUrl: e,
-    updateExistingPaymentMethods: r
+    returnUrl: r,
+    updateExistingPaymentMethods: e
   }) => {
-    if (!e)
+    if (!r)
       throw new Error("returnUrl is required");
     const o = await n.addPaymentMethod({
-      returnUrl: e,
-      updateExistingPaymentMethods: r
+      returnUrl: r,
+      updateExistingPaymentMethods: e
     });
     if ("error" in o && s)
       throw new Error(o.error);
     return o;
-  }, Y = async ({
-    type: e,
-    config: r
+  }, U = async ({
+    type: r,
+    config: e
   }) => {
-    if (!e)
+    if (!r)
       throw new Error("type is required");
     const u = new URL(document.location.toString()).searchParams.get("locale"), f = await n.createHostedSession({
-      type: e,
+      type: r,
       config: {
         ...u ? { locale: u } : {},
-        ...r || {}
+        ...e || {}
       }
     });
     if ("error" in f && s)
       throw new Error(f.error);
     return f;
-  }, U = async (e) => {
-    const r = await n.listNotifications(e);
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
+  }, Y = async (r) => {
+    const e = await n.listNotifications(r);
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
   }, k = async ({
-    id: e
+    id: r
   }) => {
-    const r = await n.triggerNotificationCta({ id: e });
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, D = async ({ id: e, type: r }) => {
-    const o = await n.trackNotificationCta({ id: e, type: r });
+    const e = await n.triggerNotificationCta({ id: r });
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
+  }, D = async ({ id: r, type: e }) => {
+    const o = await n.trackNotificationCta({ id: r, type: e });
     if ("error" in o && s)
       throw new Error(o.error);
     return o;
   }, L = async ({
-    id: e,
-    readAt: r,
+    id: r,
+    readAt: e,
     dismissedAt: o
   }) => {
     const u = await n.updateNotification({
-      id: e,
-      readAt: r,
+      id: r,
+      readAt: e,
       dismissedAt: o
     });
     if ("error" in u && s)
       throw new Error(u.error);
     return u;
-  }, _ = async (e) => {
-    const r = await n.getChecklist(e);
-    if (r && "error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, F = async (e) => {
-    const r = await n.getChecklists(e);
-    if (r && "error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, q = async ({ idOrHandle: e }) => {
-    const r = await n.showChecklist({ idOrHandle: e });
-    if (r && "error" in r && s)
-      throw new Error(r.error);
-    return r;
+  }, _ = async (r) => {
+    const e = await n.getChecklist(r);
+    if (e && "error" in e && s)
+      throw new Error(e.error);
+    return e;
+  }, F = async (r) => {
+    const e = await n.getChecklists(r);
+    if (e && "error" in e && s)
+      throw new Error(e.error);
+    return e;
+  }, q = async ({ idOrHandle: r }) => {
+    const e = await n.showChecklist({ idOrHandle: r });
+    if (e && "error" in e && s)
+      throw new Error(e.error);
+    return e;
   }, T = async ({
-    idOrHandle: e,
-    stepIdOrHandle: r
+    idOrHandle: r,
+    stepIdOrHandle: e
   }) => {
     const o = await n.skipChecklistStep({
-      idOrHandle: e,
-      stepIdOrHandle: r
+      idOrHandle: r,
+      stepIdOrHandle: e
     });
     if (o && "error" in o && s)
       throw new Error(o.error);
     return o;
   }, V = async ({
-    idOrHandle: e,
-    stepIdOrHandle: r
+    idOrHandle: r,
+    stepIdOrHandle: e
   }) => {
     const o = await n.completeChecklistStep({
-      idOrHandle: e,
-      stepIdOrHandle: r
+      idOrHandle: r,
+      stepIdOrHandle: e
     });
     if ("error" in o && s)
       throw new Error(o.error);
     return o;
-  }, B = async ({
-    customerId: e
+  }, B = async ({ invoiceId: r }) => {
+    const e = await n.getInvoiceUrl(r);
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
+  }, I = async ({
+    customerId: r
   } = {}) => {
-    const r = await n.getAppInstallations({
-      ...e && { customerId: e }
+    const e = await n.getAppInstallations({
+      ...r && { customerId: r }
     });
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
   }, H = async () => {
-    const e = await n.getAffiliateProgram();
+    const r = await n.getAffiliateProgram();
+    if ("error" in r && s)
+      throw new Error(r.error);
+    return r;
+  }, j = async () => {
+    const r = await n.getAffiliate();
+    if (r && "error" in r && s)
+      throw new Error(r.error);
+    return r;
+  }, $ = async (r) => {
+    const e = await n.enrollAffiliate(r);
     if ("error" in e && s)
       throw new Error(e.error);
     return e;
-  }, I = async () => {
-    const e = await n.getAffiliate();
-    if (e && "error" in e && s)
-      throw new Error(e.error);
-    return e;
-  }, j = async (e) => {
-    const r = await n.enrollAffiliate(e);
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, $ = async (e) => {
-    const r = await n.submitReferralRequest(e);
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, G = async (e) => {
-    const r = await n.getAffiliateReferrals(e);
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, J = async (e) => {
-    const r = await n.getAffiliateReferralRequests(e);
-    if ("error" in r && s)
-      throw new Error(r.error);
-    return r;
-  }, Q = async () => {
-    const e = await n.getAffiliateMetrics();
+  }, G = async (r) => {
+    const e = await n.submitReferralRequest(r);
     if ("error" in e && s)
       throw new Error(e.error);
     return e;
+  }, J = async (r) => {
+    const e = await n.getAffiliateReferrals(r);
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
+  }, Q = async (r) => {
+    const e = await n.getAffiliateReferralRequests(r);
+    if ("error" in e && s)
+      throw new Error(e.error);
+    return e;
+  }, W = async () => {
+    const r = await n.getAffiliateMetrics();
+    if ("error" in r && s)
+      throw new Error(r.error);
+    return r;
   };
-  O(() => {
-    i && y();
+  ee(() => {
+    i && g();
   }, [i]);
-  const W = (a == null ? void 0 : a.plans) || [], X = (a == null ? void 0 : a.subscription) || null;
-  return S && w ? A || null : /* @__PURE__ */ Z(
+  const X = (a == null ? void 0 : a.plans) || [], Z = (a == null ? void 0 : a.subscription) || null;
+  return S && w ? A || null : /* @__PURE__ */ z(
     b.Provider,
     {
       value: {
         client: n,
         customer: a,
-        subscription: X,
-        plans: W,
+        subscription: Z,
+        plans: X,
         loading: w,
         i18n: { ...m, ...C },
         sendUsageEvent: v,
@@ -298,8 +303,8 @@ const le = {
         cancelSubscription: R,
         createOneTimeCharge: M,
         addPaymentMethod: x,
-        createHostedSession: Y,
-        listNotifications: U,
+        createHostedSession: U,
+        listNotifications: Y,
         triggerNotificationCta: k,
         trackNotificationCta: D,
         updateNotification: L,
@@ -308,41 +313,42 @@ const le = {
         completeChecklistStep: V,
         showChecklist: q,
         skipChecklistStep: T,
-        getAppInstallations: B,
+        getInvoiceUrl: B,
+        getAppInstallations: I,
         getAffiliateProgram: H,
-        getAffiliate: I,
-        enrollAffiliate: j,
-        submitReferralRequest: $,
-        getAffiliateReferrals: G,
-        getAffiliateReferralRequests: J,
-        getAffiliateMetrics: Q,
-        isFeatureEnabled: ({ featureKey: e, count: r = 0 }) => a != null && a.features[e] ? re({
-          feature: a.features[e],
-          count: r
+        getAffiliate: j,
+        enrollAffiliate: $,
+        submitReferralRequest: G,
+        getAffiliateReferrals: J,
+        getAffiliateReferralRequests: Q,
+        getAffiliateMetrics: W,
+        isFeatureEnabled: ({ featureKey: r, count: e = 0 }) => a != null && a.features[r] ? te({
+          feature: a.features[r],
+          count: e
         }) : !1,
-        limitForFeature: ({ featureKey: e }) => a != null && a.features[e] && a.features[e].type === "limit" ? a.features[e].value : -1,
+        limitForFeature: ({ featureKey: r }) => a != null && a.features[r] && a.features[r].type === "limit" ? a.features[r].value : -1,
         refetch: async () => {
-          await y();
+          await g();
         }
       },
       children: l
     }
   );
-}, fe = () => {
-  const t = ee(b);
+}, de = () => {
+  const t = re(b);
   if (t === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return t;
-}, h = (t) => t.type === "boolean" && t.value === !0 || t.type === "limit" && t.value !== 0, de = (t, i) => Number(h(i)) - Number(h(t)) || t.name.localeCompare(i.name), te = (t = "USD") => new Intl.NumberFormat("en-US", {
+}, h = (t) => t.type === "boolean" && t.value === !0 || t.type === "limit" && t.value !== 0, me = (t, i) => Number(h(i)) - Number(h(t)) || t.name.localeCompare(i.name), ne = (t = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: t,
   notation: "standard"
-}), me = (t, i = "USD", c = !0) => {
-  let l = te(i).format(t);
+}), we = (t, i = "USD", c = !0) => {
+  let l = ne(i).format(t);
   return c && (l = l.replace(/\.00$/, "")), l;
 };
-var ne = /* @__PURE__ */ ((t) => (t.Annual = "ANNUAL", t.Every30Days = "EVERY_30_DAYS", t))(ne || {});
-const se = (t = "EVERY_30_DAYS") => {
+var se = /* @__PURE__ */ ((t) => (t.Annual = "ANNUAL", t.Every30Days = "EVERY_30_DAYS", t))(se || {});
+const oe = (t = "EVERY_30_DAYS") => {
   switch (t) {
     case "ANNUAL":
       return "year";
@@ -350,7 +356,7 @@ const se = (t = "EVERY_30_DAYS") => {
     default:
       return "month";
   }
-}, oe = (t = "EVERY_30_DAYS") => {
+}, ie = (t = "EVERY_30_DAYS") => {
   switch (t) {
     case "ANNUAL":
       return "yr";
@@ -358,10 +364,10 @@ const se = (t = "EVERY_30_DAYS") => {
     default:
       return "mo";
   }
-}, we = ({
+}, pe = ({
   interval: t = "EVERY_30_DAYS",
   useShortFormPlanIntervals: i = !0
-}) => i ? oe(t) : se(t), pe = ({
+}) => i ? ie(t) : oe(t), ge = ({
   plan: t,
   customFieldKey: i = "recommended"
 }) => {
@@ -374,27 +380,27 @@ const se = (t = "EVERY_30_DAYS") => {
 }) => {
   var l;
   return ((l = t.customFields) == null ? void 0 : l[i]) || c;
-}, ge = ({
+}, he = ({
   plan: t
 }) => t.discounts && t.discounts.length > 0 ? t.discounts.reduce(
   (i, c) => i.discountedAmount < c.discountedAmount ? i : c
-) : void 0, he = (t = 4) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, be = (t = 4) => t % 4 === 0 ? 4 : t % 3 === 0 ? 3 : t % 2 === 0 ? 2 : t === 1 ? 1 : 4;
+) : void 0, be = (t = 4) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, Ce = (t = 4) => t % 4 === 0 ? 4 : t % 3 === 0 ? 3 : t % 2 === 0 ? 2 : t === 1 ? 1 : 4;
 export {
   m as Labels,
-  ue as MantleProvider,
-  le as PlanAvailability,
-  ne as PlanInterval,
-  be as columnCount,
-  he as columnSpan,
+  fe as MantleProvider,
+  ue as PlanAvailability,
+  se as PlanInterval,
+  Ce as columnCount,
+  be as columnSpan,
   ye as customButtonLabel,
   h as featureEnabled,
-  de as featureSort,
-  ge as highestDiscount,
-  we as intervalLabel,
-  se as intervalLabelLong,
-  oe as intervalLabelShort,
-  pe as isRecommendedPlan,
-  me as money,
-  fe as useMantle
+  me as featureSort,
+  he as highestDiscount,
+  pe as intervalLabel,
+  oe as intervalLabelLong,
+  ie as intervalLabelShort,
+  ge as isRecommendedPlan,
+  we as money,
+  de as useMantle
 };
 //# sourceMappingURL=index.mjs.map

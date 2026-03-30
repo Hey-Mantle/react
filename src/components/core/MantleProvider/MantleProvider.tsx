@@ -6,6 +6,7 @@ import type {
   Customer,
   Feature,
   HostedSession,
+  InvoiceUrlResponse,
   ListAffiliateReferralRequestsResponse,
   ListAffiliateReferralsResponse,
   MantleError,
@@ -77,6 +78,8 @@ export interface TMantleContext {
   skipChecklistStep: SkipChecklistStepCallback;
   /** Mark a checklist as shown */
   showChecklist: ShowChecklistCallback;
+  /** Get the hosted invoice URL for a specific invoice */
+  getInvoiceUrl: GetInvoiceUrlCallback;
   /** Get app installations */
   getAppInstallations: GetAppInstallationsCallback;
   /** Get the affiliate program for the current app */
@@ -329,6 +332,12 @@ export type GetAffiliateReferralRequestsCallback = (params?: {
   /** The number of requests per page, defaults to 25 */
   limit?: number;
 }) => Promise<ListAffiliateReferralRequestsResponse | MantleError>;
+
+/** Callback to get the hosted invoice URL for a specific invoice */
+export type GetInvoiceUrlCallback = (params: {
+  /** The ID of the invoice */
+  invoiceId: string;
+}) => Promise<InvoiceUrlResponse | MantleError>;
 
 /** Callback to get the affiliate's performance metrics */
 export type GetAffiliateMetricsCallback = () => Promise<
@@ -703,6 +712,19 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
   };
 
   /**
+   * Gets the hosted invoice URL for a specific invoice
+   * @param params.invoiceId - The ID of the invoice
+   * @returns The invoice URL
+   */
+  const getInvoiceUrl: GetInvoiceUrlCallback = async ({ invoiceId }) => {
+    const result = await mantleClient.getInvoiceUrl(invoiceId);
+    if ("error" in result && throwOnError) {
+      throw new Error(result.error);
+    }
+    return result;
+  };
+
+  /**
    * Get the list of app installations for the customer
    * @param params.customerId - The customer ID / Shopify domain, api token. Only required if using the API key for authentication instead of the customer API token
    * @returns The list of app installations
@@ -855,6 +877,7 @@ export const MantleProvider: React.FC<MantleProviderProps> = ({
         completeChecklistStep,
         showChecklist,
         skipChecklistStep,
+        getInvoiceUrl,
         getAppInstallations,
         getAffiliateProgram,
         getAffiliate,

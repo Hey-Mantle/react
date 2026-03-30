@@ -18,4 +18,5 @@ export type {
   GetAffiliateReferralsCallback,
   GetAffiliateReferralRequestsCallback,
   GetAffiliateMetricsCallback,
+  GetInvoiceUrlCallback,
 } from './components/core/MantleProvider/MantleProvider';
